@@ -13,7 +13,7 @@ jobs:
   # Pin the workflow ref (@…) and tooling-ref to a release tag once a release
   # includes the changed-only input; using @main until then.
   validate:
-    uses: CGIAR-Climate-Data-Hub/metadata/.github/workflows/validate-records.yaml@main
+    uses: CGIAR-Climate-Data-Hub/cdh-metadata-standard/.github/workflows/validate-records.yaml@main
     with:
       path: records
       changed-only: true
