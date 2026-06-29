@@ -1,0 +1,29 @@
+name: Format
+
+on:
+  pull_request:
+    paths:
+      - "**/*.yaml"
+      - "**/*.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need the base commit to diff against
+      # Node is preinstalled on the runner; prettier formats YAML natively.
+      # Fix locally with: npx prettier --write .
+      - name: Check changed YAML
+        run: |
+          files=$(git diff --name-only --diff-filter=d \
+            ${{ github.event.pull_request.base.sha }} HEAD -- '*.yaml' '*.yml')
+          [ -z "$files" ] && echo "No YAML changed" && exit 0
+          npx --yes prettier@3 --check $files || {
+            echo "::error::YAML not formatted. Fix with: npx prettier@3 --write . (then commit)"
+            exit 1
+          }
