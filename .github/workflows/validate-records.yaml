@@ -1,0 +1,20 @@
+name: Validate records
+
+on:
+  pull_request:
+    paths:
+      - "records/**"
+
+permissions:
+  contents: read
+
+jobs:
+  # Validate only the records changed in this PR against the CDH metadata schema.
+  # Pin the workflow ref (@…) and tooling-ref to a release tag once a release
+  # includes the changed-only input; using @main until then.
+  validate:
+    uses: CGIAR-Climate-Data-Hub/metadata/.github/workflows/validate-records.yaml@main
+    with:
+      path: records
+      changed-only: true
+      tooling-ref: v0.1.0
