@@ -1,0 +1,19 @@
+name: Notify site
+
+# Tell the site repo to rebuild when records change on main. Requires the
+# SITE_DISPATCH_TOKEN secret: a fine-grained PAT for the site repo with
+# "Contents: read and write" permission.
+on:
+  push:
+    branches: [main]
+    paths: ["records/**"]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.SITE_DISPATCH_TOKEN }}
+          repository: CGIAR-Climate-Data-Hub/climate-data-hub
+          event-type: records-updated
