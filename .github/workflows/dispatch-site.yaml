@@ -1,15 +1,29 @@
 name: Notify site
 
-# Tell the site repo to rebuild when records change on main. Requires the
-# SITE_DISPATCH_TOKEN secret: a fine-grained PAT for the site repo with
+# Validate everything on main, then tell the site repo to rebuild. Requires
+# the SITE_DISPATCH_TOKEN secret: a fine-grained PAT for the site repo with
 # "Contents: read and write" permission.
 on:
   push:
     branches: [main]
     paths: ["records/**"]
 
+permissions:
+  contents: read
+
 jobs:
+  # Full-set validation of main's records — the dispatch only fires when the
+  # state the site will fetch is valid (PR validation is the first gate; this
+  # covers direct pushes and anything that slipped through).
+  validate:
+    uses: CGIAR-Climate-Data-Hub/cdh-metadata-standard/.github/workflows/validate-records.yaml@main
+    with:
+      path: records
+      changed-only: false
+      tooling-ref: v0.1.0
+
   dispatch:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: peter-evans/repository-dispatch@v3
