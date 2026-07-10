@@ -2,8 +2,6 @@ name: Validate records
 
 on:
   pull_request:
-    paths:
-      - "records/**"
 
 permissions:
   contents: read
