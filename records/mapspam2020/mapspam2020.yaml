@@ -49,8 +49,7 @@ contact:
     url: https://www.ifpri.org/
 
 citation:
-  title:
-    Global Spatially-Disaggregated Crop Production Statistics Data for 2020 Version 2.0 Release 2
+  title: Global Spatially-Disaggregated Crop Production Statistics Data for 2020 Version 2.0 Release 2
   authors:
     - International Food Policy Research Institute (IFPRI)
   date: "2026"
@@ -139,8 +138,7 @@ dimensions:
 
   - name: technology
     type: technology
-    description:
-      MAPSPAM production system code. Full labels are provided in the dimension codes asset.
+    description: MAPSPAM production system code. Full labels are provided in the dimension codes asset.
     values: [all, irrigated, rainfed]
 
 variables:
