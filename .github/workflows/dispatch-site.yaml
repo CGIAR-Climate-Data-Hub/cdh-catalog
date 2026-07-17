@@ -20,7 +20,7 @@ jobs:
     with:
       path: records
       changed-only: false
-      tooling-ref: v0.1.0
+      tooling-ref: v0.2.0
 
   dispatch:
     needs: validate
