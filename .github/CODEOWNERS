@@ -1,0 +1,9 @@
+# Later rules override earlier ones; the last matching pattern wins.
+# Enforcement requires the "Require review from Code Owners" branch
+# protection rule on main (Settings -> Branches / Rulesets).
+
+# Default owner for everything (workflows, docs, config)
+* @bjyberg
+
+# Metadata records: any listed owner can approve submissions
+/records/ @bjyberg @peetmate @anaguilarar
