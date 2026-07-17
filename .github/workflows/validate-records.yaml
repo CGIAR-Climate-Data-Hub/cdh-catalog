@@ -17,4 +17,4 @@ jobs:
     with:
       path: records
       changed-only: true
-      tooling-ref: v0.1.0
+      tooling-ref: v0.2.0
