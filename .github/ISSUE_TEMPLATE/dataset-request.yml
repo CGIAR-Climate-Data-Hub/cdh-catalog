@@ -1,0 +1,73 @@
+name: Dataset request
+description: Request that a dataset be added to the Climate Data Hub catalog
+title: "[Dataset request]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a dataset. Please share what you know; choose **Unknown** where details still need to be confirmed.
+
+  - type: input
+    id: dataset
+    attributes:
+      label: Dataset
+      description: What is the dataset's name or working title?
+      placeholder: e.g. Gridded Livestock of the World 4
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Briefly describe the dataset, including what it measures and its geographic and temporal coverage.
+      placeholder: What does the dataset contain, where does it apply, and what time period does it cover?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: access
+    attributes:
+      label: Access conditions
+      description: What access conditions currently apply?
+      options:
+        - Public
+        - Restricted or approval required
+        - Licensed or paid
+        - Internal only
+        - Unknown
+    validations:
+      required: true
+
+  - type: input
+    id: format
+    attributes:
+      label: Format
+      description: What format or formats is the dataset currently available in?
+      placeholder: e.g. GeoTIFF, NetCDF, CSV, Zarr, or Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case
+      description: How would this dataset be used, and who would benefit from it?
+      placeholder: Describe the problem, analysis, product, or audience this dataset would support.
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Add anything else that may help, such as the data owner, license, citation, limitations, or dependencies.
+
+  - type: input
+    id: location
+    attributes:
+      label: Current location or URL
+      description: Provide at least one actionable location where the dataset can be found, such as its source page, download URL, repository, or storage path.
+      placeholder: https://example.org/dataset, s3://bucket/path, or an accessible internal path
+    validations:
+      required: true

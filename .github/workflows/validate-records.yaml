@@ -1,9 +1,9 @@
 name: Validate records
 
 on:
+  # Required workflows must run for every PR so GitHub receives a status.
+  # `changed-only` below skips record validation when records/ is unchanged.
   pull_request:
-    paths:
-      - "records/**"
 
 permissions:
   contents: read
