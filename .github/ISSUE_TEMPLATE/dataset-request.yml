@@ -48,15 +48,6 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: storage
-    attributes:
-      label: Storage
-      description: What platform or system currently stores the data?
-      placeholder: e.g. S3, CKAN, Google Drive, local server, or Unknown
-    validations:
-      required: true
-
   - type: textarea
     id: use_case
     attributes:
