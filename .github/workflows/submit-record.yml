@@ -1,0 +1,123 @@
+name: Submit metadata record
+
+# Requires the SUBMIT_PR_TOKEN secret: a fine-grained PAT for this repo with "Contents:
+# read and write" and "Pull requests: read and write" permission. The built-in
+# GITHUB_TOKEN cannot be used for the PR-creation step below — GitHub does not run
+# pull_request-triggered workflows (Validate records) on PRs opened with GITHUB_TOKEN,
+# which would silently skip validation on every submission. See
+# https://github.com/peter-evans/create-pull-request#action-inputs ("Important note").
+
+on:
+  workflow_dispatch:
+    inputs:
+      record_id:
+        description: Record ID slug (e.g. chirps-daily-v1.0)
+        required: true
+        type: string
+      yaml_content:
+        description: Full YAML content of the metadata record
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # record_id reaches this workflow straight from the dispatch API, not just through
+      # the app's own form — anyone with dispatch access can call it directly and skip
+      # the app's client-side slug check. It gets used in a filesystem path and a branch
+      # name below, so a value like "../../.github/workflows/evil" must be rejected here,
+      # before it reaches either. Routing it through env: (as every step here does)
+      # protects against script injection, but not against a hostile path — that needs
+      # its own check.
+      - name: Validate record_id shape
+        env:
+          RECORD_ID: ${{ inputs.record_id }}
+        run: |
+          if [[ ! "$RECORD_ID" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+            echo "::error::record_id '${RECORD_ID}' is not a lowercase-kebab-case slug"
+            exit 1
+          fi
+
+      - name: Write record file
+        env:
+          YAML_CONTENT: ${{ inputs.yaml_content }}
+          RECORD_ID: ${{ inputs.record_id }}
+        run: |
+          mkdir -p "records/${RECORD_ID}"
+          printf '%s\n' "${YAML_CONTENT}" > "records/${RECORD_ID}/${RECORD_ID}.yaml"
+
+      - name: Format YAML with Prettier
+        env:
+          RECORD_ID: ${{ inputs.record_id }}
+        run: |
+          npx --yes prettier@3 --write "records/${RECORD_ID}/${RECORD_ID}.yaml"
+
+      # Belt to the PR-triggered check's braces: that check depends on SUBMIT_PR_TOKEN
+      # being configured correctly, so a broken or malformed record still fails loudly
+      # here — before a PR is opened for it at all — even if the secret is missing,
+      # misscoped, or the check gets skipped for any other reason.
+      - name: Check out CDH tooling (v0.3.0)
+        uses: actions/checkout@v4
+        with:
+          repository: CGIAR-Climate-Data-Hub/cdh-metadata-standard
+          ref: v0.3.0
+          path: _cdh-tooling
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: _cdh-tooling/package-lock.json
+
+      - name: Install CDH tooling
+        working-directory: _cdh-tooling
+        run: npm ci
+
+      - name: Validate record against CDH v0.3.0 profile
+        env:
+          RECORD_ID: ${{ inputs.record_id }}
+        run: |
+          node _cdh-tooling/scripts/validate-yaml.js \
+            --profile _cdh-tooling/spec/schemas/profiles/cdh.schema.json \
+            "records/${RECORD_ID}/${RECORD_ID}.yaml"
+
+      - name: Create pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.SUBMIT_PR_TOKEN }}
+          branch: submit/${{ inputs.record_id }}
+          commit-message: "feat: add ${{ inputs.record_id }} metadata record"
+          title: "feat: add ${{ inputs.record_id }}"
+          body: |
+            ## New CDH metadata record
+
+            **Record ID:** `${{ inputs.record_id }}`
+
+            Submitted via [CDH Metadata Generator](https://anaguilarar.github.io/CDH-metadata-app/).
+
+            ---
+            CI validates this record against the CDH v0.3.0 profile schema automatically.
+            Check the **Validate records** check below for results.
+          labels: submission
+          delete-branch: false
+
+      - name: Write job summary
+        env:
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+          RECORD_ID: ${{ inputs.record_id }}
+        run: |
+          echo "## Submission: \`${RECORD_ID}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${PR_URL}" ]; then
+            echo "Pull request created: ${PR_URL}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Pull request already exists for this record ID." >> $GITHUB_STEP_SUMMARY
+          fi
