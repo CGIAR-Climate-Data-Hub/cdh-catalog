@@ -1,0 +1,128 @@
+# yaml-language-server: $schema=../../spec/schemas/profiles/cdh.schema.json
+$schema: >-
+  https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.3.0
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/cdh/schema.json
+created: "2026-08-25"
+updated: "2026-08-27"
+id: chirts-era5-daily
+title: CHIRTS-ERA5 Daily
+description: >-
+  CHIRTS-ER5 daily provides global, high-resolution (0.05°) daily maximum and minimum 2-meter air
+  temperature estimates from 1983 to present. It blends ERA5 reanalysis with station observations
+  using the CHIRTS algorithm, producing a consistent long-term record suitable for climate trend
+  analysis, heat-stress monitoring, and agricultural modeling.
+resource_type: dataset
+keywords:
+  - temperature
+  - daily
+  - era5
+  - station-blended
+  - global
+  - climate-hazards-center
+license: CC-BY-4.0
+access: public
+contact:
+  - organization: UCSB Climate Hazards Center
+    roles:
+      - licensor
+      - producer
+    url: https://chc.ucsb.edu
+    email: chc-help@geog.ucsb.edu
+    name: Climate Hazards Center UC Santa Barbara
+doi: 10.15780/G2F08J
+citation:
+  title: CHIRTS-ERA5 Data Repository
+  authors:
+    - Verdin, A.
+    - Funk, C.
+    - Peterson, P.
+    - Landsfeld, M.
+    - Tuholske, C.
+    - Grace, K.
+  date: "2025"
+  publisher: UCSB Climate Hazards Center
+  url: https://doi.org/10.15780/G2F08J
+related_publications:
+  - citation:
+      title: >-
+        Development and validation of the CHIRTS-daily quasi-global high-resolution daily
+        temperature data set
+      authors:
+        - Verdin, A.
+        - Funk, C.
+        - Peterson, P.
+        - Landsfeld, M.
+        - Tuholske, C.
+        - Grace, K.
+      date: "2020"
+      publisher: Scientific Data
+      url: https://doi.org/10.1038/s41597-020-00643-7
+    doi: 10.1038/s41597-020-00643-7
+  - citation:
+      title: >-
+        A High-Resolution 1983-2016 Tmax Climate Data Record Based on Infrared Temperatures and
+        Stations by the Climate Hazard Center
+      authors:
+        - Funk, C.
+        - Peterson, P.
+        - Peterson, S.
+        - Shukla, S.
+        - Davenport, F.
+        - Michaelsen, J.
+        - Knapp, K.R.
+        - Landsfeld, M.
+        - Husak, G.
+        - Harrison, L.
+        - Rowland, J.
+        - Budde, M.
+        - Meiburg, A.
+        - Dinku, T.
+        - Pedreros, D.
+        - Mata, N.
+      date: "2019"
+      publisher: Journal of Climate
+      url: https://doi.org/10.1175/JCLI-D-18-0698.1
+    doi: 10.1175/JCLI-D-18-0698.1
+  - citation:
+      title: >-
+        High resolution climate change observations and projections for the evaluation of
+        heat-related extremes
+      authors:
+        - Williams, E.
+        - Funk, C.
+        - Peterson, P.
+        - Tuholske, C.
+      date: "2024"
+      publisher: Scientific Data
+      url: https://doi.org/10.1038/s41597-024-03074-w
+    doi: 10.1038/s41597-024-03074-w
+spatial:
+  bbox:
+    - -180
+    - -90
+    - 180
+    - 90
+  crs: EPSG:4326
+  geography:
+    - world
+  resolution:
+    - type: xy
+      unit: degree
+      value: 0.05
+      label: 0.05° (~5 km at equator)
+temporal:
+  start_date: "1983-01-01"
+  end_date: null
+data:
+  - name: geotiffs
+    locations:
+      - url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/
+        title: HTTPS
+    description: Daily maximum and minimum temperature GeoTIFF files (Tmax/Tmin)
+    media_type: image/tiff; application=geotiff
+    nodata: -9999
+cdh:
+  domain:
+    - climate
