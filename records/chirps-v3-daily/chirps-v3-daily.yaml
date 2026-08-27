@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=../../spec/schemas/profiles/cdh.schema.json
+$schema: >-
+  https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.3.0
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/cdh/schema.json
+  - >-
+    https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/datacube/schema.json
+created: "2026-08-27"
+updated: "2026-08-27"
+id: chirps-v3-daily
+title: CHIRPS v3 Daily Precipitation
+version: v3.0
+description: >
+  CHIRPS (Climate Hazards center InfraRed Precipitation with Stations), version 3, is a quasi-global
+  daily precipitation dataset produced by the Climate Hazards Center (UC Santa Barbara), blending
+  0.05° satellite infrared cold-cloud-duration imagery with in-situ station observations. It spans
+  1981 to near-present, covering 50°S–50°N at all longitudes, and is widely used for drought
+  monitoring, hydrological modeling, and trend/seasonal analysis. Values represent daily accumulated
+  precipitation in millimeters.
+resource_type: dataset
+keywords:
+  - precipitation
+  - rainfall
+  - CHIRPS
+  - satellite
+  - gridded
+  - daily
+  - drought monitoring
+license: CC-BY-4.0
+access: public
+contact:
+  - organization: Climate Hazards Center, UC Santa Barbara
+    roles:
+      - licensor
+      - producer
+    url: https://www.chc.ucsb.edu/
+    email: chc-help@geog.ucsb.edu
+doi: 10.1038/sdata.2015.66
+citation:
+  title: >-
+    The climate hazards infrared precipitation with stations—a new environmental record for
+    monitoring extremes
+  authors:
+    - Funk, C.
+    - Peterson, P.
+    - Landsfeld, M.
+    - Pedreros, D.
+    - Verdin, J.
+    - Shukla, S.
+    - Husak, G.
+    - Rowland, J.
+    - Harrison, L.
+    - Hoell, A.
+    - Michaelsen, J.
+  date: "2015"
+  publisher: Scientific Data
+  url: https://doi.org/10.1038/sdata.2015.66
+spatial:
+  bbox:
+    - -180
+    - -50
+    - 180
+    - 50
+  crs: EPSG:4326
+  geography:
+    - world
+  resolution:
+    - type: xy
+      unit: degree
+      value: 0.05
+      label: 0.05° (~5 km at equator)
+temporal:
+  start_date: "1981-01-01"
+  end_date: null
+data:
+  - name: geotiff
+    locations:
+      - url: https://data.chc.ucsb.edu/products/CHIRPS-3.0/
+        title: HTTPS
+    processing_steps:
+      - source
+    description: Daily GeoTIFF files, one per day
+    nodata: -9999
+    media_type: image/tiff; application=geotiff
+processing:
+  - id: source
+    description: Original CHIRPS v3 daily release from the Climate Hazards Center
+    derived_from:
+      - url: https://data.chc.ucsb.edu/products/CHIRPS-3.0/
+        title: CHIRPS-3.0 data portal
+cdh:
+  domain:
+    - climate
+    - hydrology
+dimensions:
+  - name: time
+    type: temporal
+    description: Daily time step of the precipitation record
+    values:
+      - "1981-01-01"
+    step: P1D
+variables:
+  - name: precipitation
+    description: Daily accumulated precipitation
+    data_type: float32
+    unit: mm
+    dimensions:
+      - time
+    nodata: -9999
