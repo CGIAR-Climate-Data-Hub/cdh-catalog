@@ -102,6 +102,12 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
+          # Only ever stage the record itself — the workspace also holds the
+          # _cdh-tooling checkout (used just to run validate-yaml.js), which
+          # `create-pull-request`'s default `git add -A` would otherwise sweep
+          # in as a broken submodule gitlink (it has its own .git, no
+          # .gitmodules entry).
+          add-paths: records
           branch: submit/${{ inputs.record_id }}
           commit-message: "feat: add ${{ inputs.record_id }} metadata record"
           title: "feat: add ${{ inputs.record_id }}"
