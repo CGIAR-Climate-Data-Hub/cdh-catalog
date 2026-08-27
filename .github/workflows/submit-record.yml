@@ -1,9 +1,9 @@
 name: Submit metadata record
 
-# Requires the SUBMIT_PR_TOKEN secret: a fine-grained PAT for this repo with "Contents:
-# read and write" and "Pull requests: read and write" permission. The built-in
-# GITHUB_TOKEN cannot be used for the PR-creation step below — GitHub does not run
-# pull_request-triggered workflows (Validate records) on PRs opened with GITHUB_TOKEN,
+# Requires the APP_ID and APP_PRIVATE_KEY secrets: a GitHub App installed on this repo
+# with "Contents: read and write" and "Pull requests: read and write" permission. The
+# built-in GITHUB_TOKEN cannot be used for the PR-creation step below — GitHub does not
+# run pull_request-triggered workflows (Validate records) on PRs opened with GITHUB_TOKEN,
 # which would silently skip validation on every submission. See
 # https://github.com/peter-evans/create-pull-request#action-inputs ("Important note").
 
@@ -88,11 +88,20 @@ jobs:
             --profile _cdh-tooling/spec/schemas/profiles/cdh.schema.json \
             "records/${RECORD_ID}/${RECORD_ID}.yaml"
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: cdh-catalog
+
       - name: Create pull request
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.SUBMIT_PR_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           branch: submit/${{ inputs.record_id }}
           commit-message: "feat: add ${{ inputs.record_id }} metadata record"
           title: "feat: add ${{ inputs.record_id }}"
