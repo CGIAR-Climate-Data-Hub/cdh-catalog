@@ -2,9 +2,9 @@ name: Process submitted record
 
 # Turns a "Submit metadata record" issue into a validated pull request, so a contributor
 # never needs their own token or write access to this repo — anyone can open an issue on
-# a public repo. Requires the SUBMIT_PR_TOKEN secret (see submit-record.yml's header):
-# GITHUB_TOKEN cannot be used for the PR-creation step, or the Validate records check
-# would silently never run on the PR this workflow opens.
+# a public repo. Requires the APP_ID and APP_PRIVATE_KEY secrets (see submit-record.yml's
+# header): GITHUB_TOKEN cannot be used for the PR-creation step, or the Validate records
+# check would silently never run on the PR this workflow opens.
 
 on:
   issues:
@@ -137,12 +137,22 @@ jobs:
           fi
           echo "ok=true" >> "$GITHUB_OUTPUT"
 
+      - name: Generate GitHub App token
+        if: steps.guard.outputs.ok == 'true' && steps.validate.outputs.ok == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: cdh-catalog
+
       - name: Create pull request
         if: steps.guard.outputs.ok == 'true' && steps.validate.outputs.ok == 'true'
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.SUBMIT_PR_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           branch: submit/${{ steps.guard.outputs.record_id }}
           commit-message: "feat: add ${{ steps.guard.outputs.record_id }} metadata record"
           title: "feat: add ${{ steps.guard.outputs.record_id }}"
