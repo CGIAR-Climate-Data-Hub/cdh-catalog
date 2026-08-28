@@ -254,9 +254,9 @@ data:
     file_size: 500 MB
   - name: cogs
     locations:
-      - url: https://digital-atlas.s3.amazonaws.com/cdh/data/mapspam2020-v2r2/cogs/
+      - url: https://digital-atlas.s3.amazonaws.com/cdh/data/mapspam2020-v2r2/cog/
         title: HTTPS
-      - url: s3://digital-atlas/cdh/data/mapspam-2020-v2r2/cogs/
+      - url: s3://digital-atlas/cdh/data/mapspam-2020-v2r2/cog/
         title: S3
     href_template: "spam2020-{technology}-{variable}.tif"
     processing_steps: [cloud-optimize]
