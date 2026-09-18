@@ -1,0 +1,139 @@
+# CDH v0.3.0 FEDERATED record - the Atlas cites this index but does not host it.
+# Source deliberately CPC/ERSSTv6, NOT the HadISST-based series - see the note.
+$schema: https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.3.0
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/datacube/schema.json
+
+id: enso-driver-dmi
+title: Indian Ocean Dipole Mode Index (DMI, NOAA CPC / ERSSTv6)
+description: >
+  Monthly Dipole Mode Index for the Indian Ocean as published by the NOAA Climate Prediction Center:
+  the sea-surface-temperature anomaly of the western tropical Indian Ocean (50E-70E, 10S-10N) minus
+  that of the south-eastern tropical Indian Ocean (90E-110E, 10S-0), computed from ERSSTv6 against a
+  1991-2020 climatology. A federated record - the Adaptation Atlas cites this index but does not host
+  or redistribute it.
+resource_type: dataset
+license: CC0-1.0 # work of the US Government; NCEI records "no constraints on data access or use" for ERSST
+keywords:
+  [
+    indian ocean dipole,
+    iod,
+    dmi,
+    sea surface temperature,
+    climate index,
+    ersst,
+    seasonal forecasting,
+  ]
+
+note: >
+  SOURCE CHOICE IS DELIBERATE. The widely cited DMI series served by NOAA PSL is computed from
+  HadISST, which is Crown Copyright, Met Office, released under the UK Non-Commercial Government
+  Licence - downloads permitted for private study and scientific research, any other use requiring a
+  licence from the Met Office IPR officer. That is incompatible with the open licences Adaptation
+  Atlas products carry, so this record uses the CPC ERSSTv6 series instead, which is a work of the US
+  Government with no constraints on access or use.
+  The swap is not only a licensing fix. CPC computes RONI (record enso-driver-roni) from the same
+  ERSSTv6 reconstruction against the same 1991-2020 base period, so pairing CPC DMI with CPC RONI
+  puts both drivers on one SST basis and one climatology. Pairing HadISST DMI with ERSSTv6 RONI does
+  not, and mixing reconstructions is the same class of error as mixing RONI with the raw Nino 3.4
+  anomaly.
+  VALUES DIFFER FROM THE HadISST SERIES. A different SST reconstruction and a different climatology
+  produce a different series, not a relabelled one. Any analysis that selected analogue seasons from
+  the HadISST-based DMI must be re-run after switching; do not splice the two.
+  COVERAGE. Monthly, 1950-01 onward, updated automatically on the first Thursday of each month; the
+  live file ran to 2026-08 when this record was written. This also resolves the staleness in the
+  KE-ENSO staging, where DMI was NULL for all of 2025 in both seasons - a gap that made 2025 unusable
+  as an analogue year and that failed SILENTLY in a z-scored analogue distance.
+  The file carries both poles (WTIO, SETIO) alongside the index, so the two legs of a dipole event
+  can be distinguished rather than inferred from the difference alone.
+
+access: public
+
+contact:
+  - organization: NOAA Climate Prediction Center
+    url: https://www.cpc.ncep.noaa.gov/products/international/ocean_monitoring/indian/IODMI/DMI_month.html
+    roles: [licensor, producer]
+  - name: Peter Steward
+    organization: Alliance of Bioversity International and CIAT
+    email: p.steward@cgiar.org
+    roles: [point-of-contact]
+
+citation:
+  title: Indian Ocean Dipole Mode Index (DMI), monthly, ERSSTv6, 1991-2020 climatology
+  authors:
+    - "NOAA Climate Prediction Center"
+  date: "2026"
+  publisher: NOAA National Weather Service, Climate Prediction Center
+  url: https://www.cpc.ncep.noaa.gov/products/international/ocean_monitoring/indian/IODMI/DMI_month.html
+
+created: "2026-09-18"
+updated: "2026-09-18"
+
+temporal:
+  start_date: "1950-01"
+  end_date: null
+
+dimensions:
+  - name: month
+    type: temporal
+    description: Calendar month of the anomaly, one row per month.
+    step: P1M
+
+variables:
+  - name: WTIO
+    dimensions: [month]
+    description: Western tropical Indian Ocean SST anomaly, averaged over 50E-70E, 10S-10N.
+    data_type: float32
+    unit: Cel
+  - name: SETIO
+    dimensions: [month]
+    description: South-eastern tropical Indian Ocean SST anomaly, averaged over 90E-110E, 10S-0.
+    data_type: float32
+    unit: Cel
+  - name: DMI
+    dimensions: [month]
+    description: Dipole Mode Index, WTIO minus SETIO. Positive is a positive IOD phase.
+    data_type: float32
+    unit: Cel
+
+processing:
+  - id: source
+    description: >
+      CPC area-averages ERSSTv6 sea-surface-temperature anomalies over the two dipole poles defined by
+      Saji and colleagues (1999), against a 1991-2020 climatology, and publishes the poles and their
+      difference as a monthly fixed-width table.
+    derived_from:
+      - title: NOAA CPC Indian Ocean Dipole Mode Index
+        url: https://www.cpc.ncep.noaa.gov/products/international/ocean_monitoring/indian/IODMI/DMI_month.html
+      - title: NOAA Extended Reconstructed Sea Surface Temperature (ERSST)
+        url: https://www.ncei.noaa.gov/products/extended-reconstructed-sst
+
+data:
+  - name: dmi-monthly
+    description: Fixed-width monthly table, columns Year, Month, WTIO, SETIO, DMI.
+    locations:
+      - url: https://www.cpc.ncep.noaa.gov/products/international/ocean_monitoring/indian/IODMI/mnth.ersstv6.clim19912020.dmi_current.txt
+        title: HTTPS
+    media_type: text/plain
+    processing_steps: [source]
+
+cdh:
+  domain: [climate]
+  usage:
+    intended_uses:
+      - Characterising Indian Ocean Dipole state when selecting analogue seasons for Kenyan seasonal outlooks.
+      - Pairing with RONI (record enso-driver-roni) on a single SST reconstruction and base period.
+    not_recommended_for:
+      - use: Splicing this series onto the HadISST-based DMI served by NOAA PSL.
+        reason: >
+          Different SST reconstruction and different climatology, so the join introduces a step
+          change that would be read as a physical signal.
+        use_instead: One source end to end; this one, which is also the openly licensed option.
+      - use: Weighting IOD and ENSO equally in an unscaled analogue distance.
+        reason: >
+          For Kenya OND the two axes have very different spread (ENSO sd about 1.179 against IOD
+          about 0.362), so an unscaled squared distance lets ENSO dominate by roughly ten to one -
+          backwards for the season IOD matters most in.
+        use_instead: Z-score each driver axis before computing distance.
