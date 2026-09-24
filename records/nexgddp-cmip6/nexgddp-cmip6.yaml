@@ -1,0 +1,228 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
+"$schema": https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: "v0.3.0"
+
+# Extensions this record uses (pinned schema URLs).
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/climate/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/datacube/schema.json
+
+# Core Metadata (required)
+id: "nexgddp-cmip6"
+title: "NexGDDP-CMIP6"
+description: >
+  ""
+license: "CC0"
+access: public
+
+resource_type: "dataset"
+
+#   keywords:
+#     - zonal statistics
+#     - term: Food security
+#       scheme: https://www.eionet.europa.eu/gemet/
+#       uri: https://www.eionet.europa.eu/gemet/en/concept/1838
+keywords: []
+note: > # Optional
+  ""
+
+# Contact Metadata (required). At least one contact MUST list licensor in roles.
+contact:
+  - name: "" # optional when organization is present; required for person-level contacts
+    roles: [licensor] # any of: licensor | producer | processor | point-of-contact | custodian
+    email: ""
+    organization: "" # required when name is present; may be used on its own
+    url: ""
+  - name: ""
+    roles: []
+    email: ""
+    organization: ""
+    url: ""
+
+# Citation Metadata (citation required unless a doi is provided)
+citation:
+  title: "" # optional - cite-as title; may differ from the top-level title
+  authors: [] # required - names in citation order
+  date: "" # required - publication date or year
+  publisher: "" # optional - data publisher/repository, or journal for articles
+  url: "" # optional
+doi: "" # conditional - if doi exists (a doi waives the citation requirement)
+related_publications: # optional
+  - citation:
+      title: ""
+      authors: []
+      date: ""
+      publisher: ""
+      url: ""
+    doi: "https://doi.org/10.7917/OFSG3345"
+
+# metadata record dates (required) - when this record was written / last changed
+created: "2026-09-24"
+updated: "2026-09-24"
+
+# Version (required) - the source's own label, or "1" when the source does not version.
+# previous_version: the version label this release supersedes (same id); omit on a first release.
+version: "v2.0"
+
+# Spatial (conditional - if data has a spatial aspect/will be in STAC)
+spatial:
+  bbox: [-180.0, -60.0, 180.0, 90.0]
+  geography: [world]
+  crs: EPSG:4326
+  resolution:
+    - type: "xy" # one of xy, x, y, point, or polygon
+      unit: "degrees"
+      value: 0.25
+      label: "0.25 degrees (~ 27.75 km)"
+
+temporal:
+  start_date: "1950-01-01"
+  end_date: "2100-12-31"
+
+# Data fields/Attributes (required)
+dimensions:
+  - name: "scenario"
+    type: scenario
+    description: "Socios-economic scenario"
+    values: ["historical", "ssp126", "ssp245", "ssp370", "ssp585"]
+  - name: "model"
+    type: model
+    description: "Climate Model"
+    values: []
+  - name: "date"
+    type: temporal
+    description: "Date"
+    step: p1d
+
+variables:
+  - name: ""
+    dimensions: []
+    # Put the stable definition here. Add the normal reading rule here too when
+    # direction matters.
+    description: ""
+    data_type: ""
+    unit: ""
+    # Put variable-specific limitations, caveats, or warnings here. Dataset-wide
+    # limitations belong in the record-level `note` field.
+    note: >
+      ""
+
+# Additional fields for searching and filtering
+cdh:
+  domain: [climate] # Required - CDH-controlled vocabulary (vocab/domain.json)
+  usage:
+    not_recommended_for:
+      - use: ""
+        reason: ""
+        use_instead: null
+
+climate:
+  mip_era: CMIP6
+  scenarios: ["historical", "ssp126", "ssp245", "ssp370", "ssp585"]
+  models:
+    - "ACCESS-CM2"
+    - "ACCESS-ESM1-5"
+    - "CESM2"
+    - "CMCC-CM2-SR5"
+    - "CNRM-CM6-1"
+    - "CNRM-ESM2-1"
+    - "BCC-CSM2-MR"
+    - "CESM2-WACCM"
+    - "CanESM5"
+    - "CMCC-ESM2"
+    - "FGOALS-g3"
+    - "GFDL-CM4_gr2"
+    - "EC-Earth3"
+    - "HadGEM3-GC31-LL"
+    - "EC-Earth3-Veg-LR"
+    - "GFDL-CM4"
+    - "GFDL-ESM4"
+    - "HadGEM3-GC31-MM"
+    - "IITM-ESM"
+    - "GISS-E2-1-G"
+    - "INM-CM5-0"
+    - "IPSL-CM6A-LR"
+    - "KIOST-ESM"
+    - "MIROC6"
+    - "MPI-ESM1-2-LR"
+    - "MRI-ESM2-0"
+    - "KACE-1-0-G"
+    - "MPI-ESM1-2-HR"
+    - "NESM3"
+    - "NorESM2-MM"
+    - "UKESM1-0-LL"
+    - "INM-CM4-8"
+    - "NorESM2-LM"
+    - "TaiESM1"
+    - "MIROC-ES2L"
+  baseline:
+    start_date: ""
+    end_date: ""
+  bias_adjustment:
+    method: null
+    reference_dataset: null
+  downscaling:
+    method: null
+    resolution: null
+
+# Data provenance / processing
+# - `processing[]` is an ordered list of steps. When provided, at least one step
+#   MUST use `id: source` and describe the original generation of the data.
+processing:
+  - id: source
+    description:
+    code:
+      url:
+      version:
+    date:
+    derived_from:
+      - url: ""
+        title: ""
+        version: "v2.0" # the source release used, as the source labels it
+  - id: icechunk
+    description: Virtual Zarr built from the source netCDF files
+    code:
+      url: "https://github.com/virtual-zarr/nex-gddp-cmip6"
+      version: "d53dfc8"
+    date: "2023-07-29"
+    derived_from:
+      - url: "https://registry.opendata.aws/nex-gddp-cmip6/"
+        version: "v2.0" # the source release used, as the source labels it
+
+# Data Urls (required)
+data:
+  - name: "Nex-GDDP CMIP6"
+    # Access locations for this asset. At least one is required. Add more
+    # entries ONLY when they point at the SAME content via a different access
+    # path (e.g., HTTPS and S3 URLs for the same file)
+    #
+    # Different content/formats (e.g., COG vs NetCDF) and services
+    # queried rather than downloaded (e.g., a GEE collection) are SEPARATE
+    # data entries, not extra locations here.
+    locations:
+      - url: "s3://nex-gddp-cmip6/"
+        title: "S3" # optional an access label (e.g., "HTTPS", "S3")
+    processing_steps: [] # conditional, if processing metadata exists / steps are needed
+    description: ""
+    nodata: ""
+    media_type: "" # provide if known
+    file_size: "" # provide if known
+
+additional_assets: # recommended - same guidelines as above data fields
+  - name: "NetCDF file Manifest"
+    locations:
+      - url: "https://nex-gddp-cmip6.s3-us-west-2.amazonaws.com/index_v2.0_md5.txt"
+        title: "HTTPS"
+    description: ""
+    media_type: ""
+    roles: []
+    file_size: ""
+
+additional_links:
+  - name: "AWS Registry of Open Data Entry"
+    rel: ""
+    url: "https://registry.opendata.aws/nex-gddp-cmip6/"
+  - name: "Source.Coop Entry"
+    rel: ""
+    url: "https://source.coop/carbonplan/virtual-datasets/nex-gddp-cmip6"
