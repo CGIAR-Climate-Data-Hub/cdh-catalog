@@ -1,0 +1,41 @@
+name: Check links
+
+# Weekly, not on PRs: external sites flap, so this reports instead of blocking.
+# Excludes and accepted status codes live in lychee.toml.
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Glob, not a directory: lychee skips .yaml when walking a folder.
+      - name: Check record links
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --config lychee.toml 'records/**/*.yaml'
+          output: lychee/out.md
+          fail: false
+
+      # Reuse one open issue so failures don't pile up a new issue each week.
+      - name: Report broken links
+        if: steps.lychee.outputs.exit_code != 0
+        run: |
+          gh label create broken-links --color d93f0b --description "Found by the weekly link check" --force
+          issue=$(gh issue list --label broken-links --state open --json number --jq '.[0].number')
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --body-file lychee/out.md
+          else
+            gh issue create --title "Broken links in catalog records" --label broken-links --body-file lychee/out.md
+          fi
