@@ -1,4 +1,7 @@
 # Link checker config for .github/workflows/check-links.yaml
+# Be gentle with publishers hosting many of the catalog's links.
+max_concurrency = 8
+
 # 403/429: some publishers block bots or rate-limit CI.
 accept = ["200..=299", "403", "429"]
 
