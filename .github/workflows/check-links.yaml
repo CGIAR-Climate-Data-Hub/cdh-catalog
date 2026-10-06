@@ -1,8 +1,11 @@
 name: Check links
 
-# Weekly, not on PRs: external sites flap, so this reports instead of blocking.
-# Excludes and accepted status codes live in lychee.toml.
+# PRs check only changed records and aren't a required check, since external sites
+# flap. The weekly run checks everything and reports to an issue. Excludes and
+# accepted status codes live in lychee.toml.
 on:
+  pull_request:
+    paths: ["records/**"]
   schedule:
     - cron: "0 6 * * 1" # Mondays 06:00 UTC
   workflow_dispatch:
@@ -18,19 +21,36 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need the base commit to diff against
 
       # Glob, not a directory: lychee skips .yaml when walking a folder.
+      # The grep keeps PR file names shell-safe, since lychee-action evals args.
+      - name: Pick records to check
+        id: files
+        run: |
+          if [ "${{ github.event_name }}" = pull_request ]; then
+            files=$(git diff --name-only --diff-filter=d \
+              ${{ github.event.pull_request.base.sha }} HEAD -- 'records/**/*.yaml' \
+              | grep -E '^records/[a-z0-9/_-]+\.yaml$' | tr '\n' ' ')
+          else
+            files="'records/**/*.yaml'"
+          fi
+          echo "list=$files" >> "$GITHUB_OUTPUT"
+
       - name: Check record links
         id: lychee
+        if: steps.files.outputs.list != ''
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress --config lychee.toml 'records/**/*.yaml'
+          args: --no-progress --config lychee.toml ${{ steps.files.outputs.list }}
           output: lychee/out.md
-          fail: false
+          fail: ${{ github.event_name == 'pull_request' }}
+          jobSummary: true
 
       # Reuse one open issue so failures don't pile up a new issue each week.
       - name: Report broken links
-        if: steps.lychee.outputs.exit_code != 0
+        if: github.event_name != 'pull_request' && steps.lychee.outputs.exit_code != 0
         run: |
           gh label create broken-links --color d93f0b --description "Found by the weekly link check" --force
           issue=$(gh issue list --label broken-links --state open --json number --jq '.[0].number')
