@@ -1,7 +1,7 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/schemas/profiles/cdh.schema.bundled.json
-cdh_schema_version: v0.4.0
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+cdh_schema_version: v0.4.1
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
 created: "2026-08-25"
 updated: "2026-10-07"
 id: chirts-era5-daily

@@ -1,10 +1,10 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
 # CHIRPS-derived monthly + seasonal precipitation COGs (KE-ENSO Explorer, Adaptation Atlas).
 # Renamed from `africa-precipitation-chirps` after review (cdh-metadata-standard#32): this is an Atlas
 # aggregation product derived from CHIRPS v3 (catalog record `chirps-v3-daily`), not a subset of it.
-cdh_schema_version: v0.4.0
+cdh_schema_version: v0.4.1
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
 
 id: africa-precipitation-monthly-seasonal
 title: Monthly and Seasonal Precipitation from CHIRPS v3 (Africa)
@@ -193,7 +193,7 @@ data:
       - format: cdh-inventory
         title: Seasonal file inventory
         locations:
-          - url: https://raw.githubusercontent.com/CGIAR-Climate-Data-Hub/cdh-catalog/main/records/africa-precipitation-monthly-seasonal/seasonal-files.csv
+          - url: ./seasonal-files.csv
         media_type: text/csv
     media_type: image/tiff; application=geotiff; profile=cloud-optimized
     processing_steps: [source, monthly-cog, seasonal-sum]

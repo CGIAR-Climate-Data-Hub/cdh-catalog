@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
 # FEDERATED record - the Atlas cites this index but does not host it.
-cdh_schema_version: v0.4.0
+cdh_schema_version: v0.4.1
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
 
 id: enso-driver-roni
 title: NOAA CPC Relative Oceanic Nino Index (RONI)
@@ -67,7 +67,7 @@ structures:
       - name: YR
         type: temporal
         description: Calendar year of the window's centre month.
-        data_type: int16
+        data_type: integer
         extent: ["1950", "2026"]
         step: P1Y
     variables:
@@ -75,7 +75,7 @@ structures:
         description: >
           Relative Oceanic Nino Index: the Nino 3.4 SST anomaly minus the tropical-mean (20S-20N)
           SST anomaly, averaged over the three-month window.
-        data_type: decimal
+        data_type: number
         unit: degC
 
 processing:

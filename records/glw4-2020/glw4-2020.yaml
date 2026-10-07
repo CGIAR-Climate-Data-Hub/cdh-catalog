@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/schemas/profiles/cdh.schema.bundled.json
-cdh_schema_version: "v0.4.0"
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+cdh_schema_version: "v0.4.1"
 
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/extensions/cdh/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/extensions/agriculture/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/agriculture/schema.json
 
 id: glw4-2020
 title: Gridded livestock density for 2020 (GLW4)
@@ -84,70 +84,53 @@ structures:
         step: 0.08333333
         unit: degree
     variables:
-      - name: buffalo
+      - &buffalo
+        name: buffalo
         nodata: "NaN"
         description: Modelled buffalo density.
         data_type: float32
         unit: "{head}/km2"
-      - name: cattle
+      - &cattle
+        name: cattle
         nodata: "NaN"
         description: Modelled cattle density.
         data_type: float32
         unit: "{head}/km2"
-      - name: chicken
+      - &chicken
+        name: chicken
         nodata: "NaN"
         description: Modelled chicken density.
         data_type: float32
         unit: "{head}/km2"
-      - name: goat
+      - &goat
+        name: goat
         nodata: "NaN"
         description: Modelled goat density.
         data_type: float32
         unit: "{head}/km2"
-      - name: pig
+      - &pig
+        name: pig
         nodata: "NaN"
         description: Modelled pig density.
         data_type: float32
         unit: "{head}/km2"
-      - name: sheep
+      - &sheep
+        name: sheep
         nodata: "NaN"
         description: Modelled sheep density.
         data_type: float32
         unit: "{head}/km2"
 
+  # Same variables as the Zarr, stored with the float32 minimum as fill value.
   - name: cogs
     dimensions: [*cell]
     variables:
-      - name: buffalo
-        nodata: -3.4028235e+38
-        description: Modelled buffalo density.
-        data_type: float32
-        unit: "{head}/km2"
-      - name: cattle
-        nodata: -3.4028235e+38
-        description: Modelled cattle density.
-        data_type: float32
-        unit: "{head}/km2"
-      - name: chicken
-        nodata: -3.4028235e+38
-        description: Modelled chicken density.
-        data_type: float32
-        unit: "{head}/km2"
-      - name: goat
-        nodata: -3.4028235e+38
-        description: Modelled goat density.
-        data_type: float32
-        unit: "{head}/km2"
-      - name: pig
-        nodata: -3.4028235e+38
-        description: Modelled pig density.
-        data_type: float32
-        unit: "{head}/km2"
-      - name: sheep
-        nodata: -3.4028235e+38
-        description: Modelled sheep density.
-        data_type: float32
-        unit: "{head}/km2"
+      - { <<: *buffalo, nodata: -3.4028235e+38 }
+      - { <<: *cattle, nodata: -3.4028235e+38 }
+      - { <<: *chicken, nodata: -3.4028235e+38 }
+      - { <<: *goat, nodata: -3.4028235e+38 }
+      - { <<: *pig, nodata: -3.4028235e+38 }
+      - { <<: *sheep, nodata: -3.4028235e+38 }
 
 cdh:
   domain: [agricultural-production]

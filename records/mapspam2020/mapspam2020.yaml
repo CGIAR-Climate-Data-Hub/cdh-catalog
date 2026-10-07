@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/schemas/profiles/cdh.schema.bundled.json
-cdh_schema_version: "v0.4.0"
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+cdh_schema_version: "v0.4.1"
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/extensions/cdh/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/extensions/climate/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.0/extensions/agriculture/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/climate/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/agriculture/schema.json
 
 id: spam2020
 title: MAPSPAM 2020
@@ -152,23 +152,27 @@ structures:
         description: MAPSPAM production system code. Full labels are provided in the dimension codes asset.
         values: [all, irrigated, rainfed]
     variables:
-      - name: physical_area
+      - &physical_area
+        name: physical_area
         nodata: "NaN"
         description: Physical crop area allocated to each grid cell.
         data_type: float32
         unit: ha
-      - name: harvested_area
+      - &harvested_area
+        name: harvested_area
         nodata: "NaN"
         description: Harvested crop area allocated to each grid cell.
         data_type: float32
         unit: ha
-      - name: production
+      - &production
+        name: production
         nodata: "NaN"
         description: Crop production allocated to each grid cell.
         data_type: float32
         unit: t
         note: Absolute quantity; regional summaries should sum values across cells.
-      - name: yield
+      - &yield
+        name: yield
         nodata: "NaN"
         description: Crop yield for each grid cell.
         data_type: float32
@@ -177,33 +181,14 @@ structures:
           Relative quantity; do not sum yield values across grid cells. Regional summaries should
           use a weighted mean with harvested_area as the weight.
 
+  # Same variables as the Zarr, stored with a -9999 fill value.
   - name: cogs
     dimensions: [*cell, *crop, *technology]
     variables:
-      - name: physical_area
-        nodata: -9999
-        description: Physical crop area allocated to each grid cell.
-        data_type: float32
-        unit: ha
-      - name: harvested_area
-        nodata: -9999
-        description: Harvested crop area allocated to each grid cell.
-        data_type: float32
-        unit: ha
-      - name: production
-        nodata: -9999
-        description: Crop production allocated to each grid cell.
-        data_type: float32
-        unit: t
-        note: Absolute quantity; regional summaries should sum values across cells.
-      - name: yield
-        nodata: -9999
-        description: Crop yield for each grid cell.
-        data_type: float32
-        unit: t ha-1
-        note: >
-          Relative quantity; do not sum yield values across grid cells. Regional summaries should
-          use a weighted mean with harvested_area as the weight.
+      - { <<: *physical_area, nodata: -9999 }
+      - { <<: *harvested_area, nodata: -9999 }
+      - { <<: *production, nodata: -9999 }
+      - { <<: *yield, nodata: -9999 }
 
 cdh:
   domain: [agricultural-production]
