@@ -189,6 +189,7 @@ data:
       - url: s3://digital-atlas/domain=climate/type=observational/source=chirps-chirts-era5/region=africa/processing=seasonal/
         title: S3
     # Not every season x year exists, so the files are listed rather than templated.
+    # The CSV puts href last so the link checker reads the URL, not the whole row.
     file_index:
       - format: cdh-inventory
         title: Seasonal file inventory
