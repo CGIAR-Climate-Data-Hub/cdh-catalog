@@ -1,6 +1,5 @@
 # yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
-# CHIRPS-derived monthly + seasonal precipitation COGs (KE-ENSO Explorer, Adaptation Atlas).
-# aggregation product derived from CHIRPS v3 (catalog record `chirps-v3-daily`)
+# CHIRPS v3 monthly Africa rewritten as COGs, plus seasonal sums derived from them (KE-ENSO Explorer, Adaptation Atlas).
 cdh_schema_version: v0.4.1
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
@@ -12,12 +11,13 @@ series:
   name: Africa Agriculture Adaptation Atlas
   url: https://adaptationatlas.cgiar.org/
 description: >
-  Total precipitation (PTOT) aggregated from CHIRPS v3.0 and delivered as per-pixel monthly Cloud
-  Optimized GeoTIFFs and per-year rolling 3-month (seasonal) sums over Africa, 1981 to present.
-  This is the rainfall backbone of the KE-ENSO Explorer's seasonal/ENSO analysis: the twelve
-  seasonal windows (JFM, FMA, ..., DJF) are the tri-month sums the notebook compares against ENSO
-  phase and against the drought (SPEI), vegetation (NDVI) and flood layers. A derived aggregation
-  product, not a redistribution of the CHIRPS daily archive.
+  Total precipitation (PTOT) from the CHIRPS v3.0 monthly Africa product, delivered as per-pixel
+  monthly Cloud Optimized GeoTIFFs and per-year rolling 3-month (seasonal) sums, 1981 to present.
+  The monthly files hold the same values as CHIRPS on the same 0.05° grid, with the -9999 sentinel
+  masked and overviews added; the seasonal sums are derived from them. This is the rainfall
+  backbone of the KE-ENSO Explorer's seasonal/ENSO analysis: the twelve seasonal windows (JFM,
+  FMA, ..., DJF) are the tri-month sums the notebook compares against ENSO phase and against the
+  drought (SPEI), vegetation (NDVI) and flood layers.
 resource_type: dataset
 license: CC-BY-4.0 # Atlas-processed COGs; CHIRPS source is public domain
 attribution: Derived from CHIRPS v3, Climate Hazards Center, UC Santa Barbara.
@@ -146,23 +146,23 @@ structures:
 
 processing:
   - id: source
-    description: CHIRPS v3.0 quasi-global daily/monthly precipitation (station + infrared blend).
+    description: CHIRPS v3.0 monthly precipitation totals, Africa window (station + infrared blend).
     derived_from:
-      - title: CHIRPS v3.0 data portal (Climate Hazards Center)
-        url: https://data.chc.ucsb.edu/products/CHIRPS/v3.0/
+      - title: CHIRPS v3.0 monthly Africa GeoTIFFs (Climate Hazards Center)
+        url: https://data.chc.ucsb.edu/products/CHIRPS/v3.0/monthly/africa/tifs/
         version: v3.0
-      - title: CDH catalog record chirps-v3-daily
-        id: chirps-v3-daily
   - id: monthly-cog
-    description: Monthly PTOT over the Africa window, written as COGs with internal overviews.
+    description: >
+      Each monthly GeoTIFF rewritten as a COG with internal overviews, -9999 masked to NaN. Same
+      grid and values as the source.
     code:
-      url: https://github.com/AdaptationAtlas/hazards_prototype
-      version: R/observational
+      url: https://github.com/AdaptationAtlas/hazards_prototype/blob/develop/R/observational/1_get_chirps_chirts.R
+      version: "4d89638"
   - id: seasonal-sum
     description: Per-year tri-month sums over the twelve seasonal windows, written as COGs with overviews.
     code:
-      url: https://github.com/AdaptationAtlas/hazards_prototype
-      version: R/observational/5b_make_obs_seasonal_rasters.R
+      url: https://github.com/AdaptationAtlas/hazards_prototype/blob/develop/R/observational/5b_make_obs_seasonal_rasters.R
+      version: "c4c3de2"
 
 data:
   - name: monthly
