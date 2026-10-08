@@ -3,7 +3,7 @@ cdh_schema_version: v0.4.1
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
 created: "2026-08-25"
-updated: "2026-10-07"
+updated: "2026-10-08"
 id: chirts-era5-daily
 title: CHIRTS-ERA5 Daily
 version: "1"
@@ -162,7 +162,7 @@ structures:
         name: time
         type: temporal
         description: Day of the temperature estimate; the {time} token of the daily files.
-        extent: ["1983-01-01", "2026-10-02"]
+        extent: ["1983-01-01", "2026-10-03"] # files present as of `updated`; may lag the data, never lead it
         step: P1D
     variables:
       - name: Tmax

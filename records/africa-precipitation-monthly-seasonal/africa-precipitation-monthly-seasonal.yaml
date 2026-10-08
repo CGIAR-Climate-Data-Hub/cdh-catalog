@@ -97,7 +97,7 @@ related_publications:
       url: https://doi.org/10.1038/sdata.2015.66
 
 created: "2026-08-28"
-updated: "2026-10-07"
+updated: "2026-10-08"
 
 spatial:
   bbox: [-20.0, -40.0, 55.0, 40.0] # Africa (verified vs live COG: 1500 x 1600 cells at 0.05 deg)
@@ -121,7 +121,7 @@ structures:
       - name: time
         type: temporal
         description: Month of the monthly totals (YYYY-MM); the {time} token of the monthly asset.
-        extent: ["1981-01", "2026-04"]
+        extent: ["1981-01", "2026-04"] # files present as of `updated`; may lag the data, never lead it
         step: P1M
     variables:
       - &ptot
