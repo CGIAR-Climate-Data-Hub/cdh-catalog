@@ -44,7 +44,7 @@ citation:
     - organization: NOAA Climate Prediction Center
   date: "2026"
   publisher: NOAA National Weather Service, Climate Prediction Center
-  url: https://www.cpc.ncep.noaa.gov/data/indices/RONI.ascii.txt
+  url: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/
 
 created: "2026-09-18"
 updated: "2026-10-08"
@@ -77,15 +77,6 @@ structures:
         data_type: number
         unit: degC
 
-processing:
-  - id: source
-    description: >
-      CPC computes the Nino 3.4 SST anomaly and subtracts the tropical-mean (20S-20N) SST anomaly,
-      publishing overlapping three-month means as a fixed-width ASCII table.
-    derived_from:
-      - title: NOAA CPC RONI
-        url: https://www.cpc.ncep.noaa.gov/data/indices/RONI.ascii.txt
-
 data:
   - name: roni-ascii
     description: Fixed-width ASCII table, one row per overlapping three-month window.
@@ -93,7 +84,6 @@ data:
       - url: https://www.cpc.ncep.noaa.gov/data/indices/RONI.ascii.txt
         title: HTTPS
     media_type: text/plain
-    processing_steps: [source]
 
 cdh:
   domain: [climate]
