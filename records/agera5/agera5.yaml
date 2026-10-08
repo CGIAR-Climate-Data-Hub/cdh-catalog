@@ -114,8 +114,7 @@ structures:
       - &time
         name: time
         type: temporal
-        description: Day, midnight to midnight local time (00-00LT). Trails real time by about a week.
-        extent: ["1979-01-01", "2026-09-30"]
+        description: Day, midnight to midnight local time (00-00LT). Grows daily, about a week behind present.
         step: P1D
     variables:
       - &Temperature_Air_2m_Max_24h
