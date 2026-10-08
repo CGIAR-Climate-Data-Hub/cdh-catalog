@@ -1,0 +1,1136 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# FEDERATED record - NASA serves the data; the Hub does not host a copy.
+cdh_schema_version: v0.4.1
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/climate/schema.json
+
+id: nasa-power-daily
+title: NASA POWER daily meteorology, solar radiation and precipitation
+version: "10.0.0"
+series:
+  name: NASA POWER
+  url: https://power.larc.nasa.gov/
+description: >
+  Daily global weather, solar radiation and precipitation for agriculture and energy, 1981 to
+  present, from NASA's Prediction Of Worldwide Energy Resources (POWER) project. POWER repackages
+  NASA models and satellite products into one analysis-ready, free, no-login service: meteorology
+  (temperature, humidity, wind, pressure, soil moisture and temperature, snow) from the MERRA-2
+  reanalysis on a 0.5° x 0.625° grid, with GEOS-IT for the last weeks that MERRA-2 has not yet
+  covered; solar and longwave radiation from CERES SYN1deg on a 1° grid, with FLASHFlux for the
+  most recent days; and satellite precipitation from GPM IMERG on a 0.1° grid. The primary access
+  is the set of Zarr stores on AWS Open Data, one per source, each chunked either for time series
+  at points or for maps. The POWER API is the alternative: it stitches the sources into one series
+  per parameter for a point or a small region, in JSON, CSV or NetCDF.
+resource_type: dataset
+license: CC-BY-4.0
+attribution: >
+  These data were obtained from the National Aeronautics and Space Administration (NASA) Langley
+  Research Center (LaRC) Prediction of Worldwide Energy Resource (POWER) Project funded through the
+  NASA Earth Science/Applied Science Program.
+
+access: public
+
+keywords:
+  - NASA POWER
+  - MERRA-2
+  - GEOS-IT
+  - CERES
+  - IMERG
+  - reanalysis
+  - daily weather
+  - solar radiation
+  - agrometeorology
+  - crop modelling
+  - analysis-ready
+  - zarr
+
+note: >
+  Each source is its own Zarr store with its own grid and start date; a series from 1981 to today
+  joins MERRA-2 (to about a month ago) with GEOS-IT (2022 to a few days ago), and SYN1deg (to about
+  three months ago) with FLASHFlux (2024 to a few days ago). The API does this join for you. Days
+  are local solar time (LST) in the stores listed here; every store except IMERG also exists in a
+  UTC version with "_utc" in place of "_lst" in the name. Time axes are allocated to 2029-12-31 and
+  are NaN past the last available day; check last_available.json in the bucket or slice by date
+  rather than trusting the axis end. Units differ between routes: the Zarr stores keep source
+  units (radiation in W m-2 daily means, temperature in °C, precipitation in mm per day), while the
+  API's AG community returns radiation in MJ m-2 per day and uses -999 for missing. Values are
+  model and satellite estimates, not station observations: MERRA-2 cells are about 55 km, so
+  expect bias at single sites and in complex terrain, especially for precipitation; prefer IMERG
+  or a station-blended product such as CHIRPS for rainfall totals.
+
+contact:
+  - organization: NASA Langley Research Center, POWER Project
+    roles: [producer, licensor, point-of-contact]
+    url: https://power.larc.nasa.gov/
+    email: larc-power-project@mail.nasa.gov
+  - name: Brayden Youngberg
+    roles: [maintainer]
+    email: b.youngberg@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
+
+citation:
+  title: NASA POWER Data v10
+  authors:
+    - organization: NASA Prediction of Worldwide Energy Resources (POWER) Project
+    - family: Stackhouse
+      given: Paul W.
+      orcid: https://orcid.org/0000-0002-2047-310X
+    - family: Patadia
+      given: Falguni
+  date: "2025"
+  publisher: NASA Langley Research Center
+  url: https://power.larc.nasa.gov/
+
+created: "2026-10-08"
+updated: "2026-10-08"
+
+spatial:
+  bbox: [-180.0, -90.0, 180.0, 90.0]
+  geography: [world]
+  crs: EPSG:4326
+
+temporal:
+  start_date: "1981-01-01"
+  end_date: null
+  update_frequency: daily
+
+# One data dictionary per source. GEOS-IT carries the MERRA-2 variables minus two, so it reuses
+# them with merge keys. Units are as stored in the Zarr; the API converts some (see note).
+structures:
+  - name: merra2
+    dimensions:
+      - &lat_merra2
+        name: lat
+        type: y
+        description: Latitude of the cell centre, -90 to 90.
+        step: 0.5
+        unit: degree
+      - &lon_merra2
+        name: lon
+        type: x
+        description: Longitude of the cell centre, -180 to 179.375.
+        step: 0.625
+        unit: degree
+      - &time_lst
+        name: time
+        type: temporal
+        description: >
+          Day, midnight to midnight local solar time (LST) at the cell. The axis is allocated to
+          2029-12-31; days past the last available date are all NaN.
+        step: P1D
+    variables:
+      - &CDD0
+        name: CDD0
+        description: The daily accumulation of degrees above a 0-degree-Celsius threshold when the daily mean temperature is above the threshold.
+        data_type: float32
+        unit: degC d
+        nodata: NaN
+      - &CDD10
+        name: CDD10
+        description: The daily accumulation of degrees above a 10-degree-Celsius threshold when the daily mean temperature is above the threshold.
+        data_type: float32
+        unit: degC d
+        nodata: NaN
+      - &CDD18_3
+        name: CDD18_3
+        description: The daily accumulation of degrees above an 18.3-degree-Celsius threshold when the daily mean temperature is above the threshold.
+        data_type: float32
+        unit: degC d
+        nodata: NaN
+      - &DISPH
+        name: DISPH
+        description: The height at which the mean velocity is zero due to large obstacles such as buildings/canopy.
+        data_type: float32
+        unit: m
+        nodata: NaN
+      - &EVLAND
+        name: EVLAND
+        description: The evaporation over land at the surface of the earth.
+        data_type: float32
+        unit: mm d-1
+        nodata: NaN
+      - &EVPTRNS
+        name: EVPTRNS
+        description: The evapotranspiration energy flux at the surface of the earth.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - &FROST_DAYS
+        name: FROST_DAYS
+        description: A frost day occurs when the 2m temperature cools to the dew point temperature and both are less than 0 C or 32 F.
+        data_type: float32
+        unit: d
+        nodata: NaN
+      - &FRSEAICE
+        name: FRSEAICE
+        description: The fraction of ocean covered by sea ice.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - &FRSNO
+        name: FRSNO
+        description: The fraction of land covered by snow.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - &GWETPROF
+        name: GWETPROF
+        description: The amount of water and water vapor present in the soil.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - &GWETROOT
+        name: GWETROOT
+        description: "The amount of water and water vapor available to plants in the root zone, generally considered to be the upper 1 m of soil, expressed as the proportion of water present in a given amount of soil."
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - &GWETTOP
+        name: GWETTOP
+        description: The amount of water and water vapor present in the soil.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - &HDD0
+        name: HDD0
+        description: The daily accumulation of degrees below a 0-degree-Celsius threshold when the daily mean temperature is below the threshold.
+        data_type: float32
+        unit: degC d
+        nodata: NaN
+      - &HDD10
+        name: HDD10
+        description: The daily accumulation of degrees below a 10-degree-Celsius threshold when the daily mean temperature is below the threshold.
+        data_type: float32
+        unit: degC d
+        nodata: NaN
+      - &HDD18_3
+        name: HDD18_3
+        description: The daily accumulation of degrees below an 18.3-degree-Celsius threshold when the daily mean temperature is below the threshold.
+        data_type: float32
+        unit: degC d
+        nodata: NaN
+      - name: PBLTOP
+        description: The pressure at the top of the planet boundary layer.
+        data_type: float32
+        unit: hPa
+        nodata: NaN
+      - &PRECSNO
+        name: PRECSNO
+        description: The snow precipitation at the surface of the earth.
+        data_type: float32
+        unit: mm d-1
+        nodata: NaN
+      - name: PRECSNOLAND
+        description: The snow precipitation only over land at the surface of the earth.
+        data_type: float32
+        unit: mm d-1
+        nodata: NaN
+      - &PRECTOTCORR
+        name: PRECTOTCORR
+        description: The average MERRA-2 bias corrected total precipitation at the surface of the earth.
+        data_type: float32
+        unit: mm d-1
+        nodata: NaN
+      - &PS
+        name: PS
+        description: The atmospheric pressure at the surface of the earth.
+        data_type: float32
+        unit: hPa
+        nodata: NaN
+      - &QV10M
+        name: QV10M
+        description: The ratio of the mass of water vapor to the total mass of air at 10 meters.
+        data_type: float32
+        unit: g kg-1
+        nodata: NaN
+      - &QV2M
+        name: QV2M
+        description: The ratio of the mass of water vapor to the total mass of air at 2 meters.
+        data_type: float32
+        unit: g kg-1
+        nodata: NaN
+      - &RH2M
+        name: RH2M
+        description: "The ratio of vapor pressure to the saturation vapor pressure with respect to a plane surface of pure water, expressed in percent."
+        data_type: float32
+        unit: "%"
+        nodata: NaN
+      - &RHOA
+        name: RHOA
+        description: The air density at surface of the earth.
+        data_type: float32
+        unit: kg m-3
+        nodata: NaN
+      - &SLP
+        name: SLP
+        description: The sea level pressure at the surface of the earth.
+        data_type: float32
+        unit: hPa
+        nodata: NaN
+      - &SNODP
+        name: SNODP
+        description: The snow depth on land at surface of the earth.
+        data_type: float32
+        unit: cm
+        nodata: NaN
+      - &T10M
+        name: T10M
+        description: The air (dry bulb) temperature at 10 meters above the surface of the earth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T10M_MAX
+        name: T10M_MAX
+        description: The maximum hourly air (dry bulb) temperature at 10 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T10M_MIN
+        name: T10M_MIN
+        description: The minimum hourly air (dry bulb) temperature at 10 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T10M_RANGE
+        name: T10M_RANGE
+        description: The minimum and maximum hourly air (dry bulb) temperature range at 10 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T2M
+        name: T2M
+        description: The average air (dry bulb) temperature at 2 meters above the surface of the earth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T2MDEW
+        name: T2MDEW
+        description: The dew/frost point temperature at 2 meters above the surface of the earth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T2MWET
+        name: T2MWET
+        description: The adiabatic saturation temperature which can be measured by a thermometer covered in a water-soaked cloth over which air is passed at 2 meters above the surface of the earth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T2M_MAX
+        name: T2M_MAX
+        description: The maximum hourly air (dry bulb) temperature at 2 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T2M_MIN
+        name: T2M_MIN
+        description: The minimum hourly air (dry bulb) temperature at 2 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &T2M_RANGE
+        name: T2M_RANGE
+        description: The difference between the minimum and maximum hourly air (dry bulb) temperature at 2 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TO3
+        name: TO3
+        description: The total amount of ozone in a column extending vertically from the earth's surface to the top of the atmosphere.
+        data_type: float32
+        unit: DU
+        nodata: NaN
+      - &TQV
+        name: TQV
+        description: "The total atmospheric water vapor contained in a vertical column of unit cross-sectional area extending from the surface to the top of the atmosphere, sourced from the GMAO."
+        data_type: float32
+        unit: kg m-2
+        nodata: NaN
+      - &TROPPB
+        name: TROPPB
+        description: The tropopause pressure based on the blended estimate.
+        data_type: float32
+        unit: hPa
+        nodata: NaN
+      - &TROPQ
+        name: TROPQ
+        description: The ratio of the mass of water vapor to the total mass of air at the tropopause pressure given by TROPPB.
+        data_type: float32
+        unit: g kg-1
+        nodata: NaN
+      - &TROPT
+        name: TROPT
+        description: The air (dry bulb) temperature at the tropopause pressure given by TROPPB.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TS
+        name: TS
+        description: The average temperature at the earth's surface.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TSOIL1
+        name: TSOIL1
+        description: The estimate of soil temperatures at layer 1; 0.018 to 0.0988 m depth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TSOIL2
+        name: TSOIL2
+        description: The estimate of soil temperatures at layer 2; 0.0988 to 0.294 m depth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TSOIL3
+        name: TSOIL3
+        description: The estimate of soil temperatures at layer 3; 0.294 to 0.6799 m depth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TSOIL4
+        name: TSOIL4
+        description: The estimate of soil temperatures at layer 4; 0.6799 to 1.4425 m depth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TSOIL5
+        name: TSOIL5
+        description: The estimate of soil temperatures at layer 5; 1.4425 to 2.949 m depth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TSOIL6
+        name: TSOIL6
+        description: The estimate of soil temperatures at layer 6; 2.949 to 10.0 m depth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TSURF
+        name: TSURF
+        description: The estimate of surface temperature of land and snow; 0 to 0.018 m depth.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TS_MAX
+        name: TS_MAX
+        description: The maximum hourly earth skin temperature in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TS_MIN
+        name: TS_MIN
+        description: The minimum hourly earth skin temperature in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &TS_RANGE
+        name: TS_RANGE
+        description: The minimum and maximum hourly earth skin temperature range in the period of interest.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+      - &U10M
+        name: U10M
+        description: The estimate of the eastward wind average speed for winds blowing 10 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &U2M
+        name: U2M
+        description: The estimate of the eastward wind average speed for winds blowing 2 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &U50M
+        name: U50M
+        description: The estimate of the eastward wind average speed for winds blowing 50 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &V10M
+        name: V10M
+        description: The estimate of the northward wind average speed for winds blowing 10 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &V2M
+        name: V2M
+        description: The estimate of the northward wind average speed for winds blowing 2 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &V50M
+        name: V50M
+        description: The estimate of the northward wind average speed for winds blowing 50 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WD10M
+        name: WD10M
+        description: The average of the wind direction at 10 meters above the surface of the earth.
+        data_type: float32
+        unit: degree
+        nodata: NaN
+      - &WD2M
+        name: WD2M
+        description: The average of the wind direction at 2 meters above the surface of the earth.
+        data_type: float32
+        unit: degree
+        nodata: NaN
+      - &WD50M
+        name: WD50M
+        description: The average of the wind direction at 50 meters above the surface of the earth.
+        data_type: float32
+        unit: degree
+        nodata: NaN
+      - &WS10M
+        name: WS10M
+        description: The average of wind speed at 10 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS10M_MAX
+        name: WS10M_MAX
+        description: The maximum hourly wind speed at 10 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS10M_MIN
+        name: WS10M_MIN
+        description: The minimum hourly wind speed at 10 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS10M_RANGE
+        name: WS10M_RANGE
+        description: The minimum and maximum hourly wind speed range at 10 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS2M
+        name: WS2M
+        description: The average of wind speed at 2 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS2M_MAX
+        name: WS2M_MAX
+        description: The maximum hourly wind speed at 2 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS2M_MIN
+        name: WS2M_MIN
+        description: The minimum hourly wind speed at 2 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS2M_RANGE
+        name: WS2M_RANGE
+        description: The minimum and maximum hourly wind speed range at 2 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS50M
+        name: WS50M
+        description: The average of wind speed at 50 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS50M_MAX
+        name: WS50M_MAX
+        description: The maximum hourly wind speed at 50 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS50M_MIN
+        name: WS50M_MIN
+        description: The minimum hourly wind speed at 50 meters above the surface of the earth in the period of interest.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &WS50M_RANGE
+        name: WS50M_RANGE
+        description: The minimum and maximum hourly wind speed range at 50 meters above the surface of the earth.
+        data_type: float32
+        unit: m s-1
+        nodata: NaN
+      - &Z0M
+        name: Z0M
+        description: The height above the displacement plane at which the mean wind becomes zero when extrapolating the logarithmic wind speed profile downward through the surface layer.
+        data_type: float32
+        unit: m
+        nodata: NaN
+
+  - name: geosit
+    dimensions: [*lat_merra2, *lon_merra2, *time_lst]
+    variables:
+      - *CDD0
+      - *CDD10
+      - *CDD18_3
+      - *DISPH
+      - *EVLAND
+      - *EVPTRNS
+      - *FROST_DAYS
+      - *FRSEAICE
+      - *FRSNO
+      - *GWETPROF
+      - *GWETROOT
+      - *GWETTOP
+      - *HDD0
+      - *HDD10
+      - *HDD18_3
+      - *PRECSNO
+      - *PRECTOTCORR
+      - *PS
+      - *QV10M
+      - *QV2M
+      - *RH2M
+      - *RHOA
+      - *SLP
+      - *SNODP
+      - *T10M
+      - *T10M_MAX
+      - *T10M_MIN
+      - *T10M_RANGE
+      - *T2M
+      - *T2MDEW
+      - *T2MWET
+      - *T2M_MAX
+      - *T2M_MIN
+      - *T2M_RANGE
+      - *TO3
+      - *TQV
+      - *TROPPB
+      - *TROPQ
+      - *TROPT
+      - *TS
+      - *TSOIL1
+      - *TSOIL2
+      - *TSOIL3
+      - *TSOIL4
+      - *TSOIL5
+      - *TSOIL6
+      - *TSURF
+      - *TS_MAX
+      - *TS_MIN
+      - *TS_RANGE
+      - *U10M
+      - *U2M
+      - *U50M
+      - *V10M
+      - *V2M
+      - *V50M
+      - *WD10M
+      - *WD2M
+      - *WD50M
+      - *WS10M
+      - *WS10M_MAX
+      - *WS10M_MIN
+      - *WS10M_RANGE
+      - *WS2M
+      - *WS2M_MAX
+      - *WS2M_MIN
+      - *WS2M_RANGE
+      - *WS50M
+      - *WS50M_MAX
+      - *WS50M_MIN
+      - *WS50M_RANGE
+      - *Z0M
+
+  - name: syn1deg
+    dimensions:
+      - &cell_1deg
+        name: cell
+        type: xy
+        description: 1° (~111 km at equator). Cell centres at -89.5 to 89.5 and -179.5 to 179.5.
+        step: 1
+        unit: degree
+      - *time_lst
+    variables:
+      - name: AIRMASS
+        description: Air mass according to Perez et al. 1990.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: ALLSKY_KT
+        description: A fraction representing clearness of the atmosphere; the all sky insolation that is transmitted through the atmosphere to strike the surface of the earth divided by the average of top of the atmosphere total solar irradiance incident.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: ALLSKY_NKT
+        description: The average zenith angle-independent expression of the all sky insolation clearness index.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: ALLSKY_SFC_LW_DWN
+        description: The downward thermal infrared irradiance under all sky conditions reaching a horizontal plane at the surface of the earth.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_LW_UP
+        description: The upward thermal infrared irradiance under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_PAR_DIFF
+        description: The diffuse (scattered from original direct path by molecules or particles) Photosynthetically Active Radiation (PAR) solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_PAR_DIRH
+        description: The Photosynthetically Active Radiation (PAR) solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_PAR_TOT
+        description: The total (direct plus diffuse) Photosynthetically Active Radiation (PAR) incident on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_SW_DIFF
+        description: The diffuse (scattered from original direct path by molecules or particles) solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_SW_DIRH
+        description: The solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_SW_DNI
+        description: The direct solar irradiance incident to a horizontal plane normal (perpendicular) to the direction of the sun's position under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_SW_DWN
+        description: The total solar irradiance incident (direct plus diffuse) on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_SW_UP
+        description: The upward shortwave irradiance under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_UVA
+        description: The ultraviolet A (UVA 315nm-400nm) irradiance under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_UVB
+        description: The ultraviolet B (UVB 280nm-315nm) irradiance under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_UV_INDEX
+        description: "All sky surface UV index: UV irradiance in W m-2 times 40."
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: ALLSKY_SRF_ALB
+        description: The all sky rate of reflectivity of the earth's surface; the ratio of the solar energy reflected by the surface of the earth compared to the total solar energy incident reaching the surface of the earth.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: AOD_55
+        description: The optical thickness at 0.55 um measured vertically; the component of the atmosphere to quantify the removal of radiant energy from an incident beam.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: AOD_55_ADJ
+        description: The adjusted optical thickness at 0.55 um measured vertically; the component of the atmosphere to quantify the removal of radiant energy from an incident beam.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: AOD_84
+        description: The optical thickness at 0.84 um measured vertically; the component of the atmosphere to quantify the removal of radiant energy from an incident beam.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: CLOUD_AMT
+        description: The average percent of cloud amount during the temporal period.
+        data_type: float32
+        unit: "%"
+        nodata: NaN
+      - name: CLOUD_AMT_DAY
+        description: The average percent of cloud amount during daylight.
+        data_type: float32
+        unit: "%"
+        nodata: NaN
+      - name: CLOUD_AMT_NIGHT
+        description: The average percent of cloud amount during nighttime.
+        data_type: float32
+        unit: "%"
+        nodata: NaN
+      - name: CLOUD_OD
+        description: The vertical optical thickness between the top and bottom of a cloud.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: CLRSKY_DAYS
+        description: The number of Clear Sky Days if the daytime cloud amount is less than 10 percent.
+        data_type: int16
+        unit: d
+        nodata: -999
+      - name: CLRSKY_KT
+        description: A fraction representing clearness of the atmosphere; the clear sky insolation that is transmitted through the atmosphere to strike the surface of the earth divided by the average of top of the atmosphere total solar irradiance incident.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: CLRSKY_NKT
+        description: The average zenith angle-independent expression of the clear sky insolation clearness index.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: CLRSKY_SFC_LW_DWN
+        description: The downward thermal infrared irradiance under clear sky conditions reaching a horizontal plane on the surface of the earth.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_LW_UP
+        description: The upward thermal infrared irradiance under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_PAR_DIFF
+        description: The diffuse (scattered from original direct path by molecules or particles) Photosynthetically Active Radiation (PAR) solar irradiance incident on a horizontal plane at the surface of the earth under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_PAR_DIRH
+        description: The Photosynthetically Active Radiation (PAR) solar irradiance incident on a horizontal plane at the surface of the earth under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_PAR_TOT
+        description: The total Photosynthetically Active Radiation (PAR) incident on a horizontal plane at the surface of the earth under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_SW_DIFF
+        description: The diffuse (scattered from original direct path by molecules or particles) solar irradiance incident on a horizontal plane at the surface of the earth under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_SW_DIRH
+        description: The solar irradiance incident on a horizontal plane at the surface of the earth under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_SW_DNI
+        description: The direct solar irradiance incident to a horizontal plane normal (perpendicular) to the direction of the sun's position under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_SW_DWN
+        description: The total solar irradiance incident (direct plus diffuse) on a horizontal plane at the surface of the earth under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_SW_UP
+        description: The upward shortwave irradiance under clearsky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SRF_ALB
+        description: The clear sky rate of reflectivity of the earth's surface; the ratio of the solar energy reflected by the surface of the earth compared to the total solar energy incident reaching the surface of the earth.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: MIDDAY_INSOL
+        description: The total amount of solar irradiance (direct plus diffuse) incident on a horizontal plane at the earth's surface during the solar noon hour midday period.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ORIGINAL_ALLSKY_SFC_SW_DIFF
+        description: The diffuse (scattered from original direct path by molecules or particles) solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ORIGINAL_ALLSKY_SFC_SW_DIRH
+        description: The solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: PSH
+        description: The average intensity of solar irradiance that reaches the surface.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: PW
+        description: "The total atmospheric water vapor contained in a vertical column of the atmosphere, sourced from CERES."
+        data_type: float32
+        unit: cm
+        nodata: NaN
+      - name: SRF_ALB_ADJ
+        description: The ratio of the solar energy reflected by the surface of the earth compared to the total solar energy incident reaching the surface of the earth.
+        data_type: float32
+        unit: "1"
+        nodata: NaN
+      - name: TOA_SW_DNI
+        description: The total solar irradiance incident (direct plus diffuse) on a horizontal plane where oriented to the sun's position at the top of the atmosphere (extraterrestrial radiation).
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: TOA_SW_DWN
+        description: The total solar irradiance incident (direct plus diffuse) on a horizontal plane at the top of the atmosphere (extraterrestrial radiation).
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: TS_ADJ
+        description: The adjusted average temperature at the earth's surface.
+        data_type: float32
+        unit: degC
+        nodata: NaN
+
+  - name: flashflux
+    dimensions: [*cell_1deg, *time_lst]
+    variables:
+      - name: ALLSKY_SFC_LW_DWN
+        description: The downward thermal infrared irradiance under all sky conditions reaching a horizontal plane at the surface of the earth.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: ALLSKY_SFC_SW_DWN
+        description: The total solar irradiance incident (direct plus diffuse) on a horizontal plane at the surface of the earth under all sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_LW_DWN
+        description: The downward thermal infrared irradiance under clear sky conditions reaching a horizontal plane on the surface of the earth.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: CLRSKY_SFC_SW_DWN
+        description: The total solar irradiance incident (direct plus diffuse) on a horizontal plane at the surface of the earth under clear sky conditions.
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+      - name: TOA_SW_DWN
+        description: The total solar irradiance incident (direct plus diffuse) on a horizontal plane at the top of the atmosphere (extraterrestrial radiation).
+        data_type: float32
+        unit: W m-2
+        nodata: NaN
+
+  - name: imerg
+    dimensions:
+      - name: cell
+        type: xy
+        description: 0.1° (~11 km at equator). Cell centres at -89.95 to 89.95 and -179.95 to 179.95.
+        step: 0.1
+        unit: degree
+      - name: time
+        type: temporal
+        description: >
+          Day, midnight to midnight UTC. IMERG has no local-time version. The axis is allocated to
+          2029-12-31; days past the last available date are all NaN.
+        step: P1D
+    variables:
+      - name: IMERG_PRECLIQUID_PROB
+        description: Probability of liquid precipitation estimated with a diagnostic parameterization using ancillary data.
+        data_type: float32
+        unit: "%"
+        nodata: NaN
+      - name: IMERG_PRECTOT
+        description: The average IMERG total precipitation at the surface of the earth.
+        data_type: float32
+        unit: mm d-1
+        nodata: NaN
+      - name: IMERG_PRECTOT_COUNT
+        description: The count of half-hourly precipitation retrievals where precipitation is at least 0.01 mm.
+        data_type: int16
+        unit: "1"
+        nodata: -999
+
+cdh:
+  domain: [climate]
+  usage:
+    intended_uses:
+      - daily weather inputs for crop, livestock and agro-ecological models where no local station exists
+      - solar radiation and evapotranspiration inputs that station networks rarely measure
+      - weather time series for trial sites, farms and other point locations, 1981 to a few days ago
+      - growing-season summaries such as heat days, rainfall totals and degree days
+    not_recommended_for:
+      - use: rainfall totals at a site or for a small catchment
+        reason: MERRA-2 precipitation is a 55 km model estimate; IMERG is better but still satellite-only.
+        use_instead: CHIRPS v3 daily (station-blended), or IMERG from this record for recent days.
+      - use: hourly or sub-daily analysis
+        reason: this record covers the daily stores; the hourly stores are a separate product with fewer variables and different units.
+        use_instead: the POWER hourly API or the power_*_hourly_* stores in the same bucket.
+      - use: long-term trends across the MERRA-2 to GEOS-IT join
+        reason: the two models differ; a step at the join can look like a trend.
+        use_instead: MERRA-2 alone, accepting the lag of about a month.
+
+processing:
+  - id: source
+    description: >
+      POWER release 10 regrids nothing: each source is kept at its native grid and aggregated from
+      hourly to local-solar-time or UTC days by the POWER team at NASA Langley, then written to
+      Zarr on AWS Open Data and served through the POWER API.
+    derived_from:
+      - title: MERRA-2 (Modern-Era Retrospective analysis for Research and Applications, version 2)
+        url: https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/
+      - title: GEOS-IT (Goddard Earth Observing System for Instrument Teams)
+        url: https://gmao.gsfc.nasa.gov/gmao-products/geos-it/
+      - title: CERES SYN1deg
+        url: https://ceres.larc.nasa.gov/data/#syn1deg-level-3
+      - title: CERES FLASHFlux
+        url: https://ceres.larc.nasa.gov/data/#flashflux-level-3
+      - title: GPM IMERG
+        url: https://gpm.nasa.gov/data/imerg
+
+# Store names follow power_{source}_daily_{temporal|spatial}_{lst|utc}.zarr. "temporal" chunks
+# are long in time and small in space (time series at points); "spatial" chunks are one day of
+# the whole grid (maps). Anonymous access; Zarr v2 with consolidated metadata.
+data:
+  - name: merra2-temporal
+    structures: [merra2]
+    description: >
+      Primary meteorology, 1981 to about a month ago. Chunked 5844 days x 15 lat x 15 lon (16 years
+      x 7.5° x 9.4°), so decades at a few points read few chunks. Slow for a map on one day.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/merra2/temporal/power_merra2_daily_temporal_lst.zarr
+        title: S3 (us-west-2), LST
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: merra2-spatial
+    structures: [merra2]
+    description: Same data chunked one day x whole grid, for maps of a region or the globe on a few days.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/merra2/spatial/power_merra2_daily_spatial_lst.zarr
+        title: S3 (us-west-2), LST
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: geosit-temporal
+    structures: [geosit]
+    description: >
+      Near-real-time meteorology, 2022 to a few days ago, on the MERRA-2 grid. Use it for the weeks
+      MERRA-2 has not yet covered. Chunked 1473 days x 15 lat x 15 lon.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/geosit/temporal/power_geosit_daily_temporal_lst.zarr
+        title: S3 (us-west-2), LST
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: geosit-spatial
+    structures: [geosit]
+    description: GEOS-IT chunked one day x whole grid, for maps.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/geosit/spatial/power_geosit_daily_spatial_lst.zarr
+        title: S3 (us-west-2), LST
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: syn1deg-temporal
+    structures: [syn1deg]
+    description: >
+      Primary solar and longwave radiation, 2001 to about three months ago, 1° grid. Chunked 4000
+      days x 10 lat x 15 lon.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/syn1deg/temporal/power_syn1deg_daily_temporal_lst.zarr
+        title: S3 (us-west-2), LST
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: syn1deg-spatial
+    structures: [syn1deg]
+    description: SYN1deg chunked one day x whole grid, for maps.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/syn1deg/spatial/power_syn1deg_daily_spatial_lst.zarr
+        title: S3 (us-west-2), LST
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: flashflux-temporal
+    structures: [flashflux]
+    description: >
+      Near-real-time radiation, 2024 to a few days ago, on the SYN1deg grid but only the five core
+      fluxes. Use it for the months SYN1deg has not yet covered. Chunked 1473 days x 15 x 15.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/flashflux/temporal/power_flashflux_daily_temporal_lst.zarr
+        title: S3 (us-west-2), LST
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: flashflux-spatial
+    structures: [flashflux]
+    description: FLASHFlux chunked one day x whole grid, for maps.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/flashflux/spatial/power_flashflux_daily_spatial_lst.zarr
+        title: S3 (us-west-2), LST
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: imerg-temporal
+    structures: [imerg]
+    description: >
+      Satellite precipitation, 1998 to a few days ago, 0.1° grid, UTC days only. Chunked 1461 days
+      x 50 lat x 100 lon (4 years x 5° x 10°).
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/imerg/temporal/power_imerg_daily_temporal_utc.zarr
+        title: S3 (us-west-2), UTC
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: imerg-spatial
+    structures: [imerg]
+    description: IMERG chunked one day x 900 lat x 1800 lon (a quarter of the globe), for maps.
+    locations:
+      - url: https://nasa-power.s3.us-west-2.amazonaws.com/imerg/spatial/power_imerg_daily_spatial_utc.zarr
+        title: S3 (us-west-2), UTC
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: api-daily
+    structures: [merra2, syn1deg, imerg]
+    description: >
+      Alternative route. One GET returns any of the parameters above for a point or a bounding box
+      and date range, already joined across MERRA-2/GEOS-IT and SYN1deg/FLASHFlux (the response
+      header lists which sources were used). Pass community=AG for agricultural units (radiation in
+      MJ m-2 per day) and time-standard=UTC for IMERG parameters. The regional endpoint takes one
+      parameter per request. Needs no key; large regions or many points are slow and
+      rate-limited, so use the Zarr stores for those.
+    locations:
+      - url: https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M_MAX,T2M_MIN,PRECTOTCORR,ALLSKY_SFC_SW_DWN&community=AG&latitude=-1.29&longitude=36.82&start=20240101&end=20241231&format=JSON
+        title: Point endpoint (example query, Nairobi 2024)
+      - url: https://power.larc.nasa.gov/api/temporal/daily/regional?parameters=PRECTOTCORR&community=AG&latitude-min=-5&latitude-max=5&longitude-min=34&longitude-max=42&start=20240101&end=20240107&format=NETCDF
+        title: Regional endpoint (example query, one parameter, 8° x 10° box, one week, NetCDF)
+    media_type: application/json
+    processing_steps: [source]
+
+additional_assets:
+  - name: example
+    roles: [example]
+    media_type: text/x-python
+    description: Reads three MERRA-2 variables for two points and joins GEOS-IT for the recent weeks, anonymously from S3.
+    locations:
+      - url: ./example.py
+  - name: agent guide
+    roles: [agents]
+    media_type: text/markdown
+    description: Choosing a store, joining sources, units, and efficient point reads.
+    locations:
+      - url: ./AGENTS.md
+
+additional_links:
+  - title: NASA POWER on the Registry of Open Data on AWS
+    rel: about
+    url: https://registry.opendata.aws/nasa-power/
+    description: Bucket listing, licence and tutorials for the Zarr stores.
+  - title: POWER documentation
+    rel: describedby
+    url: https://power.larc.nasa.gov/docs/
+    description: Methodology, data sources, release notes and service guides.
+  - title: POWER API reference
+    rel: service-doc
+    url: https://power.larc.nasa.gov/api/pages/
+    description: Swagger pages for the hourly, daily, monthly and climatology APIs.
+  - title: POWER daily API OpenAPI description
+    rel: service-desc
+    url: https://power.larc.nasa.gov/api/temporal/daily/openapi.json
+  - title: Parameter dictionary (AG community, daily)
+    rel: describedby
+    url: https://power.larc.nasa.gov/api/system/manager/parameters?community=AG&temporal=daily
+    description: Definitions and API units for every daily parameter.
+  - title: Last available date per store
+    rel: describedby
+    url: https://nasa-power.s3.us-west-2.amazonaws.com/last_available.json
+    description: JSON updated by POWER with the newest day in each source, time step and time standard.
+  - title: POWER Data Access Viewer
+    rel: alternate
+    url: https://power.larc.nasa.gov/data-access-viewer/
+    description: Browser tool for the same data, for one-off downloads.
