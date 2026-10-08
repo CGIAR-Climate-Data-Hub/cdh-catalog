@@ -177,7 +177,6 @@ processing:
 cdh:
   domain:
     - climate
-    - hydrology
   usage:
     intended_uses:
       - daily rainfall inputs for crop and hydrological models
