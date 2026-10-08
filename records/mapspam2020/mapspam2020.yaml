@@ -96,54 +96,54 @@ structures:
       - &crop
         name: crop
         type: crop
-        description: MAPSPAM crop code. Full labels are provided in the dimension codes asset.
-        values:
-          - whea
-          - rice
-          - maiz
-          - barl
-          - mill
-          - pmil
-          - sorg
-          - ocer
-          - pota
-          - swpo
-          - yams
-          - cass
-          - orts
-          - bean
-          - chic
-          - cowp
-          - pige
-          - lent
-          - opul
-          - soyb
-          - grou
-          - cnut
-          - oilp
-          - sunf
-          - rape
-          - sesa
-          - ooil
-          - sugc
-          - sugb
-          - cott
-          - ofib
-          - coff
-          - rcof
-          - coco
-          - teas
-          - toba
-          - bana
-          - plnt
-          - citr
-          - trof
-          - temf
-          - toma
-          - onio
-          - vege
-          - rubb
-          - rest
+        description: MAPSPAM crop code.
+        categories:
+          - { value: whea, label: Wheat }
+          - { value: rice, label: Rice }
+          - { value: maiz, label: Maize }
+          - { value: barl, label: Barley }
+          - { value: mill, label: Small Millet }
+          - { value: pmil, label: Pearl Millet }
+          - { value: sorg, label: Sorghum }
+          - { value: ocer, label: Other Cereals }
+          - { value: pota, label: Potato }
+          - { value: swpo, label: Sweet Potato }
+          - { value: yams, label: Yams }
+          - { value: cass, label: Cassava }
+          - { value: orts, label: Other Roots }
+          - { value: bean, label: Bean }
+          - { value: chic, label: Chickpea }
+          - { value: cowp, label: Cowpea }
+          - { value: pige, label: Pigeon Pea }
+          - { value: lent, label: Lentil }
+          - { value: opul, label: Other Pulses }
+          - { value: soyb, label: Soybean }
+          - { value: grou, label: Groundnut }
+          - { value: cnut, label: Coconut }
+          - { value: oilp, label: Oilpalm }
+          - { value: sunf, label: Sunflower }
+          - { value: rape, label: Rapeseed }
+          - { value: sesa, label: Sesame Seed }
+          - { value: ooil, label: Other Oil Crops }
+          - { value: sugc, label: Sugarcane }
+          - { value: sugb, label: Sugarbeet }
+          - { value: cott, label: Cotton }
+          - { value: ofib, label: Other Fibre Crops }
+          - { value: coff, label: Arabic Coffee }
+          - { value: rcof, label: Robusta Coffee }
+          - { value: coco, label: Cocoa }
+          - { value: teas, label: Tea }
+          - { value: toba, label: Tobacco }
+          - { value: bana, label: Banana }
+          - { value: plnt, label: Plantain }
+          - { value: citr, label: Citrus }
+          - { value: trof, label: Other Tropical Fruit }
+          - { value: temf, label: Temperate Fruit }
+          - { value: toma, label: Tomato }
+          - { value: onio, label: Onion }
+          - { value: vege, label: Other Vegetables }
+          - { value: rubb, label: Rubber }
+          - { value: rest, label: Rest of Crops }
 
       - &technology
         name: technology
