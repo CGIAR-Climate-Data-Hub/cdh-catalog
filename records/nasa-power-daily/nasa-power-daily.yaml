@@ -845,12 +845,12 @@ structures:
         unit: W m-2
         nodata: NaN
       - name: ORIGINAL_ALLSKY_SFC_SW_DIFF
-        description: The diffuse (scattered from original direct path by molecules or particles) solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions.
+        description: The diffuse (scattered from original direct path by molecules or particles) solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions. Uncorrected source value kept for reference; use the variable without the ORIGINAL_ prefix.
         data_type: float32
         unit: W m-2
         nodata: NaN
       - name: ORIGINAL_ALLSKY_SFC_SW_DIRH
-        description: The solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions.
+        description: The solar irradiance incident on a horizontal plane at the surface of the earth under all sky conditions. Uncorrected source value kept for reference; use the variable without the ORIGINAL_ prefix.
         data_type: float32
         unit: W m-2
         nodata: NaN
@@ -929,17 +929,17 @@ structures:
         step: P1D
     variables:
       - name: IMERG_PRECLIQUID_PROB
-        description: Probability of liquid precipitation estimated with a diagnostic parameterization using ancillary data.
+        description: 'Probability of liquid precipitation estimated with a diagnostic parameterization using ancillary data. POWER marks it "reviewing": not yet an official product.'
         data_type: float32
         unit: "%"
         nodata: NaN
       - name: IMERG_PRECTOT
-        description: The average IMERG total precipitation at the surface of the earth.
+        description: 'The average IMERG total precipitation at the surface of the earth. POWER marks it "reviewing": not yet an official product.'
         data_type: float32
         unit: mm d-1
         nodata: NaN
       - name: IMERG_PRECTOT_COUNT
-        description: The count of half-hourly precipitation retrievals where precipitation is at least 0.01 mm.
+        description: 'The count of half-hourly precipitation retrievals where precipitation is at least 0.01 mm. POWER marks it "reviewing": not yet an official product.'
         data_type: int16
         unit: "1"
         nodata: -999
@@ -1060,8 +1060,9 @@ data:
   - name: imerg-temporal
     structures: [imerg]
     description: >
-      Satellite precipitation, 1998 to a few days ago, 0.1° grid, UTC days only. Chunked 1461 days
-      x 50 lat x 100 lon (4 years x 5° x 10°).
+      Satellite precipitation, 1998 to a few days ago, 0.1° grid, UTC days only. POWER still marks
+      the IMERG variables "reviewing", not official. Chunked 1461 days x 50 lat x 100 lon (4 years
+      x 5° x 10°).
     locations:
       - url: https://nasa-power.s3.us-west-2.amazonaws.com/imerg/temporal/power_imerg_daily_temporal_utc.zarr
         title: S3 (us-west-2), UTC
