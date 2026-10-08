@@ -128,10 +128,10 @@ processing:
         title: GLW 4 2020
   - id: cloud-optimize
     description: Optimize data for cloud storage
-    date: "2026-06-23"
+    date: "2026-10-08"
     code:
       url: https://github.com/CGIAR-Climate-Data-Hub/cdh-data-pipeline/blob/main/recipes/glw4.py
-      version: "885ed96"
+      version: "a4c989d"
 
 data:
   - name: zarr
