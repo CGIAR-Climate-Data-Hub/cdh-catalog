@@ -16,7 +16,7 @@ description: >
   species: buffalo, cattle, sheep, goats, pigs, and chickens. This data is for the 2020 reference
   year. Densities are estimated with a Random Forest model that downscales harmonized subnational
   census counts onto a regular grid, so the values represent modelled distributions rather than
-  direct observations. All of the values are number of animals per km^2
+  direct observations. Values are head per km².
 license: CC-BY-4.0
 resource_type: dataset
 
@@ -124,10 +124,10 @@ processing:
     description: Original GLW 4 release
     date: "2024-07-15"
     derived_from:
-      - url: https://data.apps.fao.org/catalog//iso/9d1e149b-d63f-4213-978b-317a8eb42d02
+      - url: https://data.apps.fao.org/catalog/iso/9d1e149b-d63f-4213-978b-317a8eb42d02
         title: GLW 4 2020
   - id: cloud-optimize
-    description: Optimize data for cloud storage
+    description: Stack the six FAO GeoTIFFs into one density(species, y, x) Zarr and write one COG per species.
     date: "2026-10-08"
     code:
       url: https://github.com/CGIAR-Climate-Data-Hub/cdh-data-pipeline/blob/main/recipes/glw4.py
@@ -142,9 +142,9 @@ data:
       - url: s3://digital-atlas/cdh/data/glw4-2020/glw4-2020.zarr
         title: S3
     processing_steps: [cloud-optimize]
-    description: Zarr store of GLW 4 2020
+    description: Zarr store of GLW 4 2020, one density array over species, y and x.
     media_type: application/vnd.zarr; version=3
-    file_size: 31.1 MB
+    file_size: 36.2 MB
   - name: cogs
     structures: [cogs]
     locations:
@@ -154,7 +154,7 @@ data:
         title: S3
     href_template: "glw4-2020-{species}.tif"
     processing_steps: [cloud-optimize]
-    description: Cloud-optimized GeoTIFFs of GLW 4 2020
+    description: Cloud-optimized GeoTIFFs of GLW 4 2020, one per species.
     media_type: "image/tiff; application=geotiff; profile=cloud-optimized"
 
 additional_links:

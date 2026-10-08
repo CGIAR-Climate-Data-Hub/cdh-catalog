@@ -8,28 +8,26 @@ id: chirts-era5-daily
 title: CHIRTS-ERA5 Daily
 version: "1"
 description: >-
-  CHIRTS-ER5 daily provides global, high-resolution (0.05°) daily maximum and minimum 2-meter air
+  CHIRTS-ERA5 daily provides global, high-resolution (0.05°) daily maximum and minimum 2-meter air
   temperature estimates from 1983 to present. It blends ERA5 reanalysis with station observations
   using the CHIRTS algorithm, producing a consistent long-term record suitable for climate trend
   analysis, heat-stress monitoring, and agricultural modeling.
 resource_type: dataset
 keywords:
   - temperature
-  - daily
-  - era5
+  - CHIRTS
+  - ERA5
   - station-blended
-  - global
-  - climate-hazards-center
+  - heat stress
 license: CC-BY-4.0
 access: public
 contact:
-  - organization: UCSB Climate Hazards Center
+  - organization: Climate Hazards Center, UC Santa Barbara
     roles:
       - licensor
       - producer
-    url: https://chc.ucsb.edu
+    url: https://www.chc.ucsb.edu/
     email: chc-help@geog.ucsb.edu
-    name: Climate Hazards Center UC Santa Barbara
   - name: Andres Aguilar Ariza
     roles: [maintainer]
     email: Andres.Aguilar@cgiar.org
@@ -55,7 +53,7 @@ citation:
     - family: Grace
       given: K.
   date: "2025"
-  publisher: UCSB Climate Hazards Center
+  publisher: Climate Hazards Center, UC Santa Barbara
   url: https://doi.org/10.15780/G2F08J
 related_publications:
   - citation:
@@ -148,6 +146,7 @@ spatial:
 temporal:
   start_date: "1983-01-01"
   end_date: null
+  update_frequency: daily
 # Tmax and Tmin are separate file sets, so each is its own structure on the shared grid and axis.
 structures:
   - name: tmax
@@ -198,3 +197,11 @@ data:
 cdh:
   domain:
     - climate
+  usage:
+    intended_uses:
+      - daily temperature inputs for crop models and heat-stress indicators
+      - long-term temperature trends and extremes at 0.05°
+    not_recommended_for:
+      - use: hourly or sub-daily analysis
+        reason: only daily maximum and minimum are published.
+        use_instead: ERA5 hourly 2 m temperature.

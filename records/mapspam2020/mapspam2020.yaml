@@ -2,7 +2,6 @@
 cdh_schema_version: "v0.4.1"
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/climate/schema.json
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/agriculture/schema.json
 
 id: spam2020
@@ -74,7 +73,7 @@ related_publications:
     doi: 10.1016/j.agsy.2014.01.002
 
 created: "2026-07-06"
-updated: "2026-10-07"
+updated: "2026-10-08"
 
 spatial:
   bbox: [-180, -90, 180, 90]
@@ -149,7 +148,7 @@ structures:
       - &technology
         name: technology
         type: technology
-        description: MAPSPAM production system code. Full labels are provided in the dimension codes asset.
+        description: MAPSPAM production system; all is the sum of irrigated and rainfed.
         values: [all, irrigated, rainfed]
     variables:
       - &physical_area
@@ -181,7 +180,7 @@ structures:
           Relative quantity; do not sum yield values across grid cells. Regional summaries should
           use a weighted mean with harvested_area as the weight.
 
-  # Same variables as the Zarr, stored with a -9999 fill value.
+  # Same variables as the Zarr, stored with the float32 minimum as fill value.
   - name: cogs
     dimensions: [*cell, *crop, *technology]
     variables:
@@ -279,7 +278,7 @@ data:
     processing_steps: [cloud-optimize]
     description: Zarr representation of the source MAPSPAM files.
     media_type: application/vnd.zarr; version=3
-    file_size: 500 MB
+    file_size: 287 MB
   - name: cogs
     structures: [cogs]
     locations:
@@ -289,7 +288,7 @@ data:
         title: S3
     href_template: "spam2020-{variable}-{technology}.tif"
     processing_steps: [cloud-optimize]
-    description: Cloud Optimized GeoTIFFs of the MAPSPAM files.
+    description: Cloud Optimized GeoTIFFs, one per variable and technology, with one band per crop in the order of the crop dimension.
     media_type: "image/tiff; application=geotiff; profile=cloud-optimized"
 
 additional_assets:

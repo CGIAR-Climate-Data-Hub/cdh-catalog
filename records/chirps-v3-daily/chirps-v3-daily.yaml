@@ -20,8 +20,6 @@ keywords:
   - rainfall
   - CHIRPS
   - satellite
-  - gridded
-  - daily
   - drought monitoring
 license: CC-BY-4.0
 access: public
@@ -180,3 +178,14 @@ cdh:
   domain:
     - climate
     - hydrology
+  usage:
+    intended_uses:
+      - daily rainfall inputs for crop and hydrological models
+      - drought monitoring and seasonal rainfall anomalies
+    not_recommended_for:
+      - use: areas poleward of 50° latitude
+        reason: CHIRPS covers 50°S to 50°N only.
+        use_instead: ERA5 or AgERA5 precipitation.
+      - use: sub-daily rainfall analysis
+        reason: daily values are disaggregated from pentad totals with ERA5, so within-day timing is not observed.
+        use_instead: IMERG half-hourly precipitation.
