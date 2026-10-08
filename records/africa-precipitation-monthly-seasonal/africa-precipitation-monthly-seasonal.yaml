@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
 # CHIRPS-derived monthly + seasonal precipitation COGs (KE-ENSO Explorer, Adaptation Atlas).
-# Renamed from `africa-precipitation-chirps` after review (cdh-metadata-standard#32): this is an Atlas
-# aggregation product derived from CHIRPS v3 (catalog record `chirps-v3-daily`), not a subset of it.
+# aggregation product derived from CHIRPS v3 (catalog record `chirps-v3-daily`)
 cdh_schema_version: v0.4.1
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
@@ -20,7 +19,8 @@ description: >
   phase and against the drought (SPEI), vegetation (NDVI) and flood layers. A derived aggregation
   product, not a redistribution of the CHIRPS daily archive.
 resource_type: dataset
-license: CC-BY-4.0 # Atlas-processed COGs; CHIRPS source is public domain (credit CHC / UC Santa Barbara)
+license: CC-BY-4.0 # Atlas-processed COGs; CHIRPS source is public domain
+attribution: Derived from CHIRPS v3, Climate Hazards Center, UC Santa Barbara.
 
 keywords:
   [
@@ -36,12 +36,9 @@ keywords:
   ]
 
 note: >
-  Source CHIRPS is public domain ("no restrictions on use"); these reprocessed COGs are released
-  CC-BY-4.0 with attribution to the Climate Hazards Center, UC Santa Barbara. Seasonal windows are
-  labelled by the calendar year in which the window ends (DJF_2020 = Dec 2019 to Feb 2020). Edge
-  windows that the record cannot cover in full are absent (NDJ and DJF 1981; windows ending after
-  the latest monthly file), so the seasonal asset lists its files in an inventory rather than a
-  template.
+  Seasonal windows are labelled by the calendar year in which the window ends (DJF_2020 = Dec 2019
+  to Feb 2020). Edge windows that the record cannot cover in full are absent (NDJ and DJF 1981;
+  windows ending after the latest monthly file).
 
 contact:
   - name: Peter Steward
@@ -100,7 +97,7 @@ created: "2026-08-28"
 updated: "2026-10-08"
 
 spatial:
-  bbox: [-20.0, -40.0, 55.0, 40.0] # Africa (verified vs live COG: 1500 x 1600 cells at 0.05 deg)
+  bbox: [-20.0, -40.0, 55.0, 40.0]
   crs: EPSG:4326
   geography: [africa]
 
@@ -121,7 +118,7 @@ structures:
       - name: time
         type: temporal
         description: Month of the monthly totals (YYYY-MM); the {time} token of the monthly asset.
-        extent: ["1981-01", "2026-04"] # files present as of `updated`; may lag the data, never lead it
+        extent: ["1981-01", "2026-04"] # files present as of `updated`; may lag the data
         step: P1M
     variables:
       - &ptot
