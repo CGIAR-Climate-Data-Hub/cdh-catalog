@@ -176,7 +176,7 @@ structures:
         nodata: "NaN"
         description: Crop yield for each grid cell.
         data_type: float32
-        unit: t ha-1
+        unit: kg ha-1
         note: >
           Relative quantity; do not sum yield values across grid cells. Regional summaries should
           use a weighted mean with harvested_area as the weight.
@@ -185,10 +185,10 @@ structures:
   - name: cogs
     dimensions: [*cell, *crop, *technology]
     variables:
-      - { <<: *physical_area, nodata: -9999 }
-      - { <<: *harvested_area, nodata: -9999 }
-      - { <<: *production, nodata: -9999 }
-      - { <<: *yield, nodata: -9999 }
+      - { <<: *physical_area, nodata: -3.4028235e+38 }
+      - { <<: *harvested_area, nodata: -3.4028235e+38 }
+      - { <<: *production, nodata: -3.4028235e+38 }
+      - { <<: *yield, nodata: -3.4028235e+38 }
 
 cdh:
   domain: [agricultural-production]
