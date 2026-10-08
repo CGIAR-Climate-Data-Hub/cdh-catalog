@@ -1,16 +1,15 @@
-# CDH v0.3.0 FEDERATED record - the Atlas cites this index but does not host it.
-# Validate: node scripts/validate-yaml.js --profile spec/schemas/profiles/cdh.schema.json <this file>
-$schema: https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
-cdh_schema_version: v0.3.0
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# FEDERATED record - the Atlas cites this index but does not host it.
+cdh_schema_version: v0.4.1
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
 
 id: enso-driver-roni
 title: NOAA CPC Relative Oceanic Nino Index (RONI)
+version: "1"
 description: >
   The Nino 3.4 sea-surface-temperature anomaly expressed relative to the tropical-mean SST anomaly,
-  published monthly by the NOAA Climate Prediction Center as overlapping three-month windows. A
-  federated record: the Adaptation Atlas cites this index but does not host or redistribute it.
+  published monthly by the NOAA Climate Prediction Center as overlapping three-month windows.
 resource_type: dataset
 license: CC0-1.0 # work of the US Government, public domain
 keywords:
@@ -32,31 +31,50 @@ contact:
   - name: Peter Steward
     organization: Alliance of Bioversity International and CIAT
     email: p.steward@cgiar.org
-    roles: [point-of-contact]
+    roles: [point-of-contact, maintainer]
+  - name: Brayden Youngberg
+    organization: Alliance of Bioversity International and CIAT
+    email: b.youngberg@cgiar.org
+    roles: [maintainer]
 
 citation:
   title: Relative Oceanic Nino Index (RONI)
   authors:
-    - "NOAA Climate Prediction Center"
+    - organization: NOAA Climate Prediction Center
   date: "2026"
   publisher: NOAA National Weather Service, Climate Prediction Center
-  url: https://www.cpc.ncep.noaa.gov/data/indices/RONI.ascii.txt
+  url: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/
 
 created: "2026-09-18"
-updated: "2026-09-18"
+updated: "2026-10-08"
 
 temporal:
   start_date: "1950-01"
   end_date: null
+  update_frequency: monthly
 
-processing:
-  - id: source
-    description: >
-      CPC computes the Nino 3.4 SST anomaly and subtracts the tropical-mean (20S-20N) SST anomaly,
-      publishing overlapping three-month means as a fixed-width ASCII table.
-    derived_from:
-      - title: NOAA CPC RONI
-        url: https://www.cpc.ncep.noaa.gov/data/indices/RONI.ascii.txt
+structures:
+  - name: roni-table
+    dimensions:
+      - name: SEAS
+        type: season
+        description: >
+          Overlapping three-month window named by the initials of its months (DJF = Dec-Feb ... NDJ =
+          Nov-Jan), labelled by its centre month.
+        data_type: string
+        values: [DJF, JFM, FMA, MAM, AMJ, MJJ, JJA, JAS, ASO, SON, OND, NDJ]
+      - name: YR
+        type: temporal
+        description: Calendar year of the window's centre month.
+        data_type: integer
+        step: P1Y
+    variables:
+      - name: ANOM
+        description: >
+          Relative Oceanic Nino Index: the Nino 3.4 SST anomaly minus the tropical-mean (20S-20N)
+          SST anomaly, averaged over the three-month window.
+        data_type: number
+        unit: degC
 
 data:
   - name: roni-ascii
@@ -65,13 +83,14 @@ data:
       - url: https://www.cpc.ncep.noaa.gov/data/indices/RONI.ascii.txt
         title: HTTPS
     media_type: text/plain
-    processing_steps: [source]
 
 cdh:
   domain: [climate]
   usage:
     intended_uses:
-      - Selecting analogue seasons for Kenyan seasonal outlooks in the KE-ENSO Explorer.
+      - classifying seasons by ENSO phase (El Nino, La Nina, neutral)
+      - selecting analogue years for seasonal outlooks and impact analysis
+      - ENSO driver for rainfall, drought and crop anomaly studies
     not_recommended_for:
       - use: Mixing RONI with the raw Nino 3.4 anomaly in one time series or distance metric.
         reason: >

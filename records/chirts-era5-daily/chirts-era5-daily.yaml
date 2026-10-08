@@ -1,48 +1,59 @@
-# yaml-language-server: $schema=../../spec/schemas/profiles/cdh.schema.json
-$schema: >-
-  https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
-cdh_schema_version: v0.3.0
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+cdh_schema_version: v0.4.1
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
 created: "2026-08-25"
-updated: "2026-08-27"
+updated: "2026-10-08"
 id: chirts-era5-daily
 title: CHIRTS-ERA5 Daily
+version: "1"
 description: >-
-  CHIRTS-ER5 daily provides global, high-resolution (0.05°) daily maximum and minimum 2-meter air
+  CHIRTS-ERA5 daily provides global, high-resolution (0.05°) daily maximum and minimum 2-meter air
   temperature estimates from 1983 to present. It blends ERA5 reanalysis with station observations
   using the CHIRTS algorithm, producing a consistent long-term record suitable for climate trend
   analysis, heat-stress monitoring, and agricultural modeling.
 resource_type: dataset
 keywords:
   - temperature
-  - daily
-  - era5
+  - CHIRTS
+  - ERA5
   - station-blended
-  - global
-  - climate-hazards-center
+  - heat stress
 license: CC-BY-4.0
 access: public
 contact:
-  - organization: UCSB Climate Hazards Center
+  - organization: Climate Hazards Center, UC Santa Barbara
     roles:
       - licensor
       - producer
-    url: https://chc.ucsb.edu
+    url: https://www.chc.ucsb.edu/
     email: chc-help@geog.ucsb.edu
-    name: Climate Hazards Center UC Santa Barbara
+  - name: Andres Aguilar Ariza
+    roles: [maintainer]
+    email: Andres.Aguilar@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
+  - name: Brayden Youngberg
+    roles: [maintainer]
+    email: b.youngberg@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
 doi: 10.15780/G2F08J
 citation:
   title: CHIRTS-ERA5 Data Repository
   authors:
-    - Verdin, A.
-    - Funk, C.
-    - Peterson, P.
-    - Landsfeld, M.
-    - Tuholske, C.
-    - Grace, K.
+    - family: Verdin
+      given: A.
+    - family: Funk
+      given: C.
+    - family: Peterson
+      given: P.
+    - family: Landsfeld
+      given: M.
+    - family: Tuholske
+      given: C.
+    - family: Grace
+      given: K.
   date: "2025"
-  publisher: UCSB Climate Hazards Center
+  publisher: Climate Hazards Center, UC Santa Barbara
   url: https://doi.org/10.15780/G2F08J
 related_publications:
   - citation:
@@ -50,12 +61,18 @@ related_publications:
         Development and validation of the CHIRTS-daily quasi-global high-resolution daily
         temperature data set
       authors:
-        - Verdin, A.
-        - Funk, C.
-        - Peterson, P.
-        - Landsfeld, M.
-        - Tuholske, C.
-        - Grace, K.
+        - family: Verdin
+          given: A.
+        - family: Funk
+          given: C.
+        - family: Peterson
+          given: P.
+        - family: Landsfeld
+          given: M.
+        - family: Tuholske
+          given: C.
+        - family: Grace
+          given: K.
       date: "2020"
       publisher: Scientific Data
       url: https://doi.org/10.1038/s41597-020-00643-7
@@ -65,35 +82,54 @@ related_publications:
         A High-Resolution 1983-2016 Tmax Climate Data Record Based on Infrared Temperatures and
         Stations by the Climate Hazard Center
       authors:
-        - Funk, C.
-        - Peterson, P.
-        - Peterson, S.
-        - Shukla, S.
-        - Davenport, F.
-        - Michaelsen, J.
-        - Knapp, K.R.
-        - Landsfeld, M.
-        - Husak, G.
-        - Harrison, L.
-        - Rowland, J.
-        - Budde, M.
-        - Meiburg, A.
-        - Dinku, T.
-        - Pedreros, D.
-        - Mata, N.
+        - family: Funk
+          given: C.
+        - family: Peterson
+          given: P.
+        - family: Peterson
+          given: S.
+        - family: Shukla
+          given: S.
+        - family: Davenport
+          given: F.
+        - family: Michaelsen
+          given: J.
+        - family: Knapp
+          given: K.R.
+        - family: Landsfeld
+          given: M.
+        - family: Husak
+          given: G.
+        - family: Harrison
+          given: L.
+        - family: Rowland
+          given: J.
+        - family: Budde
+          given: M.
+        - family: Meiburg
+          given: A.
+        - family: Dinku
+          given: T.
+        - family: Pedreros
+          given: D.
+        - family: Mata
+          given: N.
       date: "2019"
       publisher: Journal of Climate
-      url: https://doi.org/10.1175/JCLI-D-18-0698.1
     doi: 10.1175/JCLI-D-18-0698.1
   - citation:
       title: >-
         High resolution climate change observations and projections for the evaluation of
         heat-related extremes
       authors:
-        - Williams, E.
-        - Funk, C.
-        - Peterson, P.
-        - Tuholske, C.
+        - family: Williams
+          given: E.
+        - family: Funk
+          given: C.
+        - family: Peterson
+          given: P.
+        - family: Tuholske
+          given: C.
       date: "2024"
       publisher: Scientific Data
       url: https://doi.org/10.1038/s41597-024-03074-w
@@ -101,28 +137,71 @@ related_publications:
 spatial:
   bbox:
     - -180
-    - -90
+    - -60
     - 180
-    - 90
+    - 70
   crs: EPSG:4326
   geography:
     - world
-  resolution:
-    - type: xy
-      unit: degree
-      value: 0.05
-      label: 0.05° (~5 km at equator)
 temporal:
   start_date: "1983-01-01"
   end_date: null
+  update_frequency: daily
+# Tmax and Tmin are separate file sets, so each is its own structure on the shared grid and axis.
+structures:
+  - name: tmax
+    dimensions:
+      - &cell
+        name: cell
+        type: xy
+        description: 0.05° (~5 km at equator).
+        step: 0.05
+        unit: degree
+      - &time
+        name: time
+        type: temporal
+        description: Day of the temperature estimate; the {time} token of the daily files.
+        extent: ["1983-01-01", "2026-10-03"] # files present as of `updated`; may lag the data, never lead it
+        step: P1D
+    variables:
+      - name: Tmax
+        description: Daily maximum 2-meter air temperature
+        data_type: float32
+        unit: degC
+        nodata: -9999
+  - name: tmin
+    dimensions: [*cell, *time]
+    variables:
+      - name: Tmin
+        description: Daily minimum 2-meter air temperature
+        data_type: float32
+        unit: degC
+        nodata: -9999
 data:
-  - name: geotiffs
+  - name: tmax-geotiffs
+    structures: [tmax]
     locations:
-      - url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/
+      - url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/tmax/tifs/daily/
         title: HTTPS
-    description: Daily maximum and minimum temperature GeoTIFF files (Tmax/Tmin)
+    href_template: "{time:%Y}/CHIRTS-ERA5.daily_Tmax.{time:%Y.%m.%d}.tif"
+    description: Daily maximum temperature GeoTIFF files, one per day in yearly folders
     media_type: image/tiff; application=geotiff
-    nodata: -9999
+  - name: tmin-geotiffs
+    structures: [tmin]
+    locations:
+      - url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/tmin/tifs/daily/
+        title: HTTPS
+    href_template: "{time:%Y}/CHIRTS-ERA5.daily_Tmin.{time:%Y.%m.%d}.tif"
+    description: Daily minimum temperature GeoTIFF files, one per day in yearly folders
+    media_type: image/tiff; application=geotiff
 cdh:
   domain:
     - climate
+  usage:
+    intended_uses:
+      - daily temperature inputs for crop models and heat-stress indicators
+      - long-term temperature trends and extremes at 0.05°
+    not_recommended_for:
+      - use: hourly or sub-daily analysis
+        reason: only daily maximum and minimum are published.
+        use_instead: ERA5 hourly 2 m temperature.
