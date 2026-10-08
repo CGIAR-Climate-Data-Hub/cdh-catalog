@@ -11,7 +11,7 @@ description: >
   CHIRPS (Climate Hazards center InfraRed Precipitation with Stations), version 3, is a quasi-global
   daily precipitation dataset produced by the Climate Hazards Center (UC Santa Barbara), blending
   0.05° satellite infrared cold-cloud-duration imagery with in-situ station observations. It spans
-  1981 to near-present, covering 50°S–50°N at all longitudes, and is widely used for drought
+  1981 to near-present, covering 60°S–60°N at all longitudes, and is widely used for drought
   monitoring, hydrological modeling, and trend/seasonal analysis. Values represent daily accumulated
   precipitation in millimeters.
 resource_type: dataset
@@ -126,9 +126,9 @@ related_publications:
 spatial:
   bbox:
     - -180
-    - -50
+    - -60
     - 180
-    - 50
+    - 60
   crs: EPSG:4326
   geography:
     - world
@@ -182,8 +182,8 @@ cdh:
       - daily rainfall inputs for crop and hydrological models
       - drought monitoring and seasonal rainfall anomalies
     not_recommended_for:
-      - use: areas poleward of 50° latitude
-        reason: CHIRPS covers 50°S to 50°N only.
+      - use: areas poleward of 60° latitude
+        reason: CHIRPS v3 covers 60°S to 60°N only.
         use_instead: ERA5 or AgERA5 precipitation.
       - use: sub-daily rainfall analysis
         reason: daily values are disaggregated from pentad totals with ERA5, so within-day timing is not observed.

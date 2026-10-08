@@ -137,9 +137,9 @@ related_publications:
 spatial:
   bbox:
     - -180
-    - -90
+    - -60
     - 180
-    - 90
+    - 70
   crs: EPSG:4326
   geography:
     - world
