@@ -9,7 +9,7 @@ id: agera5
 title: AgERA5 daily agrometeorological indicators
 version: "2.0"
 description: >
-  Daily surface weather for agriculture, 1979 to about a week ago, on a global 0.1° grid. AgERA5
+  Daily surface weather for agriculture, 1979 to present, on a global 0.1° grid. AgERA5
   aggregates the hourly ECMWF ERA5 reanalysis to local-time days and corrects it to the finer
   topography, land use and coastlines of ECMWF's 0.1° HRES model. Its 27 variables (air and dew
   point temperature, precipitation, solar radiation, humidity, vapour pressure, wind, cloud cover,
@@ -327,12 +327,6 @@ processing:
     derived_from:
       - title: ECMWF ERA5 reanalysis
         url: https://doi.org/10.24381/cds.143582cf
-  - id: arco
-    description: >
-      ECMWF's Data Store Service rewrites the daily NetCDF release as two analysis-ready Zarr stores
-      with different chunking, refreshed as new days are published.
-  - id: gee
-    description: Climate Engine mirrors the daily release as a Google Earth Engine image collection.
 
 data:
   - name: zarr-geo-chunked
@@ -345,7 +339,7 @@ data:
       - url: https://arco.datastores.ecmwf.int/cadl-arco-geo-001/arco/sis_agrometeorological_indicators/all/geoChunked.zarr
         title: HTTPS (CDS token as Bearer header)
     media_type: application/vnd.zarr; version=2
-    processing_steps: [source, arco]
+    processing_steps: [source]
   - name: zarr-time-chunked
     structures: [daily]
     description: >
@@ -355,7 +349,7 @@ data:
       - url: https://arco.datastores.ecmwf.int/cadl-arco-time-001/arco/sis_agrometeorological_indicators/all/timeChunked.zarr
         title: HTTPS (CDS token as Bearer header)
     media_type: application/vnd.zarr; version=2
-    processing_steps: [source, arco]
+    processing_steps: [source]
   - name: gee
     structures: [gee]
     description: >
@@ -365,7 +359,7 @@ data:
     locations:
       - url: https://earthengine.googleapis.com/v1/projects/climate-engine-pro/assets/ce-ag-era5-v2/daily
         title: Earth Engine
-    processing_steps: [source, gee]
+    processing_steps: [source]
   - name: cds-api
     structures: [daily]
     description: >
@@ -400,15 +394,13 @@ additional_links:
     rel: describedby
     url: https://confluence.ecmwf.int/spaces/CKB/pages/673546266/Agrometeorological+indicators+Analysis+Ready+Cloud+Optimised+ARCO+from+1979+to+present+derived+from+reanalysis+Product+User+Guide+PUG
     description: ECMWF guide to the Zarr stores.
-  - title: How to get a CDS API key
-    rel: help
-    url: https://cds.climate.copernicus.eu/how-to-api
   - title: CDS retrieve API description
     rel: service-desc
     url: https://cds.climate.copernicus.eu/api/retrieve/v1/openapi.json
-  - title: CDS retrieve API documentation
+  - title: CDS API documentation
     rel: service-doc
     url: https://cds.climate.copernicus.eu/how-to-api
+    description: How to get a token and call the CDS API.
   - title: AgERA5 in the Earth Engine community catalog
     rel: describedby
     url: https://gee-community-catalog.org/projects/agera5_datasets/

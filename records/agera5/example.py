@@ -10,8 +10,8 @@ from pathlib import Path
 
 import xarray as xr
 
-# Geo-chunked store: cheap for long time series at a few places.
-# Swap in .../cadl-arco-time-001/.../timeChunked.zarr for maps of a region on a few days.
+# "geoChunked" = small spatial tiles, long time runs: cheap for long time series at a few places.
+# Swap in .../cadl-arco-time-001/.../timeChunked.zarr (one day per chunk) for maps on a few days.
 URL = "https://arco.datastores.ecmwf.int/cadl-arco-geo-001/arco/sis_agrometeorological_indicators/all/geoChunked.zarr"
 
 
