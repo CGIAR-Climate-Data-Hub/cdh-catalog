@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
-# CHIRPS v3 monthly Africa rewritten as COGs, plus seasonal sums derived from them (KE-ENSO Explorer, Adaptation Atlas).
+# CHIRPS v3 monthly Africa rewritten as COGs, plus seasonal sums derived from them (Adaptation Atlas).
 cdh_schema_version: v0.4.1
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
@@ -14,10 +14,8 @@ description: >
   Total precipitation (PTOT) from the CHIRPS v3.0 monthly Africa product, delivered as per-pixel
   monthly Cloud Optimized GeoTIFFs and per-year rolling 3-month (seasonal) sums, 1981 to present.
   The monthly files hold the same values as CHIRPS on the same 0.05° grid, with the -9999 sentinel
-  masked and overviews added; the seasonal sums are derived from them. This is the rainfall
-  backbone of the KE-ENSO Explorer's seasonal/ENSO analysis: the twelve seasonal windows (JFM,
-  FMA, ..., DJF) are the tri-month sums the notebook compares against ENSO phase and against the
-  drought (SPEI), vegetation (NDVI) and flood layers.
+  masked and overviews added. The seasonal sums cover the twelve rolling tri-month windows (JFM,
+  FMA, ..., DJF) and are derived from the monthly files.
 resource_type: dataset
 license: CC-BY-4.0 # Atlas-processed COGs; CHIRPS source is public domain
 attribution: Derived from CHIRPS v3, Climate Hazards Center, UC Santa Barbara.
@@ -200,8 +198,9 @@ cdh:
   domain: [climate]
   usage:
     intended_uses:
-      - Seasonal and ENSO-phase rainfall analysis and anomaly context in the KE-ENSO Explorer.
-      - Rainfall driver for interpreting the drought (SPEI), vegetation (NDVI) and flood layers.
+      - monthly and seasonal rainfall totals and anomalies over Africa
+      - comparing seasonal rainfall across ENSO phases or analogue years
+      - rainfall context for drought, vegetation and flood indicators
     not_recommended_for:
       - use: Daily or sub-monthly rainfall analysis.
         reason: Only monthly totals and 3-month sums are published here.

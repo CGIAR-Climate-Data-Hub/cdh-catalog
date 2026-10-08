@@ -9,8 +9,7 @@ title: NOAA CPC Relative Oceanic Nino Index (RONI)
 version: "1"
 description: >
   The Nino 3.4 sea-surface-temperature anomaly expressed relative to the tropical-mean SST anomaly,
-  published monthly by the NOAA Climate Prediction Center as overlapping three-month windows. A
-  federated record: the Adaptation Atlas cites this index but does not host or redistribute it.
+  published monthly by the NOAA Climate Prediction Center as overlapping three-month windows.
 resource_type: dataset
 license: CC0-1.0 # work of the US Government, public domain
 keywords:
@@ -89,7 +88,9 @@ cdh:
   domain: [climate]
   usage:
     intended_uses:
-      - Selecting analogue seasons for Kenyan seasonal outlooks in the KE-ENSO Explorer.
+      - classifying seasons by ENSO phase (El Nino, La Nina, neutral)
+      - selecting analogue years for seasonal outlooks and impact analysis
+      - ENSO driver for rainfall, drought and crop anomaly studies
     not_recommended_for:
       - use: Mixing RONI with the raw Nino 3.4 anomaly in one time series or distance metric.
         reason: >
