@@ -40,37 +40,91 @@ contact:
     roles: [maintainer]
     email: b.youngberg@cgiar.org
     organization: Alliance of Bioversity International and CIAT
-doi: 10.1038/sdata.2015.66
+doi: 10.15780/G2JQ0P
 citation:
-  title: >-
-    The climate hazards infrared precipitation with stations—a new environmental record for
-    monitoring extremes
+  title: Climate Hazards Center Infrared Precipitation with Stations version 3 (CHIRPS3) Data Repository
   authors:
-    - family: Funk
-      given: C.
-    - family: Peterson
-      given: P.
-    - family: Landsfeld
-      given: M.
-    - family: Pedreros
-      given: D.
-    - family: Verdin
-      given: J.
-    - family: Shukla
-      given: S.
-    - family: Husak
-      given: G.
-    - family: Rowland
-      given: J.
-    - family: Harrison
-      given: L.
-    - family: Hoell
-      given: A.
-    - family: Michaelsen
-      given: J.
-  date: "2015"
-  publisher: Scientific Data
-  url: https://doi.org/10.1038/sdata.2015.66
+    - organization: Climate Hazards Center, UC Santa Barbara
+  date: "2025"
+  publisher: Climate Hazards Center, UC Santa Barbara
+  url: https://doi.org/10.15780/G2JQ0P
+related_publications:
+  - doi: 10.1038/s41597-026-07096-4
+    citation:
+      title: The Climate Hazards Center Infrared Precipitation with Stations, Version 3
+      authors:
+        - family: Funk
+          given: C.
+        - family: Peterson
+          given: P.
+        - family: Harrison
+          given: L.
+        - family: Saldivar
+          given: R.
+        - family: Landsfeld
+          given: M.
+        - family: Pedreros
+          given: D.
+        - family: Shukla
+          given: S.
+        - family: Fink
+          given: A. H.
+        - family: Davenport
+          given: F.
+        - family: Peterson
+          given: S.
+        - family: Turner
+          given: W.
+        - family: Sonnier
+          given: A.
+        - family: Budde
+          given: M.
+        - family: Tabor
+          given: K.
+        - family: Verdin
+          given: J.
+        - family: Hauzaree
+          given: N. D.
+        - family: Naim
+          given: M.
+        - family: Alaso
+          given: D.
+        - family: Husak
+          given: G.
+      date: "2026"
+      publisher: Scientific Data
+      url: https://doi.org/10.1038/s41597-026-07096-4
+  - doi: 10.1038/sdata.2015.66
+    citation:
+      title: >-
+        The climate hazards infrared precipitation with stations—a new environmental record for
+        monitoring extremes
+      authors:
+        - family: Funk
+          given: C.
+        - family: Peterson
+          given: P.
+        - family: Landsfeld
+          given: M.
+        - family: Pedreros
+          given: D.
+        - family: Verdin
+          given: J.
+        - family: Shukla
+          given: S.
+        - family: Husak
+          given: G.
+        - family: Rowland
+          given: J.
+        - family: Harrison
+          given: L.
+        - family: Hoell
+          given: A.
+        - family: Michaelsen
+          given: J.
+      date: "2015"
+      publisher: Scientific Data
+      url: https://doi.org/10.1038/sdata.2015.66
 spatial:
   bbox:
     - -180
