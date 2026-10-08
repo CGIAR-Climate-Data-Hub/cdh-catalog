@@ -60,6 +60,7 @@ citation:
   publisher: FAO Agro-Informatic Data Catalog
   url: https://data.apps.fao.org/catalog/dataset/9d1e149b-d63f-4213-978b-317a8eb42d02
 related_publications:
+  - doi: 10.1038/sdata.2018.227 # GLW 3 methods paper (Gilbert et al. 2018); no GLW 4 paper yet
   - doi: 10.1371/journal.pone.0133381
 
 # metadata tracking
