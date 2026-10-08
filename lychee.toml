@@ -10,4 +10,6 @@ accept = ["200..=299", "403", "429"]
 exclude = [
   '\.zarr/?$',
   '^https://[^/]*s3[^/]*\.amazonaws\.com/.*/$',
+  # API endpoints answer 422 to a bare GET with no query.
+  '^https://power\.larc\.nasa\.gov/api/temporal/[a-z]+/(point|regional)$',
 ]

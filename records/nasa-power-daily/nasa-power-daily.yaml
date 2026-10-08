@@ -949,7 +949,7 @@ cdh:
   usage:
     intended_uses:
       - daily weather inputs for crop, livestock and agro-ecological models where no local station exists
-      - solar radiation and evapotranspiration inputs that station networks rarely measure
+      - solar radiation, humidity and wind inputs for evapotranspiration that station networks rarely measure
       - weather time series for trial sites, farms and other point locations, 1981 to a few days ago
       - growing-season summaries such as heat days, rainfall totals and degree days
     not_recommended_for:
@@ -983,7 +983,7 @@ processing:
 
 # Store names follow power_{source}_daily_{temporal|spatial}_{lst|utc}.zarr. "temporal" chunks
 # are long in time and small in space (time series at points); "spatial" chunks are one day of
-# the whole grid (maps). Anonymous access; Zarr v2 with consolidated metadata.
+# the grid, or a quarter of it for IMERG (maps). Anonymous access; Zarr v2, consolidated metadata.
 data:
   - name: merra2-temporal
     structures: [merra2]
@@ -1076,21 +1076,29 @@ data:
         title: S3 (us-west-2), UTC
     media_type: application/vnd.zarr; version=2
     processing_steps: [source]
-  - name: api-daily
+  - name: api-daily-point
     structures: [merra2, syn1deg, imerg]
     description: >
-      Alternative route. One GET returns any of the parameters above for a point or a bounding box
-      and date range, already joined across MERRA-2/GEOS-IT and SYN1deg/FLASHFlux (the response
-      header lists which sources were used). Pass community=AG for agricultural units (radiation in
-      MJ m-2 per day) and time-standard=UTC for IMERG parameters. The regional endpoint takes one
-      parameter per request. Needs no key; large regions or many points are slow and
-      rate-limited, so use the Zarr stores for those.
+      Alternative route for a point. One GET with latitude, longitude, start, end and a parameter
+      list returns a daily series already joined across MERRA-2/GEOS-IT and SYN1deg/FLASHFlux (the
+      response header lists the sources used). Pass community=AG for agricultural units (radiation
+      in MJ m-2 per day), time-standard=UTC for IMERG parameters, and format=JSON (default), CSV,
+      ASCII or NETCDF. No key needed; rate-limited, so use the Zarr stores for many points.
     locations:
-      - url: https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M_MAX,T2M_MIN,PRECTOTCORR,ALLSKY_SFC_SW_DWN&community=AG&latitude=-1.29&longitude=36.82&start=20240101&end=20241231&format=JSON
-        title: Point endpoint (example query, Nairobi 2024)
-      - url: https://power.larc.nasa.gov/api/temporal/daily/regional?parameters=PRECTOTCORR&community=AG&latitude-min=-5&latitude-max=5&longitude-min=34&longitude-max=42&start=20240101&end=20240107&format=NETCDF
-        title: Regional endpoint (example query, one parameter, 8° x 10° box, one week, NetCDF)
+      - url: https://power.larc.nasa.gov/api/temporal/daily/point
+        title: HTTPS GET
     media_type: application/json
+    processing_steps: [source]
+  - name: api-daily-regional
+    structures: [merra2, syn1deg, imerg]
+    description: >
+      Alternative route for a bounding box, one parameter per request, same joins and options as
+      the point endpoint. The API recommends format=NETCDF for regions; JSON returns one feature
+      per cell. Slow for large boxes or long periods; use the spatial Zarr stores for those.
+    locations:
+      - url: https://power.larc.nasa.gov/api/temporal/daily/regional
+        title: HTTPS GET
+    media_type: application/x-netcdf
     processing_steps: [source]
 
 additional_assets:

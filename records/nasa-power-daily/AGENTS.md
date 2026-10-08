@@ -23,7 +23,7 @@ s3://nasa-power/{source}/{temporal|spatial}/power_{source}_daily_{temporal|spati
 
 - `temporal` chunks are long in time and small in space (MERRA-2: 5844 days × 15 × 15 cells).
   Use for time series at points or a small area.
-- `spatial` chunks are one day of the whole grid. Use for maps on a few days. A long series from a
+- `spatial` chunks are one day of the grid (IMERG: a quarter of it). Use for maps on a few days. A long series from a
   spatial store, or a global map from a temporal store, touches thousands of chunks and is slow.
 - `lst` days run midnight to midnight local solar time; `utc` is also available for every source
   except IMERG, which is UTC only.
@@ -96,9 +96,13 @@ The returned `lat`/`lon` are grid-cell centres, not the input points. Keep input
 
 `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,PRECTOTCORR&community=AG&latitude=-1.29&longitude=36.82&start=20240101&end=20241231&format=JSON`
 
-One GET per point, sources already joined, JSON/CSV/NetCDF. Good for a handful of points or when
-Zarr is not possible. Add `time-standard=UTC` for IMERG parameters. Slow and rate-limited for many
-points or large regions; use the stores for those.
+One GET per point, sources already joined, `format=JSON`, `CSV` or `NETCDF`. Good for a handful of
+points or when Zarr is not possible. Add `time-standard=UTC` for IMERG parameters. Rate-limited
+(HTTP 429), so use the stores for many points.
+
+The regional endpoint takes a bounding box and **one parameter per request**:
+
+`https://power.larc.nasa.gov/api/temporal/daily/regional?parameters=PRECTOTCORR&community=AG&latitude-min=-5&latitude-max=5&longitude-min=34&longitude-max=42&start=20240101&end=20240107&format=NETCDF`
 
 ## Output
 
