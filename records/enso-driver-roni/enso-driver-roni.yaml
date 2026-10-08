@@ -68,7 +68,6 @@ structures:
         type: temporal
         description: Calendar year of the window's centre month.
         data_type: integer
-        extent: ["1950", "2026"]
         step: P1Y
     variables:
       - name: ANOM
