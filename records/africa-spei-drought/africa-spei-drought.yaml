@@ -68,7 +68,6 @@ related_publications:
           given: J. I.
       date: "2010"
       publisher: Journal of Climate
-      url: https://doi.org/10.1175/2009JCLI2909.1
   - doi: 10.13031/2013.26773
     citation:
       title: "Reference Crop Evapotranspiration from Temperature"
@@ -79,7 +78,6 @@ related_publications:
           given: Z. A.
       date: "1985"
       publisher: Applied Engineering in Agriculture
-      url: https://doi.org/10.13031/2013.26773
 
 created: "2026-08-28"
 updated: "2026-10-09"
