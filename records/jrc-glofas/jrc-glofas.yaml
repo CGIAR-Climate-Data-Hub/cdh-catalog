@@ -202,7 +202,7 @@ processing:
       hazard.vrt stack the return periods as bands. No data is copied.
     code:
       url: https://github.com/CGIAR-Climate-Data-Hub/cdh-data-pipeline/blob/main/recipes/jrc_glofas.py
-      version: d00e292
+      version: 78a2982
     date: "2026-09-29"
   - id: crop-cog
     description: Depth tiles cropped to a Kenya window and written as one COG per return period.
