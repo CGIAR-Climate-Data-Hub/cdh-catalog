@@ -1,0 +1,115 @@
+name: Check links
+
+# Check links in every tracked file under records/, including sidecar metadata.
+# PRs check changed files, or all files when the checker changes. This isn't a
+# required check, since external sites flap. Weekly runs keep one issue per file.
+on:
+  pull_request:
+    paths:
+      - "records/**"
+      - "lychee.toml"
+      - ".github/workflows/check-links.yaml"
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need the base commit to diff against
+
+      # Explicit inputs bypass Lychee's default directory extension filter.
+      # Keep filenames out of action args: lychee-action evaluates them as shell.
+      - name: Pick catalog files to check
+        id: files
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          mkdir -p lychee
+          if [ "$GITHUB_EVENT_NAME" != pull_request ] || \
+            ! git diff --quiet "$BASE_SHA" HEAD -- lychee.toml .github/workflows/check-links.yaml; then
+            git ls-files -- records/ > lychee/inputs.txt
+          else
+            git diff --name-only --diff-filter=d "$BASE_SHA" HEAD -- \
+              records/ > lychee/inputs.txt
+          fi
+          if [ -s lychee/inputs.txt ]; then
+            echo "has_files=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No catalog files to check."
+          fi
+
+      - name: Check record links
+        id: lychee
+        if: steps.files.outputs.has_files == 'true'
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --config lychee.toml --files-from lychee/inputs.txt
+          # PRs get a Markdown job summary; weekly runs need JSON to split issues by file.
+          format: ${{ github.event_name == 'pull_request' && 'markdown' || 'json' }}
+          output: ${{ github.event_name == 'pull_request' && 'lychee/out.md' || 'lychee/out.json' }}
+          fail: ${{ github.event_name == 'pull_request' }}
+          # Sidecar metadata may contain no links (e.g. a class-code table).
+          failIfEmpty: false
+
+      # Exit 2 means broken links; other nonzero exits are checker failures.
+      - name: Fail on checker errors
+        if: >-
+          steps.lychee.outputs.exit_code != '' &&
+          steps.lychee.outputs.exit_code != '0' &&
+          steps.lychee.outputs.exit_code != '2'
+        run: |
+          echo "::error::Lychee could not complete the check. See the link-check step."
+          exit 1
+
+      # One issue per file, keyed by title: update or open while broken, close once it passes.
+      # Weekly runs check every file, so a file missing from the report has no broken links.
+      - name: Sync broken-links issues
+        if: >-
+          github.event_name != 'pull_request' &&
+          (steps.lychee.outputs.exit_code == '0' || steps.lychee.outputs.exit_code == '2')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          prefix="Broken links: "
+          gh label create broken-links --color d93f0b --description "Found by the weekly link check" --force
+
+          # Map file path -> open issue number.
+          declare -A open
+          while IFS=$'\t' read -r num file; do open[$file]=$num; done < <(
+            gh issue list --label broken-links --state open --limit 500 --json number,title \
+              --jq ".[] | select(.title | startswith(\"$prefix\")) | \"\(.number)\t\(.title | ltrimstr(\"$prefix\"))\"")
+
+          while IFS= read -r file; do
+            {
+              echo "The [weekly link check]($run_url) found broken links in \`$file\`."
+              echo
+              # status.code is null for network errors, so fall back to the message.
+              jq -r --arg f "$file" '.error_map[$f] | sort_by(.span.line)[] |
+                "- line \(.span.line // "?"): \(.url) (\(.status.code // .status.text))"' lychee/out.json
+            } > lychee/body.md
+            if [ -n "${open[$file]}" ]; then
+              gh issue edit "${open[$file]}" --body-file lychee/body.md
+              unset "open[$file]"
+            else
+              gh issue create --title "$prefix$file" --label broken-links --body-file lychee/body.md
+            fi
+          done < <(jq -r '.error_map | keys[]' lychee/out.json)
+
+          # Whatever is still in the map has no broken links now.
+          for num in "${open[@]}"; do
+            gh issue close "$num" --comment "No broken links found in the [latest check]($run_url)."
+          done

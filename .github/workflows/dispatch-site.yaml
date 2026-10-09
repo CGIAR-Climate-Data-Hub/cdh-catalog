@@ -16,11 +16,10 @@ jobs:
   # state the site will fetch is valid (PR validation is the first gate; this
   # covers direct pushes and anything that slipped through).
   validate:
-    uses: CGIAR-Climate-Data-Hub/cdh-metadata-standard/.github/workflows/validate-records.yaml@main
+    uses: CGIAR-Climate-Data-Hub/cdh-metadata-standard/.github/workflows/validate-records.yaml@v0.4.0
     with:
       path: records
       changed-only: false
-      tooling-ref: v0.3.0
 
   dispatch:
     needs: validate
