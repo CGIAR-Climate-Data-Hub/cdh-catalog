@@ -1,4 +1,4 @@
-# somewhat double-federated record - the COG copys from JRC live on Source Cooperative; the Hub publishes only index files
+# somewhat double-federated record - the COG copies from JRC live on Source Cooperative; the Hub publishes only index files
 # (VRT mosaics and STAC GeoParquet) that open them in place.
 cdh_schema_version: v0.4.1
 extensions:
@@ -9,13 +9,15 @@ title: JRC global river flood hazard maps (CEMS-GloFAS)
 version: "2.1.2"
 description: >
   Modelled riverine flood inundation along the global river network for seven return periods, 10 to
-  500 years, at 3 arc-seconds (~90 m). River flows come from the LISFLOOD hydrological model driven
-  by the GloFAS v4.0 reanalysis; inundation is simulated with LISFLOOD-FP. Each return period has a
-  water-depth map in metres and a four-class hazard map, plus two auxiliary masks: permanent water
-  bodies used to patch the maps, and spurious depths where the model is known to over-predict.
-  Source Cooperative serves it as cloud-optimized GeoTIFF tiles, and the
-  Hub publishes VRT mosaics (one band per return period) and STAC GeoParquet indexes that open those
-  tiles directly.
+  500 years, at 3 arc-seconds (~90 m), from the European Commission Joint Research Centre (JRC) for
+  the Copernicus Emergency Management Service (CEMS). River flows come from the LISFLOOD
+  hydrological model driven by the Global Flood Awareness System (GloFAS) v4.0 reanalysis;
+  inundation is simulated with the LISFLOOD-FP hydraulic model. Each return period has a water-depth
+  map in metres and a hazard map of four depth classes plus not flooded, with two auxiliary masks:
+  permanent water bodies used to patch the maps, and spurious depths where the model is known to
+  over-predict. Source Cooperative serves the maps as cloud-optimized GeoTIFF tiles, and the Hub
+  publishes GDAL virtual raster (VRT) mosaics with one band per return period and STAC GeoParquet
+  indexes that open those tiles in place.
 resource_type: dataset
 license: CC-BY-4.0
 attribution: Contains modified Copernicus Emergency Management Service information [year]
@@ -31,7 +33,7 @@ keywords:
 
 note: >
   Static modelled hazard with no temporal coverage; only land is covered. Very high depths can be
-  artefacts of the hydraulic model, the 90 m resolution, DEM sinks or tile boundaries, and the
+  artefacts of the hydraulic model, the 90 m resolution, sinks in the elevation model or tile boundaries, and the
   spurious-depths mask flags only the known cases. The VRTs reference the tiles over HTTPS with
   GDAL's /vsicurl, so open them with GDAL-based tools (rasterio, QGIS, terra) rather than
   downloading the .vrt alone.
@@ -79,7 +81,7 @@ created: "2026-08-28"
 updated: "2026-10-09"
 
 spatial:
-  bbox: [-170.0, -59.99, 179.97, 80.0]
+  bbox: [-170.0013, -59.9871, 179.9696, 80.0013]
   crs: EPSG:4326
   geography: [world]
 
@@ -99,11 +101,17 @@ structures:
         values: [10, 20, 50, 75, 100, 200, 500]
         unit: year
     variables:
-      - name: depth
+      - &depth
+        name: depth
         description: Modelled flood water depth. 0 means not flooded at that return period.
         data_type: float32
         unit: m
         nodata: -9999
+  - name: depth-nan
+    dimensions: [*cell, *return_period]
+    variables:
+      - <<: *depth
+        nodata: "NaN"
   - name: hazard
     dimensions: [*cell, *return_period]
     variables:
@@ -202,8 +210,8 @@ data:
     structures: [depth]
     description: >
       Flood depth tiles, one Source Cooperative collection per return period (depth-rp10 ...
-      depth-rp500). Open the VRT for a single seven-band mosaic, or a GeoParquet file to list and
-      query the tiles of one return period.
+      depth-rp500). Open the VRT for a single seven-band mosaic, bands in return-period order and
+      described rp10 to rp500, or a GeoParquet file to list and query the tiles of one return period.
     locations:
       - url: https://data.source.coop/nlebovits/jrc-glofas/
         title: HTTPS
@@ -222,45 +230,59 @@ data:
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp10.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp10.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp20
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp20.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp20.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp50
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp50.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp50.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp75
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp75.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp75.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp100
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp100.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp100.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp200
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp200.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp200.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp500
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp500.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp500.parquet
+            title: S3
   - name: depth-east-africa
-    structures: [depth]
+    structures: [depth-nan]
     description: >
       Kenya-window crop of the depth maps, one COG per return period on Adaptation Atlas storage.
       Same values as the global tiles; use it when only that window is needed.
@@ -280,7 +302,7 @@ data:
     structures: [hazard]
     description: >
       Hazard class tiles, one collection per return period (hazard-rp10 ... hazard-rp500). Same
-      layout as depth.
+      layout as depth: the VRT holds seven bands in return-period order, described rp10 to rp500.
     locations:
       - url: https://data.source.coop/nlebovits/jrc-glofas/
         title: HTTPS
@@ -299,43 +321,57 @@ data:
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp10.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp10.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp20
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp20.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp20.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp50
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp50.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp50.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp75
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp75.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp75.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp100
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp100.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp100.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp200
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp200.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp200.parquet
+            title: S3
       - format: stac-geoparquet
         title: rp500
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp500.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp500.parquet
+            title: S3
   - name: permanent-water
     structures: [permanent-water]
     description: Permanent water body mask tiles, one collection.
@@ -355,7 +391,9 @@ data:
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/permanent-water.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/permanent-water.parquet
+            title: S3
   - name: spurious-depths
     structures: [spurious-depths]
     description: Spurious depth mask tiles, one collection.
@@ -375,7 +413,9 @@ data:
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/spurious-depths.parquet
+            title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/spurious-depths.parquet
+            title: S3
 
 additional_links:
   - title: JRC Data Store README for the flood hazard maps
