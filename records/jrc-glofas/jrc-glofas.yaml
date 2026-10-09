@@ -1,0 +1,365 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# FEDERATED record - the COGs live on Source Cooperative; the Hub publishes only index files
+# (VRT mosaics and STAC GeoParquet) that open them in place.
+cdh_schema_version: v0.4.1
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+
+id: jrc-glofas
+title: JRC global river flood hazard maps (CEMS-GloFAS)
+version: "2.1.2"
+series:
+  name: Global Flood Awareness System (GloFAS), Copernicus Emergency Management Service
+  url: https://global-flood.emergency.copernicus.eu/
+description: >
+  Modelled riverine flood inundation along the global river network for seven return periods, 10 to
+  500 years, at 3 arc-seconds (~90 m). River flows come from the LISFLOOD hydrological model driven
+  by the GloFAS v4.0 reanalysis; inundation is simulated with LISFLOOD-FP. Each return period has a
+  water-depth map in metres and a four-class hazard map, plus two auxiliary masks: permanent water
+  bodies used to patch the maps, and spurious depths where the model is known to over-predict. The
+  Hub does not copy the data. Source Cooperative serves it as cloud-optimized GeoTIFF tiles, and the
+  Hub publishes VRT mosaics (one band per return period) and STAC GeoParquet indexes that open those
+  tiles directly.
+resource_type: dataset
+license: CC-BY-4.0
+attribution: European Union, Copernicus Emergency Management Service, GloFAS
+
+keywords:
+  - flood
+  - river flood
+  - flood hazard
+  - inundation depth
+  - return period
+  - GloFAS
+  - JRC
+  - Copernicus
+  - CEMS
+
+note: >
+  Static modelled hazard, not an observed time series: there is no temporal coverage. Only land is
+  covered. Very high depths can be artefacts of the hydraulic model, the 90 m resolution, DEM sinks
+  or tile boundaries; the spurious-depths mask flags the known cases (depth over 10 m in channels
+  draining under 3,000 km2 at the 10-year return period, plus a 2 km buffer). The VRTs reference
+  the tiles over HTTPS with GDAL's /vsicurl, so open them with GDAL-based tools (rasterio, QGIS,
+  terra) rather than downloading the .vrt alone; the stacked depth.vrt and hazard.vrt read their
+  per-return-period sibling .vrt files from the same folder.
+
+access: public
+
+contact:
+  - organization: European Commission Joint Research Centre (JRC), Copernicus Emergency Management Service
+    url: https://data.jrc.ec.europa.eu/collection/id-0054
+    roles: [licensor, producer]
+  - organization: Source Cooperative (Radiant Earth)
+    url: https://source.coop/nlebovits/jrc-glofas
+    roles: [processor]
+  - name: Brayden Youngberg
+    organization: Alliance of Bioversity International and CIAT
+    email: b.youngberg@cgiar.org
+    roles: [maintainer, point-of-contact]
+
+citation:
+  title: Modelled flood inundation for different return period scenarios at the global scale
+  authors:
+    - family: Baugh
+      given: Calum
+    - family: Colonese
+      given: Juan
+    - family: D'Angelo
+      given: Claudia
+    - family: Dottori
+      given: Francesco
+    - family: Neal
+      given: Jeffrey
+    - family: Prudhomme
+      given: Christel
+    - family: Salamon
+      given: Peter
+  date: "2024"
+  publisher: European Commission, Joint Research Centre (JRC)
+  url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/
+
+created: "2026-08-28"
+updated: "2026-10-09"
+
+spatial:
+  bbox: [-170.0, -59.99, 179.97, 80.0]
+  crs: EPSG:4326
+  geography: [world]
+
+structures:
+  - name: depth
+    dimensions:
+      - &cell
+        name: cell
+        type: xy
+        description: 3 arc-seconds (~90 m at the equator).
+        step: 0.000833333
+        unit: degree
+      - &return_period
+        name: return_period
+        type: return-period
+        description: Flood recurrence interval in years. One VRT band or one tile set per value.
+        values: [10, 20, 50, 75, 100, 200, 500]
+        unit: year
+    variables:
+      - name: depth
+        description: Modelled flood water depth. 0 means not flooded at that return period.
+        data_type: float32
+        unit: m
+        nodata: -9999
+  - name: hazard
+    dimensions: [*cell, *return_period]
+    variables:
+      - name: hazard
+        description: >
+          Water depth class, consistent with the GloFAS "Flood hazard 100-year return period" static
+          layer without its permanent-water class.
+        data_type: uint8
+        nodata: 255
+        categories:
+          - value: 0
+            label: not flooded
+          - value: 1
+            label: under 1 m
+          - value: 2
+            label: 1 to 3 m
+          - value: 3
+            label: 3 to 10 m
+          - value: 4
+            label: over 10 m
+  - name: masks
+    dimensions: [*cell]
+    variables:
+      - name: permanent_water
+        description: Permanent water bodies used to patch the flood hazard maps. 1 is water.
+        data_type: uint8
+        nodata: 255
+      - name: spurious_depths
+        description: >
+          Areas where modelled depth exceeds 10 m in channels draining under 3,000 km2 at the
+          10-year return period, plus a 2 km buffer. 1 flags the area as unreliable.
+        data_type: uint8
+        nodata: 255
+
+cdh:
+  domain: [hydrology]
+  usage:
+    intended_uses:
+      - flood-prone baseline by magnitude for exposure and risk assessment
+      - population, cropland and infrastructure exposure to river flooding at a given return period
+      - modelled counterpart to observed flood extents from satellite monitoring
+    not_recommended_for:
+      - use: reading it as observed or future-scenario flooding
+        reason: static return-period hazard from a historical reanalysis, with no dates or scenarios.
+        use_instead: satellite flood extent products, such as Copernicus Global Flood Monitoring, for what actually flooded and when.
+      - use: coastal, pluvial or flash flooding
+        reason: only riverine inundation along the modelled river network is simulated.
+      - use: depth values inside the spurious-depths mask
+        reason: known model over-prediction in small channels.
+        use_instead: treat masked cells as flood-prone with unknown depth, or use the hazard class.
+
+processing:
+  - id: source
+    description: >
+      River flows from LISFLOOD driven by the GloFAS v4.0 hydrological reanalysis, inundation from
+      LISFLOOD-FP on a MERIT-DEM and MERIT-Hydro base, published by JRC as 271 GeoTIFF tiles per
+      layer.
+    derived_from:
+      - title: JRC Data Store, CEMS-GLOFAS flood hazard
+        url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/
+        version: "2.1.2"
+      - title: GloFAS v4.0 hydrological reanalysis
+        url: http://data.europa.eu/89h/f96b7a19-0133-4105-a879-0536991ca9c5
+  - id: cloud-optimize
+    description: >
+      Tiles converted to cloud-optimized GeoTIFFs with internal overviews and published on Source
+      Cooperative as one STAC collection per layer, by Nissim Lebovits (Radiant Earth).
+    derived_from:
+      - title: JRC GloFAS global flood hazard maps on Source Cooperative
+        url: https://source.coop/nlebovits/jrc-glofas
+  - id: index
+    description: >
+      Upstream STAC collections snapshotted to STAC GeoParquet, one file per collection, and
+      mosaicked into VRTs that reference the Source Cooperative tiles in place. depth.vrt and
+      hazard.vrt stack the return periods as bands. No data is copied.
+    code:
+      url: https://github.com/CGIAR-Climate-Data-Hub/cdh-data-pipeline/blob/main/recipes/jrc_glofas.py
+      version: d00e292
+    date: "2026-09-29"
+
+data:
+  - name: depth
+    structures: [depth]
+    description: >
+      Flood depth tiles, one Source Cooperative collection per return period (depth-rp10 ...
+      depth-rp500). Open the VRT for a single seven-band mosaic, or a GeoParquet file to list and
+      query the tiles of one return period.
+    locations:
+      - url: https://data.source.coop/nlebovits/jrc-glofas/catalog.json
+        title: STAC
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source, cloud-optimize]
+    file_index:
+      - format: vrt
+        title: Seven bands, rp10 to rp500, stacked from depth-rp{n}.vrt siblings in the same folder
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth.vrt
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth.vrt
+            title: S3
+      - format: stac-geoparquet
+        title: rp10
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp10.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp10.parquet
+      - format: stac-geoparquet
+        title: rp20
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp20.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp20.parquet
+      - format: stac-geoparquet
+        title: rp50
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp50.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp50.parquet
+      - format: stac-geoparquet
+        title: rp75
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp75.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp75.parquet
+      - format: stac-geoparquet
+        title: rp100
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp100.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp100.parquet
+      - format: stac-geoparquet
+        title: rp200
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp200.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp200.parquet
+      - format: stac-geoparquet
+        title: rp500
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp500.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp500.parquet
+  - name: hazard
+    structures: [hazard]
+    description: >
+      Hazard class tiles, one collection per return period (hazard-rp10 ... hazard-rp500). Same
+      layout as depth.
+    locations:
+      - url: https://data.source.coop/nlebovits/jrc-glofas/catalog.json
+        title: STAC
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source, cloud-optimize]
+    file_index:
+      - format: vrt
+        title: Seven bands, rp10 to rp500, stacked from hazard-rp{n}.vrt siblings in the same folder
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard.vrt
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard.vrt
+            title: S3
+      - format: stac-geoparquet
+        title: rp10
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp10.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp10.parquet
+      - format: stac-geoparquet
+        title: rp20
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp20.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp20.parquet
+      - format: stac-geoparquet
+        title: rp50
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp50.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp50.parquet
+      - format: stac-geoparquet
+        title: rp75
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp75.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp75.parquet
+      - format: stac-geoparquet
+        title: rp100
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp100.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp100.parquet
+      - format: stac-geoparquet
+        title: rp200
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp200.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp200.parquet
+      - format: stac-geoparquet
+        title: rp500
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp500.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp500.parquet
+  - name: permanent-water
+    structures: [masks]
+    description: Permanent water body mask tiles, one collection.
+    locations:
+      - url: https://data.source.coop/nlebovits/jrc-glofas/permanent-water/collection.json
+        title: STAC
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source, cloud-optimize]
+    file_index:
+      - format: vrt
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/permanent-water.vrt
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/permanent-water.vrt
+            title: S3
+      - format: stac-geoparquet
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/permanent-water.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/permanent-water.parquet
+  - name: spurious-depths
+    structures: [masks]
+    description: Spurious depth mask tiles, one collection.
+    locations:
+      - url: https://data.source.coop/nlebovits/jrc-glofas/spurious-depths/collection.json
+        title: STAC
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source, cloud-optimize]
+    file_index:
+      - format: vrt
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/spurious-depths.vrt
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/spurious-depths.vrt
+            title: S3
+      - format: stac-geoparquet
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/spurious-depths.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/spurious-depths.parquet
+
+additional_links:
+  - title: JRC Data Store README for the flood hazard maps
+    rel: describedby
+    url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/README.txt
+    description: Version, model chain, hazard class breaks, mask definitions and recommended citation.
+  - title: JRC GloFAS flood hazard maps on Source Cooperative
+    rel: about
+    url: https://source.coop/nlebovits/jrc-glofas
+    description: Collection list and STAC catalog for the cloud-optimized tiles.
+  - title: JRC copyright notice
+    rel: license
+    url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/copyright.txt
