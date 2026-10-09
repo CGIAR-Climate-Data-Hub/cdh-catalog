@@ -211,8 +211,8 @@ data:
       depth-rp500). Open the VRT for a single seven-band mosaic, or a GeoParquet file to list and
       query the tiles of one return period.
     locations:
-      - url: https://data.source.coop/nlebovits/jrc-glofas/catalog.json
-        title: STAC
+      - url: https://data.source.coop/nlebovits/jrc-glofas/
+        title: HTTPS
     media_type: image/tiff; application=geotiff; profile=cloud-optimized
     processing_steps: [source, cloud-optimize]
     file_index:
@@ -288,8 +288,8 @@ data:
       Hazard class tiles, one collection per return period (hazard-rp10 ... hazard-rp500). Same
       layout as depth.
     locations:
-      - url: https://data.source.coop/nlebovits/jrc-glofas/catalog.json
-        title: STAC
+      - url: https://data.source.coop/nlebovits/jrc-glofas/
+        title: HTTPS
     media_type: image/tiff; application=geotiff; profile=cloud-optimized
     processing_steps: [source, cloud-optimize]
     file_index:
@@ -346,8 +346,8 @@ data:
     structures: [masks]
     description: Permanent water body mask tiles, one collection.
     locations:
-      - url: https://data.source.coop/nlebovits/jrc-glofas/permanent-water/collection.json
-        title: STAC
+      - url: https://data.source.coop/nlebovits/jrc-glofas/permanent-water/
+        title: HTTPS
     media_type: image/tiff; application=geotiff; profile=cloud-optimized
     processing_steps: [source, cloud-optimize]
     file_index:
@@ -366,8 +366,8 @@ data:
     structures: [masks]
     description: Spurious depth mask tiles, one collection.
     locations:
-      - url: https://data.source.coop/nlebovits/jrc-glofas/spurious-depths/collection.json
-        title: STAC
+      - url: https://data.source.coop/nlebovits/jrc-glofas/spurious-depths/
+        title: HTTPS
     media_type: image/tiff; application=geotiff; profile=cloud-optimized
     processing_steps: [source, cloud-optimize]
     file_index:
@@ -391,7 +391,11 @@ additional_links:
   - title: JRC GloFAS flood hazard maps on Source Cooperative
     rel: about
     url: https://source.coop/nlebovits/jrc-glofas
-    description: Collection list and STAC catalog for the cloud-optimized tiles.
+    description: Collection list and README for the cloud-optimized tiles.
+  - title: STAC catalog of the Source Cooperative tiles
+    rel: describedby
+    url: https://data.source.coop/nlebovits/jrc-glofas/catalog.json
+    description: One STAC collection per layer, with an item and COG per tile.
   - title: JRC copyright notice
     rel: license
     url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/copyright.txt
