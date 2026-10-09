@@ -46,7 +46,7 @@ citation:
   url: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/
 
 created: "2026-09-18"
-updated: "2026-10-08"
+updated: "2026-10-09"
 
 temporal:
   start_date: "1950-01"
@@ -83,6 +83,12 @@ data:
       - url: https://www.cpc.ncep.noaa.gov/data/indices/RONI.ascii.txt
         title: HTTPS
     media_type: text/plain
+
+additional_links:
+  - title: Indian Ocean Dipole Mode Index (DMI), catalog record enso-driver-dmi
+    rel: related
+    url: https://www.cpc.ncep.noaa.gov/products/international/ocean_monitoring/indian/IODMI/DMI_month.html
+    description: Sister IOD driver from the same ERSSTv6 reconstruction and 1991-2020 climatology.
 
 cdh:
   domain: [climate]

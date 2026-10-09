@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# FEDERATED record - the Atlas cites this index but does not host it.
+cdh_schema_version: v0.4.1
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+
+id: enso-driver-dmi
+title: NOAA CPC Indian Ocean Dipole Mode Index (DMI)
+version: "1"
+description: >
+  Monthly Indian Ocean Dipole Mode Index published by the NOAA Climate Prediction Center: the
+  sea-surface-temperature anomaly of the western tropical Indian Ocean (50E-70E, 10S-10N) minus that
+  of the south-eastern tropical Indian Ocean (90E-110E, 10S-0), computed from ERSSTv6 against a
+  1991-2020 climatology. Both poles are published alongside the index.
+resource_type: dataset
+license: CC0-1.0 # work of the US Government, public domain
+keywords:
+  [
+    indian ocean dipole,
+    iod,
+    dmi,
+    sea surface temperature,
+    climate index,
+    seasonal forecasting,
+  ]
+
+note: >
+  This is CPC's own DMI from ERSSTv6 against a 1991-2020 climatology, not the widely cited NOAA PSL
+  series computed from HadISST (which carries a non-commercial licence). The two differ in
+  reconstruction and base period, so values are not interchangeable and the series must not be
+  spliced. CPC publishes both poles (WTIO, SETIO) alongside the index.
+
+access: public
+
+contact:
+  - organization: NOAA Climate Prediction Center
+    url: https://www.cpc.ncep.noaa.gov/
+    roles: [licensor, producer]
+  - name: Peter Steward
+    organization: Alliance of Bioversity International and CIAT
+    email: p.steward@cgiar.org
+    roles: [point-of-contact, maintainer]
+  - name: Brayden Youngberg
+    organization: Alliance of Bioversity International and CIAT
+    email: b.youngberg@cgiar.org
+    roles: [maintainer]
+
+citation:
+  title: Indian Ocean Dipole Mode Index (DMI)
+  authors:
+    - organization: NOAA Climate Prediction Center
+  date: "2026"
+  publisher: NOAA National Weather Service, Climate Prediction Center
+  url: https://www.cpc.ncep.noaa.gov/products/international/ocean_monitoring/indian/IODMI/DMI_month.html
+
+created: "2026-09-18"
+updated: "2026-10-09"
+
+temporal:
+  start_date: "1950-01"
+  end_date: null
+  update_frequency: monthly
+
+structures:
+  - name: dmi-table
+    dimensions:
+      - name: Year
+        type: temporal
+        description: Calendar year of the anomaly.
+        data_type: integer
+        step: P1Y
+      - name: Month
+        type: temporal
+        description: Calendar month of the anomaly, 1 to 12.
+        data_type: integer
+        step: P1M
+    variables:
+      - name: WTIO
+        description: Western tropical Indian Ocean SST anomaly, averaged over 50E-70E, 10S-10N.
+        data_type: number
+        unit: degC
+      - name: SETIO
+        description: South-eastern tropical Indian Ocean SST anomaly, averaged over 90E-110E, 10S-0.
+        data_type: number
+        unit: degC
+      - name: DMI
+        description: Dipole Mode Index, WTIO minus SETIO. Positive is a positive IOD phase.
+        data_type: number
+        unit: degC
+
+data:
+  - name: dmi-monthly
+    description: Fixed-width ASCII table, one row per month, columns Year, Month, WTIO, SETIO, DMI.
+    locations:
+      - url: https://www.cpc.ncep.noaa.gov/products/international/ocean_monitoring/indian/IODMI/mnth.ersstv6.clim19912020.dmi_current.txt
+        title: HTTPS
+    media_type: text/plain
+
+additional_links:
+  - title: Relative Oceanic Nino Index (RONI), catalog record enso-driver-roni
+    rel: related
+    url: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/
+    description: Sister ENSO driver from the same ERSSTv6 reconstruction and 1991-2020 climatology.
+
+cdh:
+  domain: [climate]
+  usage:
+    intended_uses:
+      - classifying seasons by Indian Ocean Dipole phase (positive, negative, neutral)
+      - selecting analogue years for seasonal outlooks and impact analysis, paired with an ENSO index
+      - IOD driver for East African rainfall, drought and crop anomaly studies
+    not_recommended_for:
+      - use: Splicing this series onto the HadISST-based DMI served by NOAA PSL.
+        reason: >
+          Different SST reconstruction and different climatology, so the join introduces a step
+          change that would be read as a physical signal.
+        use_instead: One source end to end, this series throughout.
