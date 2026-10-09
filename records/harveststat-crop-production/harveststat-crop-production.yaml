@@ -1,0 +1,81 @@
+# CDH v0.3.0 FEDERATED record - the Atlas cites this dataset but does not host it.
+# Promoted from draft 2026-09-18: licence confirmed CC0-1.0 via the Dryad API.
+$schema: https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.3.0
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/cdh/schema.json
+
+id: harveststat-crop-production
+title: HarvestStat Africa - Harmonized Subnational Crop Statistics
+description: >
+  Cleaned and harmonised subnational crop production, harvested area and yield for Sub-Saharan
+  Africa, assembled from FEWS NET and FAO sources: 574,204 records, 33 countries, 94 crop types,
+  primarily 1980-2022. A federated record - the Adaptation Atlas cites this dataset but does not
+  host or redistribute it.
+resource_type: dataset
+license: CC0-1.0 # confirmed 2026-09-18 via the Dryad API: license = https://spdx.org/licenses/CC0-1.0.html
+keywords:
+  [
+    crop production,
+    harvested area,
+    yield,
+    subnational,
+    fews net,
+    africa,
+    food security,
+  ]
+doi: 10.5061/dryad.vq83bk42w
+
+note: >
+  LICENCE CONFIRMED 2026-09-18. The Dryad landing page does not print a licence, which is why this
+  record was initially held as a draft. The Dryad API settles it: the dataset record returns
+  license = https://spdx.org/licenses/CC0-1.0.html, at version 12, last modified 2026-07-17. CC0
+  requires no attribution; the citation below is given anyway.
+  Quantities are metric tonnes, areas hectares, yields metric tonnes per hectare. Coverage is jagged
+  across countries, crops and years - check per-country completeness before treating any national
+  series as continuous.
+
+contact:
+  - organization: NASA Harvest / University of Maryland
+    url: https://github.com/HarvestStat/HarvestStat-Africa
+    roles: [licensor, producer]
+  - organization: Famine Early Warning Systems Network (FEWS NET)
+    url: https://fews.net/
+    roles: [producer]
+  - name: Peter Steward
+    organization: Alliance of Bioversity International and CIAT
+    email: p.steward@cgiar.org
+    roles: [point-of-contact]
+
+citation:
+  title: HarvestStat Africa - Harmonized Subnational Crop Statistics for Sub-Saharan Africa
+  authors:
+    - "Lee, Donghoon"
+    - "Anderson, Weston"
+    - "Chen, Xuan"
+  date: "2026"
+  publisher: Dryad
+  url: https://doi.org/10.5061/dryad.vq83bk42w
+related_publications:
+  - doi: 10.5061/dryad.vq83bk42w
+
+processing:
+  - id: source
+    description: >
+      Agricultural statistics collected by FEWS NET and NASA Harvest into the FEWS NET Data
+      Warehouse, then harmonised across administrative-unit changes by the HarvestStat framework.
+    derived_from:
+      - title: HarvestStat Africa v1.0 (Dryad)
+        url: https://doi.org/10.5061/dryad.vq83bk42w
+      - title: HarvestStat-Africa source code
+        url: https://github.com/HarvestStat/HarvestStat-Africa
+
+data:
+  - name: harveststat-africa
+    description: Harmonised subnational crop statistics, v1.0.
+    locations:
+      - url: https://doi.org/10.5061/dryad.vq83bk42w
+        title: DOI
+
+cdh:
+  domain: [agricultural-production]
