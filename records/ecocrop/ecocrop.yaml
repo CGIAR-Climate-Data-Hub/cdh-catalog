@@ -105,9 +105,6 @@ related_publications:
 created: "2026-10-09"
 updated: "2026-10-09"
 
-spatial:
-  geography: [world] # species table, no geometry; thresholds apply anywhere the species is grown
-
 structures:
   - name: species-requirements
     dimensions:
