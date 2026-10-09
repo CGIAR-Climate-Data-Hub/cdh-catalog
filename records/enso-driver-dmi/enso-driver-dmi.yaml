@@ -25,15 +25,10 @@ keywords:
   ]
 
 note: >
-  SOURCE CHOICE IS DELIBERATE. The widely cited DMI series served by NOAA PSL is computed from
-  HadISST, which is Crown Copyright and released under the UK Non-Commercial Government Licence.
-  That is incompatible with the open licences CDH products carry, so this record uses the CPC
-  ERSSTv6 series, a work of the US Government with no constraints on use. CPC computes RONI (record
-  enso-driver-roni) from the same ERSSTv6 reconstruction and the same 1991-2020 base period, so the
-  two indices sit on one SST basis and one climatology.
-  VALUES DIFFER FROM THE HadISST SERIES. A different reconstruction and climatology produce a
-  different series, not a relabelled one. Do not splice the two, and re-run any analysis that
-  selected analogue seasons from the HadISST-based DMI after switching.
+  This is CPC's own DMI from ERSSTv6 against a 1991-2020 climatology, not the widely cited NOAA PSL
+  series computed from HadISST (which carries a non-commercial licence). The two differ in
+  reconstruction and base period, so values are not interchangeable and the series must not be
+  spliced. CPC publishes both poles (WTIO, SETIO) alongside the index.
 
 access: public
 
