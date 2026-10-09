@@ -1,0 +1,407 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# FEDERATED record - ECMWF serves the data; the Hub does not host a copy.
+cdh_schema_version: v0.4.1
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/climate/schema.json
+
+id: agera5
+title: AgERA5 daily agrometeorological indicators
+version: "2.0"
+description: >
+  Daily surface weather for agriculture, 1979 to present, on a global 0.1° grid. AgERA5
+  aggregates the hourly ECMWF ERA5 reanalysis to local-time days and corrects it to the finer
+  topography, land use and coastlines of ECMWF's 0.1° HRES model. Its 27 variables (air and dew
+  point temperature, precipitation, solar radiation, humidity, vapour pressure, wind, cloud cover,
+  snow, FAO-56 reference evapotranspiration) match the inputs of most crop and agro-ecological
+  models. The primary access is ECMWF's two analysis-ready Zarr stores, one chunked for time series
+  at points and one for maps of a region; a Google Earth Engine copy and the CDS API are
+  alternatives.
+resource_type: dataset
+license: CC-BY-4.0
+attribution: Generated using Copernicus Climate Change Service information [year].
+
+access: restricted
+access_note: >
+  Free, but every route needs an account. The Zarr stores and the CDS API take a Copernicus
+  Climate Data Store (CDS) Personal Access Token: register at https://cds.climate.copernicus.eu,
+  copy the token from your profile page, then open the dataset page, go to the Download tab and
+  accept the dataset licence at the bottom. Until the licence is accepted the stores answer 401 or
+  403 even with a valid token. Send the token as an HTTP header "Authorization: Bearer <token>";
+  example.py beside this record is a working call. The Earth Engine asset needs a Google Earth
+  Engine account.
+
+keywords:
+  - AgERA5
+  - ERA5
+  - reanalysis
+  - daily weather
+  - agrometeorology
+  - crop modelling
+  - evapotranspiration
+  - analysis-ready
+  - zarr
+
+note: >
+  Each day runs midnight to midnight local time at the grid cell, not UTC. Temperatures are
+  kelvin and solar radiation is J m-2 d-1; convert as needed. The time axis trails real time by
+  about a week. Values are reanalysis, not station observations: expect bias at single sites,
+  especially for precipitation in mountains.
+
+contact:
+  - organization: Copernicus Climate Change Service (C3S), ECMWF
+    roles: [licensor, producer]
+    url: https://climate.copernicus.eu/
+  - organization: Wageningen Environmental Research
+    roles: [producer]
+    url: https://www.wur.nl/en/research-results/research-institutes/environmental-research.htm
+  - name: Brayden Youngberg
+    roles: [maintainer]
+    email: b.youngberg@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
+
+citation:
+  title: Agrometeorological indicators from 1979 to present derived from reanalysis
+  authors:
+    - family: Boogaard
+      given: H.
+    - family: Schubert
+      given: J.
+    - family: De Wit
+      given: A.
+    - family: Lazebnik
+      given: J.
+    - family: Hutjes
+      given: R.
+    - family: Van der Grijn
+      given: G.
+  date: "2020"
+  publisher: Copernicus Climate Change Service (C3S) Climate Data Store (CDS)
+  url: https://cds.climate.copernicus.eu/datasets/sis-agrometeorological-indicators
+doi: 10.24381/cds.6c68c9bb
+
+created: "2026-10-08"
+updated: "2026-10-08"
+
+spatial:
+  bbox: [-180.0, -90.0, 180.0, 90.0]
+  geography: [world]
+  crs: EPSG:4326
+
+temporal:
+  start_date: "1979-01-01"
+  end_date: null
+  update_frequency: daily
+
+climate:
+  downscaling:
+    method: >
+      Grid- and variable-specific regression from ERA5 interpolated to 0.1°, trained on ECMWF HRES
+      at 0.1°, so values follow the finer topography, land use and land-sea mask.
+    resolution: 0.1 degree
+
+# One data dictionary for the Zarr stores and the CDS API; the Earth Engine copy carries 21 of the
+# 27 variables, so it is a second structure built from the same definitions.
+structures:
+  - name: daily
+    dimensions:
+      - &cell
+        name: cell
+        type: xy
+        description: 0.1° (~11 km at equator). Latitude ascends from -90 to 90, longitude from -180 to 179.9.
+        step: 0.1
+        unit: degree
+      - &time
+        name: time
+        type: temporal
+        description: Day, midnight to midnight local time (00-00LT). Grows daily, about a week behind present.
+        step: P1D
+    variables:
+      - &Temperature_Air_2m_Max_24h
+        name: Temperature_Air_2m_Max_24h
+        description: Maximum air temperature at 2 m over the local day.
+        data_type: float32
+        unit: K
+        nodata: -9999
+      - &Temperature_Air_2m_Min_24h
+        name: Temperature_Air_2m_Min_24h
+        description: Minimum air temperature at 2 m over the local day.
+        data_type: float32
+        unit: K
+        nodata: -9999
+      - &Temperature_Air_2m_Mean_24h
+        name: Temperature_Air_2m_Mean_24h
+        description: Mean air temperature at 2 m over the local day.
+        data_type: float32
+        unit: K
+        nodata: -9999
+      - &Temperature_Air_2m_Max_Day_Time
+        name: Temperature_Air_2m_Max_Day_Time
+        description: Maximum air temperature at 2 m between 06 and 18 local time.
+        data_type: float32
+        unit: K
+        nodata: -9999
+      - &Temperature_Air_2m_Mean_Day_Time
+        name: Temperature_Air_2m_Mean_Day_Time
+        description: Mean air temperature at 2 m between 06 and 18 local time.
+        data_type: float32
+        unit: K
+        nodata: -9999
+      - &Temperature_Air_2m_Min_Night_Time
+        name: Temperature_Air_2m_Min_Night_Time
+        description: Minimum air temperature at 2 m between 18 and 06 local time.
+        data_type: float32
+        unit: K
+        nodata: -9999
+      - &Temperature_Air_2m_Mean_Night_Time
+        name: Temperature_Air_2m_Mean_Night_Time
+        description: Mean air temperature at 2 m between 18 and 06 local time.
+        data_type: float32
+        unit: K
+        nodata: -9999
+      - &Dew_Point_Temperature_2m_Mean_24h
+        name: Dew_Point_Temperature_2m_Mean_24h
+        description: Mean dew point temperature at 2 m over the local day.
+        data_type: float32
+        unit: K
+        nodata: -9999
+      - &Precipitation_Flux
+        name: Precipitation_Flux
+        description: Total precipitation over the local day.
+        data_type: float32
+        unit: mm d-1
+        nodata: -9999
+      - name: Precipitation_Duration_Fraction
+        description: Fraction of the day's hours with precipitation of at least 0.1 mm/h.
+        data_type: float32
+        unit: "1"
+        nodata: -9999
+      - &Precipitation_Rain_Duration_Fraction
+        name: Precipitation_Rain_Duration_Fraction
+        description: Fraction of the day's hours with rain.
+        data_type: float32
+        unit: "1"
+        nodata: -9999
+      - &Precipitation_Solid_Duration_Fraction
+        name: Precipitation_Solid_Duration_Fraction
+        description: >
+          Fraction of the day's hours with solid precipitation (freezing rain, snow, wet snow,
+          rain-snow mix, ice pellets; no hail).
+        data_type: float32
+        unit: "1"
+        nodata: -9999
+      - &Solar_Radiation_Flux
+        name: Solar_Radiation_Flux
+        description: Surface downward solar radiation summed over the local day.
+        data_type: float32
+        unit: J m-2 d-1
+        nodata: -9999
+      - &ReferenceET_PenmanMonteith_FAO56
+        name: ReferenceET_PenmanMonteith_FAO56
+        description: Penman-Monteith reference evapotranspiration, FAO-56 method, over the local day.
+        data_type: float32
+        unit: mm d-1
+        nodata: -9999
+      - name: Derived_Relative_Humidity_2m_Max_24h
+        description: Maximum relative humidity at 2 m, derived from the daily minimum temperature and mean vapour pressure.
+        data_type: float32
+        unit: "%"
+        nodata: -9999
+      - name: Derived_Relative_Humidity_2m_Min_24h
+        description: Minimum relative humidity at 2 m, derived from the daily maximum temperature and mean vapour pressure.
+        data_type: float32
+        unit: "%"
+        nodata: -9999
+      - &Relative_Humidity_2m_06h
+        name: Relative_Humidity_2m_06h
+        description: Relative humidity at 2 m at 06 local time.
+        data_type: float32
+        unit: "%"
+        nodata: -9999
+      - name: Relative_Humidity_2m_09h
+        description: Relative humidity at 2 m at 09 local time.
+        data_type: float32
+        unit: "%"
+        nodata: -9999
+      - name: Relative_Humidity_2m_12h
+        description: Relative humidity at 2 m at 12 local time.
+        data_type: float32
+        unit: "%"
+        nodata: -9999
+      - &Relative_Humidity_2m_15h
+        name: Relative_Humidity_2m_15h
+        description: Relative humidity at 2 m at 15 local time.
+        data_type: float32
+        unit: "%"
+        nodata: -9999
+      - name: Relative_Humidity_2m_18h
+        description: Relative humidity at 2 m at 18 local time.
+        data_type: float32
+        unit: "%"
+        nodata: -9999
+      - &Vapour_Pressure_Mean_24h
+        name: Vapour_Pressure_Mean_24h
+        description: Mean vapour pressure over the local day.
+        data_type: float32
+        unit: hPa
+        nodata: -9999
+      - &Vapour_Pressure_Deficit_at_Maximum_Temperature
+        name: Vapour_Pressure_Deficit_at_Maximum_Temperature
+        description: >
+          Vapour pressure deficit at the daily maximum temperature: saturated vapour pressure at the
+          maximum temperature minus the daily mean vapour pressure.
+        data_type: float32
+        unit: hPa
+        nodata: -9999
+      - &Wind_Speed_10m_Mean_24h
+        name: Wind_Speed_10m_Mean_24h
+        description: Mean wind speed at 10 m over the local day.
+        data_type: float32
+        unit: m s-1
+        nodata: -9999
+      - &Cloud_Cover_Mean_24h
+        name: Cloud_Cover_Mean_24h
+        description: Mean total cloud cover over the local day, 0 to 1.
+        data_type: float32
+        unit: "1"
+        nodata: -9999
+      - &Snow_Thickness_Mean_24h
+        name: Snow_Thickness_Mean_24h
+        description: Mean snow depth over the local day.
+        data_type: float32
+        unit: cm
+        nodata: -9999
+      - &Snow_Thickness_LWE_Mean_24h
+        name: Snow_Thickness_LWE_Mean_24h
+        description: Mean snow liquid water equivalent over the local day.
+        data_type: float32
+        unit: cm
+        nodata: -9999
+
+  - name: gee
+    dimensions: [*cell, *time]
+    variables:
+      - *Temperature_Air_2m_Max_24h
+      - *Temperature_Air_2m_Min_24h
+      - *Temperature_Air_2m_Mean_24h
+      - *Temperature_Air_2m_Max_Day_Time
+      - *Temperature_Air_2m_Mean_Day_Time
+      - *Temperature_Air_2m_Min_Night_Time
+      - *Temperature_Air_2m_Mean_Night_Time
+      - *Dew_Point_Temperature_2m_Mean_24h
+      - *Precipitation_Flux
+      - *Precipitation_Rain_Duration_Fraction
+      - *Precipitation_Solid_Duration_Fraction
+      - *Solar_Radiation_Flux
+      - *ReferenceET_PenmanMonteith_FAO56
+      - *Relative_Humidity_2m_06h
+      - *Relative_Humidity_2m_15h
+      - *Vapour_Pressure_Mean_24h
+      - *Vapour_Pressure_Deficit_at_Maximum_Temperature
+      - *Wind_Speed_10m_Mean_24h
+      - *Cloud_Cover_Mean_24h
+      - *Snow_Thickness_Mean_24h
+      - *Snow_Thickness_LWE_Mean_24h
+
+cdh:
+  domain: [climate]
+  usage:
+    intended_uses:
+      - daily weather inputs for crop, livestock and agro-ecological models
+      - weather time series for trial sites, farms and other point locations
+      - growing-season summaries such as rainfall totals, heat days and evapotranspiration
+    not_recommended_for:
+      - use: hourly or sub-daily analysis
+        reason: AgERA5 is a daily aggregate.
+        use_instead: ERA5 hourly data on single levels (DOI 10.24381/cds.adbb2d47).
+      - use: station-accurate values at one site
+        reason: reanalysis on an 11 km grid, so local effects and extremes are smoothed.
+        use_instead: nearby weather station records, with AgERA5 to fill gaps.
+
+processing:
+  - id: source
+    description: >
+      Hourly ERA5 aggregated to local-time days and corrected to a 0.1° grid with regressions
+      trained on ECMWF HRES, by Wageningen Environmental Research for the Copernicus Climate Change
+      Service. Published on the Climate Data Store as NetCDF.
+    derived_from:
+      - title: ECMWF ERA5 reanalysis
+        url: https://doi.org/10.24381/cds.143582cf
+
+data:
+  - name: zarr-geo-chunked
+    structures: [daily]
+    description: >
+      Primary access. Zarr store chunked 2112 days x 16 lat x 32 lon (about 5.8 years x 1.6° x
+      3.2° per chunk), so long time series at a few points or a small area read few chunks. Slow
+      for a whole region on one day; use the time-chunked store for that.
+    locations:
+      - url: https://arco.datastores.ecmwf.int/cadl-arco-geo-001/arco/sis_agrometeorological_indicators/all/geoChunked.zarr
+        title: HTTPS (CDS token as Bearer header)
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: zarr-time-chunked
+    structures: [daily]
+    description: >
+      Same data chunked 1 day x 1024 lat x 1024 lon, so a map of a region or the globe for a few
+      days reads few chunks. Slow for long time series; use the geo-chunked store for that.
+    locations:
+      - url: https://arco.datastores.ecmwf.int/cadl-arco-time-001/arco/sis_agrometeorological_indicators/all/timeChunked.zarr
+        title: HTTPS (CDS token as Bearer header)
+    media_type: application/vnd.zarr; version=2
+    processing_steps: [source]
+  - name: gee
+    structures: [gee]
+    description: >
+      Google Earth Engine image collection projects/climate-engine-pro/assets/ce-ag-era5-v2/daily,
+      curated by Climate Engine. One image per day, same band names and units as the Zarr stores,
+      but 21 of the 27 variables.
+    locations:
+      - url: https://earthengine.googleapis.com/v1/projects/climate-engine-pro/assets/ce-ag-era5-v2/daily
+        title: Earth Engine
+    processing_steps: [source]
+  - name: cds-api
+    structures: [daily]
+    description: >
+      Backup route. The CDS retrieve API returns NetCDF per variable, statistic and period on
+      request; slower than the Zarr stores and queued, but needs only the cdsapi package.
+    locations:
+      - url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/sis-agrometeorological-indicators
+        title: CDS API process
+    media_type: application/x-netcdf
+    processing_steps: [source]
+
+additional_assets:
+  - name: example
+    roles: [example]
+    media_type: text/x-python
+    description: Reads three variables for two points and one year from the geo-chunked store with the CDS token.
+    locations:
+      - url: ./example.py
+  - name: agent guide
+    roles: [agents]
+    media_type: text/markdown
+    description: Getting a key, choosing a store, variable units, and efficient point reads.
+    locations:
+      - url: ./AGENTS.md
+
+additional_links:
+  - title: AgERA5 on the Climate Data Store
+    rel: about
+    url: https://cds.climate.copernicus.eu/datasets/sis-agrometeorological-indicators
+    description: Dataset page with documentation, download form and the licence to accept.
+  - title: AgERA5 ARCO product user guide
+    rel: describedby
+    url: https://confluence.ecmwf.int/spaces/CKB/pages/673546266/Agrometeorological+indicators+Analysis+Ready+Cloud+Optimised+ARCO+from+1979+to+present+derived+from+reanalysis+Product+User+Guide+PUG
+    description: ECMWF guide to the Zarr stores.
+  - title: CDS retrieve API description
+    rel: service-desc
+    url: https://cds.climate.copernicus.eu/api/retrieve/v1/openapi.json
+  - title: CDS API documentation
+    rel: service-doc
+    url: https://cds.climate.copernicus.eu/how-to-api
+    description: How to get a token and call the CDS API.
+  - title: AgERA5 in the Earth Engine community catalog
+    rel: describedby
+    url: https://gee-community-catalog.org/projects/agera5_datasets/
+    description: Band list and Earth Engine snippet for the Climate Engine copy.

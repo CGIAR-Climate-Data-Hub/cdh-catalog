@@ -1,13 +1,9 @@
-# yaml-language-server: $schema=../../spec/schemas/profiles/cdh.schema.json
-$schema: >-
-  https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/schemas/profiles/cdh.schema.json
-cdh_schema_version: v0.3.0
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+cdh_schema_version: v0.4.1
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/cdh/schema.json
-  - >-
-    https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.3.0/extensions/datacube/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
 created: "2026-08-27"
-updated: "2026-08-27"
+updated: "2026-10-08"
 id: chirps-v3-daily
 title: CHIRPS v3 Daily Precipitation
 version: v3.0
@@ -15,7 +11,7 @@ description: >
   CHIRPS (Climate Hazards center InfraRed Precipitation with Stations), version 3, is a quasi-global
   daily precipitation dataset produced by the Climate Hazards Center (UC Santa Barbara), blending
   0.05° satellite infrared cold-cloud-duration imagery with in-situ station observations. It spans
-  1981 to near-present, covering 50°S–50°N at all longitudes, and is widely used for drought
+  1981 to near-present, covering 60°S–60°N at all longitudes, and is widely used for drought
   monitoring, hydrological modeling, and trend/seasonal analysis. Values represent daily accumulated
   precipitation in millimeters.
 resource_type: dataset
@@ -24,8 +20,6 @@ keywords:
   - rainfall
   - CHIRPS
   - satellite
-  - gridded
-  - daily
   - drought monitoring
 license: CC-BY-4.0
 access: public
@@ -36,75 +30,161 @@ contact:
       - producer
     url: https://www.chc.ucsb.edu/
     email: chc-help@geog.ucsb.edu
-doi: 10.1038/sdata.2015.66
+  - name: Andres Aguilar Ariza
+    roles: [maintainer]
+    email: Andres.Aguilar@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
+  - name: Brayden Youngberg
+    roles: [maintainer]
+    email: b.youngberg@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
+doi: 10.15780/G2JQ0P
 citation:
-  title: >-
-    The climate hazards infrared precipitation with stations—a new environmental record for
-    monitoring extremes
+  title: Climate Hazards Center Infrared Precipitation with Stations version 3 (CHIRPS3) Data Repository
   authors:
-    - Funk, C.
-    - Peterson, P.
-    - Landsfeld, M.
-    - Pedreros, D.
-    - Verdin, J.
-    - Shukla, S.
-    - Husak, G.
-    - Rowland, J.
-    - Harrison, L.
-    - Hoell, A.
-    - Michaelsen, J.
-  date: "2015"
-  publisher: Scientific Data
-  url: https://doi.org/10.1038/sdata.2015.66
+    - organization: Climate Hazards Center, UC Santa Barbara
+  date: "2025"
+  publisher: Climate Hazards Center, UC Santa Barbara
+  url: https://doi.org/10.15780/G2JQ0P
+related_publications:
+  - doi: 10.1038/s41597-026-07096-4
+    citation:
+      title: The Climate Hazards Center Infrared Precipitation with Stations, Version 3
+      authors:
+        - family: Funk
+          given: C.
+        - family: Peterson
+          given: P.
+        - family: Harrison
+          given: L.
+        - family: Saldivar
+          given: R.
+        - family: Landsfeld
+          given: M.
+        - family: Pedreros
+          given: D.
+        - family: Shukla
+          given: S.
+        - family: Fink
+          given: A. H.
+        - family: Davenport
+          given: F.
+        - family: Peterson
+          given: S.
+        - family: Turner
+          given: W.
+        - family: Sonnier
+          given: A.
+        - family: Budde
+          given: M.
+        - family: Tabor
+          given: K.
+        - family: Verdin
+          given: J.
+        - family: Hauzaree
+          given: N. D.
+        - family: Naim
+          given: M.
+        - family: Alaso
+          given: D.
+        - family: Husak
+          given: G.
+      date: "2026"
+      publisher: Scientific Data
+      url: https://doi.org/10.1038/s41597-026-07096-4
+  - doi: 10.1038/sdata.2015.66
+    citation:
+      title: >-
+        The climate hazards infrared precipitation with stations—a new environmental record for
+        monitoring extremes
+      authors:
+        - family: Funk
+          given: C.
+        - family: Peterson
+          given: P.
+        - family: Landsfeld
+          given: M.
+        - family: Pedreros
+          given: D.
+        - family: Verdin
+          given: J.
+        - family: Shukla
+          given: S.
+        - family: Husak
+          given: G.
+        - family: Rowland
+          given: J.
+        - family: Harrison
+          given: L.
+        - family: Hoell
+          given: A.
+        - family: Michaelsen
+          given: J.
+      date: "2015"
+      publisher: Scientific Data
+      url: https://doi.org/10.1038/sdata.2015.66
 spatial:
   bbox:
     - -180
-    - -50
+    - -60
     - 180
-    - 50
+    - 60
   crs: EPSG:4326
   geography:
     - world
-  resolution:
-    - type: xy
-      unit: degree
-      value: 0.05
-      label: 0.05° (~5 km at equator)
 temporal:
   start_date: "1981-01-01"
   end_date: null
+  update_frequency: monthly
+structures:
+  - name: daily
+    dimensions:
+      - name: cell
+        type: xy
+        description: 0.05° (~5 km at equator).
+        step: 0.05
+        unit: degree
+      - name: time
+        type: temporal
+        description: Day of the precipitation total; the {time} token of the daily files.
+        extent: ["1981-01-01", "2026-08-31"] # files present as of `updated`; may lag the data, never lead it
+        step: P1D
+    variables:
+      - name: precipitation
+        description: Daily accumulated precipitation
+        data_type: float32
+        unit: mm
+        nodata: -9999
 data:
   - name: geotiff
     locations:
-      - url: https://data.chc.ucsb.edu/products/CHIRPS-3.0/
+      - url: https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/rnl/
         title: HTTPS
+    href_template: "{time:%Y}/chirps-v3.0.rnl.{time:%Y.%m.%d}.tif"
     processing_steps:
       - source
-    description: Daily GeoTIFF files, one per day
-    nodata: -9999
+    description: >-
+      Daily GeoTIFF files, one per day in yearly folders. Daily values are CHIRPS v3 pentad totals
+      disaggregated with ERA5 daily precipitation (the "rnl" variant).
     media_type: image/tiff; application=geotiff
 processing:
   - id: source
     description: Original CHIRPS v3 daily release from the Climate Hazards Center
     derived_from:
-      - url: https://data.chc.ucsb.edu/products/CHIRPS-3.0/
-        title: CHIRPS-3.0 data portal
+      - url: https://data.chc.ucsb.edu/products/CHIRPS/v3.0/
+        title: CHIRPS v3.0 data portal
+        version: v3.0
 cdh:
   domain:
     - climate
-    - hydrology
-dimensions:
-  - name: time
-    type: temporal
-    description: Daily time step of the precipitation record
-    values:
-      - "1981-01-01"
-    step: P1D
-variables:
-  - name: precipitation
-    description: Daily accumulated precipitation
-    data_type: float32
-    unit: mm
-    dimensions:
-      - time
-    nodata: -9999
+  usage:
+    intended_uses:
+      - daily rainfall inputs for crop and hydrological models
+      - drought monitoring and seasonal rainfall anomalies
+    not_recommended_for:
+      - use: areas poleward of 60° latitude
+        reason: CHIRPS v3 covers 60°S to 60°N only.
+        use_instead: ERA5 or AgERA5 precipitation.
+      - use: sub-daily rainfall analysis
+        reason: daily values are disaggregated from pentad totals with ERA5, so within-day timing is not observed.
+        use_instead: IMERG half-hourly precipitation.

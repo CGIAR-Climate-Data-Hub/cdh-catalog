@@ -1,0 +1,207 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# CHIRPS v3 monthly Africa rewritten as COGs, plus seasonal sums derived from them (Adaptation Atlas).
+cdh_schema_version: v0.4.1
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+
+id: africa-precipitation-monthly-seasonal
+title: Monthly and Seasonal Precipitation from CHIRPS v3 (Africa)
+version: "1"
+series:
+  name: Africa Agriculture Adaptation Atlas
+  url: https://adaptationatlas.cgiar.org/
+description: >
+  Total precipitation (PTOT) from the CHIRPS v3.0 monthly Africa product, delivered as per-pixel
+  monthly Cloud Optimized GeoTIFFs and per-year rolling 3-month (seasonal) sums, 1981 to present.
+  The monthly files hold the same values as CHIRPS on the same 0.05° grid, with the -9999 sentinel
+  masked and overviews added. The seasonal sums cover the twelve rolling tri-month windows (JFM,
+  FMA, ..., DJF) and are derived from the monthly files.
+resource_type: dataset
+license: CC-BY-4.0 # Atlas-processed COGs; CHIRPS source is public domain
+attribution: Derived from CHIRPS v3, Climate Hazards Center, UC Santa Barbara.
+
+keywords:
+  [
+    precipitation,
+    rainfall,
+    CHIRPS,
+    PTOT,
+    monthly,
+    seasonal,
+    Africa,
+    ENSO,
+    drought,
+  ]
+
+note: >
+  Seasonal windows are labelled by the calendar year in which the window ends (DJF_2020 = Dec 2019
+  to Feb 2020). Edge windows that the record cannot cover in full are absent (NDJ and DJF 1981;
+  windows ending after the latest monthly file).
+
+contact:
+  - name: Peter Steward
+    organization: Alliance of Bioversity International and CIAT
+    email: p.steward@cgiar.org
+    roles: [processor, point-of-contact, maintainer]
+  - organization: Climate Hazards Center, UC Santa Barbara
+    url: https://www.chc.ucsb.edu/data/chirps
+    roles: [licensor, producer]
+
+citation:
+  title: "Monthly and seasonal precipitation from CHIRPS v3 (Africa), Africa Agriculture Adaptation Atlas"
+  authors:
+    - family: Steward
+      given: P.
+    - family: Funk
+      given: C.
+    - family: Peterson
+      given: P.
+    - family: Landsfeld
+      given: M.
+  date: "2026"
+  publisher: Alliance of Bioversity International and CIAT
+related_publications:
+  - doi: 10.1038/sdata.2015.66
+    citation:
+      title: "The climate hazards infrared precipitation with stations - a new environmental record for monitoring extremes"
+      authors:
+        - family: Funk
+          given: C.
+        - family: Peterson
+          given: P.
+        - family: Landsfeld
+          given: M.
+        - family: Pedreros
+          given: D.
+        - family: Verdin
+          given: J.
+        - family: Shukla
+          given: S.
+        - family: Husak
+          given: G.
+        - family: Rowland
+          given: J.
+        - family: Harrison
+          given: L.
+        - family: Hoell
+          given: A.
+        - family: Michaelsen
+          given: J.
+      date: "2015"
+      publisher: Scientific Data
+      url: https://doi.org/10.1038/sdata.2015.66
+
+created: "2026-08-28"
+updated: "2026-10-08"
+
+spatial:
+  bbox: [-20.0, -40.0, 55.0, 40.0]
+  crs: EPSG:4326
+  geography: [africa]
+
+temporal:
+  start_date: "1981-01"
+  end_date: null # open-ended; monthly files are appended as CHIRPS v3 is released
+
+# The monthly and seasonal file sets sit on different time axes, so each is its own structure.
+structures:
+  - name: monthly
+    dimensions:
+      - &cell
+        name: cell
+        type: xy
+        description: 0.05 deg (~5.5 km, CHIRPS native).
+        step: 0.05
+        unit: degree
+      - name: time
+        type: temporal
+        description: Month of the monthly totals (YYYY-MM); the {time} token of the monthly asset.
+        extent: ["1981-01", "2026-04"] # files present as of `updated`; may lag the data
+        step: P1M
+    variables:
+      - &ptot
+        name: PTOT
+        description: Total precipitation over the period (calendar month, or 3-month seasonal sum).
+        data_type: float32
+        unit: mm
+  - name: seasonal
+    dimensions:
+      - *cell
+      - name: season
+        type: season
+        description: >
+          Rolling 3-month window named by the initials of its months (JFM = Jan-Mar ... DJF = Dec-Feb).
+          Each value covers three months; NDJ and DJF span the year boundary and are labelled by the
+          year in which they end.
+        values: [JFM, FMA, MAM, AMJ, MJJ, JJA, JAS, ASO, SON, OND, NDJ, DJF]
+      - name: year
+        type: temporal
+        description: Year in which a seasonal window ends.
+        extent: ["1981", "2026"]
+        step: P1Y
+    variables:
+      - *ptot
+
+processing:
+  - id: source
+    description: CHIRPS v3.0 monthly precipitation totals, Africa window (station + infrared blend).
+    derived_from:
+      - title: CHIRPS v3.0 monthly Africa GeoTIFFs (Climate Hazards Center)
+        url: https://data.chc.ucsb.edu/products/CHIRPS/v3.0/monthly/africa/tifs/
+        version: v3.0
+  - id: monthly-cog
+    description: >
+      Each monthly GeoTIFF rewritten as a COG with internal overviews, -9999 masked to NaN. Same
+      grid and values as the source.
+    code:
+      url: https://github.com/AdaptationAtlas/hazards_prototype/blob/develop/R/observational/1_get_chirps_chirts.R
+      version: "4d89638"
+  - id: seasonal-sum
+    description: Per-year tri-month sums over the twelve seasonal windows, written as COGs with overviews.
+    code:
+      url: https://github.com/AdaptationAtlas/hazards_prototype/blob/develop/R/observational/5b_make_obs_seasonal_rasters.R
+      version: "c4c3de2"
+
+data:
+  - name: monthly
+    structures: [monthly]
+    description: Per-pixel monthly precipitation totals, one COG per month.
+    locations:
+      - url: https://digital-atlas.s3.amazonaws.com/domain=climate/type=observational/source=chirps-chirts-era5/region=africa/processing=monthly/
+        title: HTTPS
+      - url: s3://digital-atlas/domain=climate/type=observational/source=chirps-chirts-era5/region=africa/processing=monthly/
+        title: S3
+    href_template: "variable={variable}/{variable}-{time}.tif" # e.g. variable=PTOT/PTOT-2020-04.tif
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    file_size: 5 MB
+    processing_steps: [source, monthly-cog]
+  - name: seasonal
+    structures: [seasonal]
+    description: Per-year rolling 3-month precipitation sums, one COG per season x year.
+    locations:
+      - url: https://digital-atlas.s3.amazonaws.com/domain=climate/type=observational/source=chirps-chirts-era5/region=africa/processing=seasonal/
+        title: HTTPS
+      - url: s3://digital-atlas/domain=climate/type=observational/source=chirps-chirts-era5/region=africa/processing=seasonal/
+        title: S3
+    # Not every season x year exists, so the files are listed rather than templated.
+    # The CSV puts href last so the link checker reads the URL, not the whole row.
+    file_index:
+      - format: cdh-inventory
+        title: Seasonal file inventory
+        locations:
+          - url: ./seasonal-files.csv
+        media_type: text/csv
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source, monthly-cog, seasonal-sum]
+
+cdh:
+  domain: [climate]
+  usage:
+    intended_uses:
+      - monthly and seasonal rainfall totals and anomalies over Africa
+      - comparing seasonal rainfall across ENSO phases or analogue years
+      - rainfall context for drought, vegetation and flood indicators
+    not_recommended_for:
+      - use: Daily or sub-monthly rainfall analysis.
+        reason: Only monthly totals and 3-month sums are published here.
+        use_instead: The CHIRPS v3 daily archive (catalog record chirps-v3-daily).

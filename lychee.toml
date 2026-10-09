@@ -1,0 +1,14 @@
+# Link checker config for .github/workflows/check-links.yaml
+# Be gentle with publishers hosting many of the catalog's links.
+max_concurrency = 8
+
+# 401: data endpoints that need a token (Earth Engine, CDS) still exist.
+# 403/429: some publishers block bots or rate-limit CI.
+accept = ["200..=299", "401", "403", "429"]
+
+# Object stores 404 on folder paths even when the data exists. A .zarr store is a
+# folder anywhere, so it's excluded on any host.
+exclude = [
+  '\.zarr/?$',
+  '^https://[^/]*s3[^/]*\.amazonaws\.com/.*/$',
+]
