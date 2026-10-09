@@ -1,6 +1,5 @@
 # yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
 # FEDERATED record - the Atlas cites this index but does not host it.
-# Source deliberately CPC/ERSSTv6, NOT the HadISST-based series - see the note.
 cdh_schema_version: v0.4.1
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
@@ -121,8 +120,3 @@ cdh:
           Different SST reconstruction and different climatology, so the join introduces a step
           change that would be read as a physical signal.
         use_instead: One source end to end, this series throughout.
-      - use: Combining DMI and an ENSO index in an unscaled distance metric.
-        reason: >
-          The IOD has a much smaller spread than ENSO, so an unscaled distance lets ENSO dominate the
-          match.
-        use_instead: Standardise each index before computing distance.
