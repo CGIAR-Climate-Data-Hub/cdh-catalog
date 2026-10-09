@@ -8,7 +8,9 @@ accept = ["200..=299", "401", "403", "429"]
 
 # Object stores 404 on folder paths even when the data exists. A .zarr store is a
 # folder anywhere, so it's excluded on any host.
+# Source Cooperative folder URLs never answer; the files under them do.
 exclude = [
   '\.zarr/?$',
   '^https://[^/]*s3[^/]*\.amazonaws\.com/.*/$',
+  '^https://data\.source\.coop/.*/$',
 ]
