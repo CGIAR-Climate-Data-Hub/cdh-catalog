@@ -1,0 +1,179 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# SPEI at 3- and 12-month scales computed by the Adaptation Atlas from CHIRPS v3 and CHIRTS-ERA5.
+cdh_schema_version: v0.4.1
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/climate/schema.json
+
+id: africa-spei-drought
+title: 3- and 12-month SPEI from CHIRPS v3 and CHIRTS-ERA5 (Africa)
+version: "1"
+series:
+  name: Africa Agriculture Adaptation Atlas
+  url: https://adaptationatlas.cgiar.org/
+description: >
+  Standardized Precipitation-Evapotranspiration Index (SPEI) at 3-month and 12-month accumulation,
+  as per-pixel monthly Cloud Optimized GeoTIFFs over Africa, 1981 to present. The index is computed
+  from the climatic water balance (CHIRPS v3 precipitation minus Hargreaves potential
+  evapotranspiration from CHIRTS-ERA5 temperature) on the 0.05° CHIRPS grid, fitted to a
+  log-logistic distribution over the 1991-2020 reference period. SPEI-03 tracks seasonal and
+  agricultural drought; SPEI-12 tracks hydrological and multi-year drought.
+resource_type: dataset
+license: CC-BY-4.0 # Atlas-derived product; CHIRPS and CHIRTS-ERA5 inputs are CC-BY-4.0
+attribution: Derived from CHIRPS v3 and CHIRTS-ERA5, Climate Hazards Center, UC Santa Barbara.
+
+keywords:
+  [
+    drought,
+    SPEI,
+    Standardized Precipitation-Evapotranspiration Index,
+    climatic water balance,
+    potential evapotranspiration,
+    Hargreaves,
+    log-logistic,
+    ENSO,
+  ]
+
+note: >
+  Files for the first months of each accumulation window exist but hold no data (1981-01 to
+  1981-02 for SPEI-03, 1981-01 to 1981-11 for SPEI-12). In arid cells the log-logistic fit is
+  poorly constrained: non-finite results are stored as NoData, and magnitudes well beyond ±3 can
+  occur where the fit is degenerate rather than indicating record drought or wetness.
+
+contact:
+  - name: Peter Steward
+    organization: Alliance of Bioversity International and CIAT
+    email: p.steward@cgiar.org
+    roles: [producer, processor, point-of-contact, maintainer]
+  - organization: Alliance of Bioversity International and CIAT
+    url: https://alliancebioversityciat.org/
+    roles: [licensor]
+
+citation:
+  authors:
+    - family: Steward
+      given: P.
+  date: "2026"
+  publisher: Alliance of Bioversity International and CIAT
+related_publications:
+  - doi: 10.1175/2009JCLI2909.1
+    citation:
+      title: "A Multiscalar Drought Index Sensitive to Global Warming: The Standardized Precipitation Evapotranspiration Index"
+      authors:
+        - family: Vicente-Serrano
+          given: S. M.
+        - family: Beguería
+          given: S.
+        - family: López-Moreno
+          given: J. I.
+      date: "2010"
+      publisher: Journal of Climate
+  - doi: 10.13031/2013.26773
+    citation:
+      title: "Reference Crop Evapotranspiration from Temperature"
+      authors:
+        - family: Hargreaves
+          given: G. H.
+        - family: Samani
+          given: Z. A.
+      date: "1985"
+      publisher: Applied Engineering in Agriculture
+
+created: "2026-08-28"
+updated: "2026-10-09"
+
+spatial:
+  bbox: [-20.0, -40.0, 55.0, 40.0]
+  crs: EPSG:4326
+  geography: [africa]
+
+temporal:
+  start_date: "1981-01"
+  end_date: null # open-ended; the time extent below ends at the latest file present
+
+climate:
+  baseline:
+    start_date: "1991-01-01"
+    end_date: "2020-12-31"
+
+structures:
+  - name: monthly
+    dimensions:
+      - name: cell
+        type: xy
+        description: 0.05 deg (~5.5 km, CHIRPS native).
+        step: 0.05
+        unit: degree
+      - name: time
+        type: temporal
+        description: Last month of the accumulation window (YYYY-MM); the {time} token of the monthly asset.
+        extent: ["1981-01", "2026-04"] # files present as of `updated`; may lag the data
+        step: P1M
+    variables:
+      - name: SPEI-03
+        description: >
+          SPEI over the 3 months ending in the labelled month: the standardized climatic water
+          balance (precipitation minus potential evapotranspiration) relative to the 1991-2020
+          distribution for that calendar month. Zero is the reference median; negative is drier
+          than the reference climatology, positive wetter. Values below -1 indicate moderate and
+          below -2 extreme drought.
+        data_type: float32
+        unit: "1"
+        nodata: "NaN"
+      - name: SPEI-12
+        description: >
+          SPEI over the 12 months ending in the labelled month, standardized as for SPEI-03. The
+          longer window responds to sustained deficits in soil moisture, streamflow and storage.
+        data_type: float32
+        unit: "1"
+        nodata: "NaN"
+
+processing:
+  - id: source
+    description: >
+      Monthly CHIRPS v3 precipitation and CHIRTS-ERA5 monthly maximum and minimum temperature, cut
+      to the Africa window.
+    derived_from:
+      - id: africa-precipitation-monthly-seasonal
+        version: "1"
+      - title: CHIRTS-ERA5 monthly Tmax GeoTIFFs (Climate Hazards Center)
+        url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/tmax/tifs/monthly/
+      - title: CHIRTS-ERA5 monthly Tmin GeoTIFFs (Climate Hazards Center)
+        url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/tmin/tifs/monthly/
+  - id: spei
+    description: >
+      Monthly potential evapotranspiration by Hargreaves-Samani from Tmax, Tmin, their mean and
+      extraterrestrial radiation at mid-month; climatic water balance = precipitation minus PET.
+      Per-pixel SPEI at 3- and 12-month scales with the SPEI R package, log-logistic fit on
+      1991-2020. Pixels with fewer than scale + 24 valid months and non-finite fits set to NoData.
+      Written as COGs with internal overviews.
+    code:
+      url: https://github.com/AdaptationAtlas/hazards_prototype/blob/develop/R/observational/2_calculate_obs_spei.R
+      version: "4d89638"
+
+data:
+  - name: monthly
+    description: Per-pixel monthly SPEI, one COG per variable per month.
+    locations:
+      - url: https://digital-atlas.s3.amazonaws.com/domain=climate/type=observational/source=chirps-chirts-era5/region=africa/processing=monthly/
+        title: HTTPS
+      - url: s3://digital-atlas/domain=climate/type=observational/source=chirps-chirts-era5/region=africa/processing=monthly/
+        title: S3
+    href_template: "variable={variable}/{variable}-{time}.tif" # e.g. variable=SPEI-03/SPEI-03-2020-04.tif
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    file_size: 6 MB
+    processing_steps: [source, spei]
+
+cdh:
+  domain: [climate]
+  usage:
+    intended_uses:
+      - seasonal (SPEI-03) and multi-year (SPEI-12) drought monitoring over Africa
+      - comparing drought conditions across ENSO phases or analogue years
+      - drought context for vegetation, crop water-stress and food security indicators
+    not_recommended_for:
+      - use: Reading SPEI as an absolute rainfall or soil-moisture deficit.
+        reason: SPEI is a standardized anomaly against the 1991-2020 fitted distribution, not a quantity of water.
+        use_instead: Monthly and seasonal precipitation totals (catalog record africa-precipitation-monthly-seasonal).
+      - use: Combining with SPEI from other producers as one series.
+        reason: Values depend on the input data, the PET method and the reference period, which differ between products.
