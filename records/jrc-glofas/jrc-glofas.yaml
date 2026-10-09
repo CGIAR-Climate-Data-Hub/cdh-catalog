@@ -124,7 +124,7 @@ structures:
             label: 3 to 10 m
           - value: 4
             label: over 10 m
-  - name: masks
+  - name: permanent-water
     dimensions: [*cell]
     variables:
       - name: permanent_water
@@ -136,6 +136,9 @@ structures:
             label: land
           - value: 1
             label: permanent water
+  - name: spurious-depths
+    dimensions: [*cell]
+    variables:
       - name: spurious_depths
         description: >
           Areas where modelled depth exceeds 10 m in channels draining under 3,000 km2 at the
@@ -334,7 +337,7 @@ data:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp500.parquet
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp500.parquet
   - name: permanent-water
-    structures: [masks]
+    structures: [permanent-water]
     description: Permanent water body mask tiles, one collection.
     locations:
       - url: https://data.source.coop/nlebovits/jrc-glofas/permanent-water/
@@ -354,7 +357,7 @@ data:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/permanent-water.parquet
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/permanent-water.parquet
   - name: spurious-depths
-    structures: [masks]
+    structures: [spurious-depths]
     description: Spurious depth mask tiles, one collection.
     locations:
       - url: https://data.source.coop/nlebovits/jrc-glofas/spurious-depths/
