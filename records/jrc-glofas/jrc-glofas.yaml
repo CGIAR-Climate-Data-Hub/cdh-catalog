@@ -35,8 +35,10 @@ note: >
   Static modelled hazard with no temporal coverage; only land is covered. Very high depths can be
   artefacts of the hydraulic model, the 90 m resolution, sinks in the elevation model or tile boundaries, and the
   spurious-depths mask flags only the known cases. The VRTs reference the tiles over HTTPS with
-  GDAL's /vsicurl, so open them with GDAL-based tools (rasterio, QGIS, terra) rather than
-  downloading the .vrt alone.
+  GDAL's /vsicurl, so open them with GDAL-based tools (rasterio, terra) rather than downloading
+  the .vrt alone, and read a window or a few tiles at a time: every read touches Source
+  Cooperative directly, so visualising or reading the whole mosaic issues thousands of requests
+  and is very slow.
 
 contact:
   - organization: European Commission Joint Research Centre (JRC), Copernicus Emergency Management Service
