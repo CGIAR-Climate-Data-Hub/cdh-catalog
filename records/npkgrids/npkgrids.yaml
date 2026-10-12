@@ -1,0 +1,450 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# FAO-published NPKGRIDS fertilizer application rate maps, federated from FAO's public bucket.
+cdh_schema_version: "v0.4.1"
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/agriculture/schema.json
+
+id: npkgrids
+title: NPKGRIDS crop-specific fertilizer application rates circa 2020 (FAO)
+version: "2.0" # as labelled on the FAO data catalog
+series:
+  name: CROPGRIDS
+  url: https://data.apps.fao.org/catalog/dataset/cropgrids
+description: >
+  NPKGRIDS maps synthetic fertilizer application rates of nitrogen (N), phosphorus (as P2O5) and
+  potassium (as K2O) for 173 crops circa 2020 (a 2015 to 2020 average) on a global 0.05 degree grid
+  (about 5.6 km at the equator), in kilograms per hectare of harvested area. Eight fertilizer
+  datasets are fused and spread over the CROPGRIDS crop masks. This is the FAO release, regenerated
+  with FAO's Python pipeline, holding 167 crops for all three nutrients plus alfalfa for N and P,
+  as one GeoTIFF per nutrient and crop.
+license: CC-BY-4.0 # as declared on the FAO data catalog
+resource_type: dataset
+
+keywords:
+  - NPKGRIDS
+  - NPK
+  - fertilizer use by crop
+  - synthetic fertilizer
+  - nutrient application rate
+  - FAOSTAT
+  - term: fertilizer application
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_10795
+  - term: application rates
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_16113
+note: >
+  Rates are modelled, not observed. No nodata is set: ocean and cells without the crop hold 0.
+  Small countries and territories are excluded by the resolution. Within-country patterns follow
+  Mueller et al. (2012) where no newer subnational data exist. Values match the figshare release
+  (Nguyen et al. 2024) up to minor numerical deviations.
+
+contact:
+  - organization: Food and Agriculture Organization of the United Nations
+    roles: [licensor, producer]
+    url: https://www.fao.org/home/en/
+  - name: Francesco N. Tubiello
+    roles: [point-of-contact]
+    email: Francesco.Tubiello@fao.org
+    organization: Food and Agriculture Organization of the United Nations
+  - name: Brayden Youngberg
+    roles: [maintainer]
+    email: b.youngberg@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
+
+citation:
+  authors:
+    - organization: Food and Agriculture Organization of the United Nations
+  date: "2025"
+  publisher: FAO Agro-Informatic Data Catalog
+  url: https://data.apps.fao.org/catalog/dataset/49a38274-d47d-40c2-8a45-7a2924a3f958
+related_publications:
+  - doi: 10.1038/s41597-024-04030-4
+    citation:
+      title: "NPKGRIDS: a global georeferenced dataset of N, P2O5, and K2O fertilizer application rates for 173 crops"
+      authors:
+        - family: Nguyen
+          given: T. H.
+        - family: Tang
+          given: F. H. M.
+        - family: Conchedda
+          given: G.
+        - family: Casse
+          given: L.
+        - family: Obli-Laryea
+          given: G.
+        - family: Tubiello
+          given: F. N.
+        - family: Maggi
+          given: F.
+      date: "2024"
+      publisher: Scientific Data
+  - doi: 10.4060/ce0953en
+    citation:
+      title: Embedding the NPKGRIDS pipeline into the CROPGRIDS system
+      authors:
+        - family: Bottini
+          given: G.
+        - family: Tubiello
+          given: F. N.
+        - family: Rilling
+          given: H.
+        - family: Maggi
+          given: F.
+        - family: Tang
+          given: F.
+      date: "2026"
+      publisher: FAO Statistics Working Paper Series No. 26-54, FAO, Rome
+
+created: "2026-10-12"
+updated: "2026-10-12"
+
+spatial:
+  bbox: [-180, -90, 180, 90]
+  geography: [world]
+  crs: EPSG:4326
+
+temporal:
+  date: "2020" # circa 2020 reference period (2015-2020 average)
+
+structures:
+  - name: cogs
+    dimensions:
+      - &cell
+        name: cell
+        type: xy
+        description: 0.05 degree cells (~5.6 km at the equator).
+        step: 0.05
+        unit: degree
+      - name: nutrient
+        type: nutrient
+        description: Fertilizer nutrient, the {nutrient} token of the file paths (mapsets CG-N, CG-P, CG-K).
+        data_type: string
+        categories:
+          - { value: N, label: Nitrogen (N) }
+          - { value: P, label: Phosphorus as phosphorus pentoxide (P2O5) }
+          - { value: K, label: Potassium as potassium oxide (K2O) }
+      - name: crop
+        type: crop
+        description: FAO crop code, the {crop} token of the file names, labelled with FAOSTAT item names.
+        reference_system: https://data.apps.fao.org/gismgr/api/v2/catalog/workspaces/FAOSTAT/dimensions/CROP
+        data_type: string
+        categories:
+          - { value: ABACA, label: "Abaca" }
+          - { value: AGAVE, label: "Agave fibres, other" }
+          - { value: ALMOND, label: "Almonds, with shell" }
+          - { value: ANISEETC, label: "Anise, badian, fennel, coriander" }
+          - { value: APPLE, label: "Apples" }
+          - { value: APRICOT, label: "Apricots" }
+          - { value: ARECA, label: "Areca nuts" }
+          - { value: ARTICHOKE, label: "Artichokes" }
+          - { value: ASPARAGUS, label: "Asparagus" }
+          - { value: AVOCADO, label: "Avocados" }
+          - { value: BAMBARA, label: "Bambara beans" }
+          - { value: BANANA, label: "Bananas" }
+          - { value: BARLEY, label: "Barley" }
+          - { value: BEAN, label: "Beans, dry" }
+          - { value: BEETFOR, label: "Beets for fodder" }
+          - { value: BERRYNES, label: "Berries, other" }
+          - { value: BLUEBERRY, label: "Blueberries" }
+          - { value: BRAZIL, label: "Brazil nuts, with shell" }
+          - { value: BROADBEAN, label: "Broad beans, horse beans, dry" }
+          - { value: BUCKWHEAT, label: "Buckwheat" }
+          - { value: CABBAGE, label: "Cabbages and other brassicas" }
+          - { value: CABBAGEFOR, label: "Cabbages for fodder" }
+          - { value: CANARYSEED, label: "Canary seed" }
+          - { value: CAROB, label: "Carobs" }
+          - { value: CARROT, label: "Carrots and turnips" }
+          - { value: CARROTFOR, label: "Carrots for fodder" }
+          - { value: CASHEWAPPLE, label: "Cashewapple" }
+          - { value: CASSAVA, label: "Cassava" }
+          - { value: CASTOR, label: "Castor oil seed" }
+          - { value: CAULIFLOWER, label: "Cauliflowers and broccoli" }
+          - { value: CEREALNES, label: "Cereals, other" }
+          - { value: CHERRY, label: "Cherries" }
+          - { value: CHESTNUT, label: "Chest nuts" }
+          - { value: CHICKPEA, label: "Chick peas" }
+          - { value: CHICORY, label: "Chicory roots" }
+          - { value: CHILLEETC, label: "Chillies and peppers, green" }
+          - { value: CINNAMON, label: "Cinnamon (cannella)" }
+          - { value: CITRUSNES, label: "Citrus fruit, other" }
+          - { value: CLOVE, label: "Cloves" }
+          - { value: CLOVER, label: "Clover" }
+          - { value: COCOA, label: "Cocoa, beans" }
+          - { value: COCONUT, label: "Coconuts" }
+          - { value: COFFEE, label: "Coffee, green" }
+          - { value: COTTON, label: "Cotton seed" }
+          - { value: COWPEA, label: "Cow peas, dry" }
+          - { value: CRANBERRY, label: "Cranberries" }
+          - { value: CUCUMBERETC, label: "Cucumbers and gherkins" }
+          - { value: CURRANT, label: "Currants" }
+          - { value: DATE, label: "Dates" }
+          - { value: EGGPLANT, label: "Eggplants (aubergines)" }
+          - { value: FIG, label: "Figs" }
+          - { value: FLAX, label: "Flax fibre and tow" }
+          - { value: FONIO, label: "Fonio" }
+          - { value: FORNES, label: "Fornes" }
+          - { value: FRUITNES, label: "Fruit fresh, other" }
+          - { value: GARLIC, label: "Garlic" }
+          - { value: GINGER, label: "Ginger" }
+          - { value: GOOSEBERRY, label: "Gooseberries" }
+          - { value: GRAPE, label: "Grapes" }
+          - { value: GRASSNES, label: "Grasses, others" }
+          - { value: GREENBEAN, label: "Green beans" }
+          - { value: GREENCORN, label: "Green corn (maize, green)" }
+          - { value: GREENONION, label: "Green onion, shallots" }
+          - { value: GREENPEA, label: "Green peas" }
+          - { value: GROUNDNUT, label: "Groundnuts, with shell" }
+          - { value: HAZELNUT, label: "Hazelnuts, with shell" }
+          - { value: HEMP, label: "Hemp tow waste" }
+          - { value: HEMPSEED, label: "Hempseed" }
+          - { value: HOP, label: "Hops" }
+          - { value: JUTE, label: "Jute" }
+          - { value: JUTELIKEFIBER, label: "Jute-like fibers" }
+          - { value: KAPOKFIBER, label: "Kapok" }
+          - { value: KAPOKSEED, label: "Kapok fruit" }
+          - { value: KARITE, label: "Karite nuts (sheanuts)" }
+          - { value: KIWI, label: "Kiwi fruit" }
+          - { value: KOLANUT, label: "Kola nuts" }
+          - { value: LEGUMENES, label: "Legumes, other" }
+          - { value: LEMONLIME, label: "Lemons and limes" }
+          - { value: LENTIL, label: "Lentils" }
+          - { value: LETTUCE, label: "Lettuce and chicory" }
+          - { value: LINSEED, label: "Linseed" }
+          - { value: LUPIN, label: "Lupins" }
+          - { value: MAIZE, label: "Maize" }
+          - { value: MAIZEFOR, label: "Maize for forage and silage" }
+          - { value: MANGO, label: "Mangoes, mangosteens, guavas" }
+          - { value: MATE, label: "Mate" }
+          - { value: MELONETC, label: "Melons, other (inc. cantaloupes)" }
+          - { value: MELONSEED, label: "Melonseed" }
+          - { value: MILLET, label: "Millet" }
+          - { value: MIXEDGRAIN, label: "Mixed grain" }
+          - { value: MIXEDGRASS, label: "Mixed grasses and legumes" }
+          - { value: MUSHROOM, label: "Mushrooms and truffles" }
+          - { value: MUSTARD, label: "Mustard seed" }
+          - { value: NUTMEG, label: "Nutmeg, mace and cardamoms" }
+          - { value: NUTNES, label: "Nuts, other" }
+          - { value: OATS, label: "Oats" }
+          - { value: OILPALM, label: "Oil palm fruit" }
+          - { value: OILSEEDFOR, label: "Oilseed for fodder, green" }
+          - { value: OILSEEDNES, label: "Oilseed, other" }
+          - { value: OKRA, label: "Okra" }
+          - { value: OLIVE, label: "Olives" }
+          - { value: ONION, label: "Onions, dry" }
+          - { value: ORANGE, label: "Oranges" }
+          - { value: PAPAYA, label: "Papayas" }
+          - { value: PEA, label: "Peas, dry" }
+          - { value: PEACHETC, label: "Peaches and nectarines" }
+          - { value: PEAR, label: "Pears" }
+          - { value: PEPPER, label: "Pepper (piper spp.)" }
+          - { value: PEPPERMINT, label: "Peppermint" }
+          - { value: PERSIMMON, label: "Persimmons" }
+          - { value: PIGEONPEA, label: "Pigeon peas" }
+          - { value: PIMENTO, label: "Pimento" }
+          - { value: PINEAPPLE, label: "Pineapples" }
+          - { value: PISTACHIO, label: "Pistachios" }
+          - { value: PLANTAIN, label: "Plantains and others" }
+          - { value: PLUM, label: "Plums and sloes" }
+          - { value: POPCORN, label: "Popcorn" }
+          - { value: POPPY, label: "Poppy seed" }
+          - { value: POTATO, label: "Potatoes" }
+          - { value: PULSENES, label: "Pulses, other" }
+          - { value: PUMPKINETC, label: "Pumpkins, squash and gourds" }
+          - { value: PYRETHRUM, label: "Pyrethrum, dried flowers" }
+          - { value: QUINCE, label: "Quinces" }
+          - { value: QUINOA, label: "Quinoa" }
+          - { value: RAMIE, label: "Ramie" }
+          - { value: RAPESEED, label: "Rapeseed" }
+          - { value: RASBERRY, label: "Rasberries" }
+          - { value: RICE, label: "Rice, paddy" }
+          - { value: ROOTNES, label: "Roots and tubers, other" }
+          - { value: RUBBER, label: "Rubber, natural" }
+          - { value: RYE, label: "Rye" }
+          - { value: RYEFOR, label: "Rye grass for forage and silage" }
+          - { value: SAFFLOWER, label: "Safflower seed" }
+          - { value: SESAME, label: "Sesame seed" }
+          - { value: SISAL, label: "Sisal" }
+          - { value: SORGHUM, label: "Sorghum" }
+          - { value: SORGHUMFOR, label: "Sorghum for forage and silage" }
+          - { value: SOURCHERRY, label: "Sour cherries" }
+          - { value: SOYBEAN, label: "Soybeans" }
+          - { value: SPICENES, label: "Spices, other" }
+          - { value: SPINACH, label: "Spinach" }
+          - { value: STRAWBERRY, label: "Strawberries" }
+          - { value: STRINGBEAN, label: "String beans" }
+          - { value: SUGARBEET, label: "Sugar beet" }
+          - { value: SUGARCANE, label: "Sugar cane" }
+          - { value: SUGARNES, label: "Sugar crops, other" }
+          - { value: SUNFLOWER, label: "Sunflower seed" }
+          - { value: SWEDEFOR, label: "Swedes for fodder" }
+          - { value: SWEETPOTATO, label: "Sweet potatoes" }
+          - {
+              value: TANGETC,
+              label: "Tangerines, mandarins, clementines, satsumas",
+            }
+          - { value: TARO, label: "Taro (cocoyam)" }
+          - { value: TEA, label: "Tea" }
+          - { value: TOBACCO, label: "Tobacco leaves" }
+          - { value: TOMATO, label: "Tomatoes" }
+          - { value: TRITICALE, label: "Triticale" }
+          - { value: TROPICALNES, label: "Fruit tropical fresh, other" }
+          - { value: TUNG, label: "Tung nuts" }
+          - { value: TURNIPFOR, label: "Turnips for fodder" }
+          - { value: VANILLA, label: "Vanilla" }
+          - { value: VEGETABLENES, label: "Vegetablenes" }
+          - { value: VEGFOR, label: "Vegetables and roots for fodder" }
+          - { value: VETCH, label: "Vetches" }
+          - { value: WALNUT, label: "Walnuts, with shell" }
+          - { value: WATERMELON, label: "Watermelons" }
+          - { value: WHEAT, label: "Wheat" }
+          - { value: YAM, label: "Yams" }
+          - { value: YAUTIA, label: "Yautia (cocoyam)" }
+    variables:
+      - &application_rate
+        name: application_rate
+        description: Synthetic fertilizer application rate of the nutrient on the crop, per hectare of harvested area.
+        data_type: float32
+        unit: kg ha-1
+        note: >
+          Relative quantity; do not sum across cells. Use a weighted mean with CROPGRIDS harvested
+          area as the weight, or multiply by harvested area to get applied mass.
+
+  # ALFALFA is published for N and P only, so it gets its own file set.
+  - name: alfalfa
+    dimensions:
+      - *cell
+      - name: nutrient
+        type: nutrient
+        description: Fertilizer nutrient, the {nutrient} token of the file paths (mapsets CG-N, CG-P).
+        data_type: string
+        categories:
+          - { value: N, label: Nitrogen (N) }
+          - { value: P, label: Phosphorus as phosphorus pentoxide (P2O5) }
+      - name: crop
+        type: crop
+        description: FAO crop code, the {crop} token of the file names.
+        reference_system: https://data.apps.fao.org/gismgr/api/v2/catalog/workspaces/FAOSTAT/dimensions/CROP
+        data_type: string
+        categories:
+          - { value: ALFALFA, label: Alfalfa }
+    variables: [*application_rate]
+
+cdh:
+  domain: [agricultural-production]
+  usage:
+    intended_uses:
+      - global and regional mapping of fertilizer use by crop and nutrient
+      - nutrient budget, emissions, and environmental impact modelling
+      - spatial targeting at national and sub-national scale
+    not_recommended_for:
+      - use: field-scale fertilizer recommendations
+        reason: the grid is too coarse and the rates are statistical allocations, not agronomic advice.
+        use_instead: local soil tests and extension guidance.
+
+commodities:
+  - crops
+  - cereals
+  - wheat
+  - rice
+  - maize
+  - barley
+  - millets
+  - sorghum
+  - potato
+  - sweet-potatoes
+  - yams
+  - cassava
+  - root-vegetables
+  - pulses
+  - legumes
+  - common-bean
+  - chickpeas
+  - cowpeas
+  - pigeon-pea
+  - lentils
+  - soybeans
+  - groundnuts
+  - coconuts
+  - oil-palms
+  - sunflower
+  - rapeseed
+  - sesame
+  - oil-crops
+  - sugarcane
+  - sugarbeet
+  - cotton
+  - fibre-crops
+  - coffee
+  - cocoa
+  - tea
+  - tobacco
+  - banana
+  - plantains
+  - citrus
+  - fruits
+  - tropical-fruits
+  - temperate-fruit
+  - tomatoes
+  - onions
+  - vegetables
+  - rubber
+
+processing:
+  - id: source
+    description: >
+      FAO Python re-implementation of the NPKGRIDS pipeline (Bottini et al. 2026): inputs
+      harmonized to rates per harvested hectare, ranked by quality per nutrient, crop and
+      subnational unit, gap-filled from neighbours and similar crops, and spread uniformly over the
+      CROPGRIDS crop masks. Code not public as of this record.
+    date: "2025-11-20"
+    derived_from:
+      - id: cropgrids
+        version: "2.0"
+        title: CROPGRIDS crop masks used to spatialize the rates
+      - url: https://doi.org/10.1038/nature11420
+        title: Mueller et al. (2012) gridded N, P, K application rates, used for within-country allocation
+
+data:
+  - name: cogs
+    structures: [cogs]
+    locations:
+      - url: https://storage.googleapis.com/fao-gismgr-faostat-data/DATA/FAOSTAT/MAPSET/
+        title: HTTPS
+      - url: gs://fao-gismgr-faostat-data/DATA/FAOSTAT/MAPSET/
+        title: GCS
+    href_template: "CG-{nutrient}/FAOSTAT.CG-{nutrient}.2020.{crop}.tif"
+    processing_steps: [source]
+    description: One COG per nutrient and crop for the 167 crops in all three mapsets, about 125 MB per nutrient.
+    media_type: "image/tiff; application=geotiff; profile=cloud-optimized"
+  - name: alfalfa-cogs
+    structures: [alfalfa]
+    locations:
+      - url: https://storage.googleapis.com/fao-gismgr-faostat-data/DATA/FAOSTAT/MAPSET/
+        title: HTTPS
+      - url: gs://fao-gismgr-faostat-data/DATA/FAOSTAT/MAPSET/
+        title: GCS
+    href_template: "CG-{nutrient}/FAOSTAT.CG-{nutrient}.2020.{crop}.tif"
+    processing_steps: [source]
+    description: The two ALFALFA files, which exist for N and P but not K.
+    media_type: "image/tiff; application=geotiff; profile=cloud-optimized"
+
+additional_links:
+  - title: Nitrogen application rate (Global - 2020 - ~5.6 km) - CROPGRIDS
+    rel: describedby
+    url: https://data.apps.fao.org/catalog/dataset/49a38274-d47d-40c2-8a45-7a2924a3f958
+  - title: Phosphorus application rate (Global - 2020 - ~5.6 km) - CROPGRIDS
+    rel: describedby
+    url: https://data.apps.fao.org/catalog/dataset/7514c3a8-bef2-4a08-8da3-348277b30f98
+  - title: Potassium application rate (Global - 2020 - ~5.6 km) - CROPGRIDS
+    rel: describedby
+    url: https://data.apps.fao.org/catalog/dataset/640cf89c-fc75-4d91-bec9-f0902320b08b
+  - title: FAO gismgr mapset metadata
+    rel: describedby
+    url: https://data.apps.fao.org/gismgr/api/v2/catalog/workspaces/FAOSTAT/mapsets/CG-N
+    description: Units and crop dimension from the FAO geodata API.
+  - title: Original NPKGRIDS release on figshare
+    rel: related
+    url: https://doi.org/10.6084/m9.figshare.24616050
+    description: Research release of Nguyen et al. (2024).
