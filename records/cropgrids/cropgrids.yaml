@@ -8,6 +8,9 @@ extensions:
 id: cropgrids
 title: CROPGRIDS crop and harvested area for 2020 (FAO)
 version: "2.0" # as labelled on the FAO data catalog
+series:
+  name: CROPGRIDS
+  url: https://data.apps.fao.org/catalog/dataset/cropgrids
 description: >
   CROPGRIDS maps the physical crop area and harvested area of 173 crops for the reference year
   2020 on a global 0.05 degree grid (about 5.6 km at the equator). It updates the Monfreda et al.

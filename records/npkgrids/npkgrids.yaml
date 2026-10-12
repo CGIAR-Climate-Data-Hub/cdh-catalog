@@ -8,6 +8,9 @@ extensions:
 id: npkgrids
 title: NPKGRIDS crop-specific fertilizer application rates circa 2020 (FAO)
 version: "2.0" # as labelled on the FAO data catalog
+series:
+  name: CROPGRIDS
+  url: https://data.apps.fao.org/catalog/dataset/cropgrids
 description: >
   NPKGRIDS maps synthetic fertilizer application rates of nitrogen (N), phosphorus (as P2O5) and
   potassium (as K2O) for 173 crops circa 2020 (a 2015 to 2020 average) on a global 0.05 degree grid
