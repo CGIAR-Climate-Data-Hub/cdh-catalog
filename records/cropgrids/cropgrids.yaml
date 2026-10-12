@@ -433,9 +433,6 @@ additional_links:
   - title: CROPGRIDS on the FAO Agro-informatics platform
     rel: about
     url: https://www.fao.org/agroinformatics/training-and-resources/data-sets/data-set-detail/cropgrids-data-on-harvested-and-crop-areas/en
-  - title: CROPGRIDS in the Hand-in-Hand Geospatial Platform
-    rel: related
-    url: https://data.apps.fao.org/?lang=en&share=f-83c01dcb-0f30-44f3-ae9e-d4574e0b97a8
   - title: Original CROPGRIDS v1.08 release on figshare
     rel: related
     url: https://doi.org/10.6084/m9.figshare.22491997
