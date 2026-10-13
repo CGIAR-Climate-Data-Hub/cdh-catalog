@@ -1,0 +1,441 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# ISRIC SoilGrids 2.0, federated from ISRIC's WebDAV server through the per-map VRT mosaics.
+cdh_schema_version: "v0.4.1"
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+
+id: soilgrids
+title: SoilGrids 2.0 global soil property maps at 250 m (ISRIC)
+version: "2.0" # as ISRIC labels it; the "latest" folder is a rolling release of this version
+series:
+  name: SoilGrids
+  url: https://www.isric.org/explore/soilgrids
+description: >
+  SoilGrids 2.0 predicts eleven soil properties for the globe on a 250 m grid at six standard depth
+  intervals from 0 to 200 cm: bulk density, cation exchange capacity, coarse fragments, clay, sand,
+  silt, total nitrogen, pH in water, organic carbon content, organic carbon density, and organic
+  carbon stock (0 to 30 cm only). Quantile regression forests are fitted on about 240,000 soil
+  profiles from the WoSIS database and some 400 environmental covariates. Each property, depth and
+  statistic is one map, with the mean, the median, the 5th and 95th percentiles of the prediction
+  distribution, and a relative uncertainty layer. ISRIC serves every map as a GDAL virtual raster
+  (VRT) that mosaics a folder of GeoTIFF tiles in place, so the maps open remotely with GDAL-based
+  tools without downloading them.
+license: CC-BY-4.0
+resource_type: dataset
+
+keywords:
+  - SoilGrids
+  - ISRIC
+  - WoSIS
+  - quantile regression forest
+  - bulk density
+  - coarse fragments
+  - organic carbon stock
+  - term: digital soil mapping
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_e4975629
+  - term: soil properties
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_330883
+  - term: soil organic carbon
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_389fe908
+  - term: soil texture
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_7199
+  - term: cation exchange capacity
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_24981
+  - term: soil pH
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_34901
+note: >
+  The maps are in the Interrupted Goode Homolosine projection, not latitude and longitude, so
+  reproject points or windows before sampling. Values are stored as int16 in scaled units with no
+  scale factor in the files; divide by the factor given in each variable's note to get conventional
+  units. The VRTs reference their tiles by relative path, so open them over HTTPS with GDAL's
+  /vsicurl rather than downloading the .vrt alone, and read windows: a full
+  global read touches thousands of tiles. Known gaps include New Zealand and parts of Siberia. The
+  "latest" folder is a rolling release and ISRIC may replace maps in place. The WRB soil class maps in
+  the same folder are aggregated from the 2017 predictions and in EPSG:4326, so they have their own
+  record, soilgrids-wrb.
+
+contact:
+  - organization: ISRIC - World Soil Information
+    roles: [licensor, producer, point-of-contact]
+    email: soilgrids@isric.org
+    url: https://www.isric.org/
+  - name: Brayden Youngberg
+    roles: [maintainer]
+    email: b.youngberg@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
+
+# ISRIC asks that the maps be cited through the SoilGrids 2.0 paper.
+citation:
+  title: "SoilGrids 2.0: producing soil information for the globe with quantified spatial uncertainty"
+  authors:
+    - family: Poggio
+      given: L.
+    - family: de Sousa
+      given: L. M.
+    - family: Batjes
+      given: N. H.
+    - family: Heuvelink
+      given: G. B. M.
+    - family: Kempen
+      given: B.
+    - family: Ribeiro
+      given: E.
+    - family: Rossiter
+      given: D.
+  date: "2021"
+  publisher: SOIL
+  url: https://doi.org/10.5194/soil-7-217-2021
+
+created: "2026-10-13"
+updated: "2026-10-13"
+
+spatial:
+  bbox: [-180, -56, 180, 83]
+  geography: [world]
+  crs: "+proj=igh +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs" # Interrupted Goode Homolosine, ESRI:54052
+
+temporal:
+  date: "2020" # static maps; fitted on the March 2020 WoSIS snapshot and published May 2020
+
+structures:
+  - name: predictions
+    dimensions:
+      - &cell
+        name: cell
+        type: xy
+        description: 250 m cells in the Interrupted Goode Homolosine projection.
+        step: 250
+        unit: m
+      - &depth
+        name: depth
+        type: z
+        description: Standard depth interval below the surface, top to bottom, the {depth} token of the file names.
+        unit: cm
+        data_type: string
+        values: [0-5cm, 5-15cm, 15-30cm, 30-60cm, 60-100cm, 100-200cm]
+      - &stat
+        name: stat
+        type: statistic
+        description: Statistic of the per-cell prediction distribution, the {stat} token of the file names.
+        data_type: string
+        categories:
+          - {
+              value: mean,
+              label: Mean (expected value; above the median for right-skewed properties),
+            }
+          - {
+              value: Q0.05,
+              label: 5th percentile (lower bound of the 90% prediction interval),
+            }
+          - { value: Q0.5, label: Median }
+          - {
+              value: Q0.95,
+              label: 95th percentile (upper bound of the 90% prediction interval),
+            }
+    variables:
+      - &bdod
+        name: bdod
+        description: Bulk density of the fine earth fraction.
+        data_type: int16
+        unit: cg/cm3
+        nodata: -32768
+        note: Divide by 100 for kg/dm3.
+      - &cec
+        name: cec
+        description: Cation exchange capacity of the soil at pH 7.
+        data_type: int16
+        unit: mmol/kg
+        nodata: -32768
+        note: Charge-equivalent mmol(c)/kg; divide by 10 for cmol(c)/kg.
+      - &cfvo
+        name: cfvo
+        description: Volumetric fraction of coarse fragments larger than 2 mm.
+        data_type: int16
+        unit: cm3/dm3
+        nodata: -32768
+        note: Divide by 10 for volume percent.
+      - &clay
+        name: clay
+        description: Proportion of clay particles smaller than 0.002 mm in the fine earth fraction.
+        data_type: int16
+        unit: g/kg
+        nodata: -32768
+        note: Divide by 10 for mass percent. Clay, silt and sand are compositional and sum to 100%.
+      - &nitrogen
+        name: nitrogen
+        description: Total nitrogen.
+        data_type: int16
+        unit: cg/kg
+        nodata: -32768
+        note: Divide by 100 for g/kg.
+      - &ocd
+        name: ocd
+        description: Organic carbon density.
+        data_type: int16
+        unit: hg/m3
+        nodata: -32768
+        note: Divide by 10 for kg/m3.
+      - &phh2o
+        name: phh2o
+        description: Soil pH in water, stored as pH times 10.
+        data_type: int16
+        unit: "1"
+        nodata: -32768
+        note: Divide by 10 for pH units.
+      - &sand
+        name: sand
+        description: Proportion of sand particles larger than 0.05 mm in the fine earth fraction.
+        data_type: int16
+        unit: g/kg
+        nodata: -32768
+        note: Divide by 10 for mass percent. Clay, silt and sand are compositional and sum to 100%.
+      - &silt
+        name: silt
+        description: Proportion of silt particles between 0.002 and 0.05 mm in the fine earth fraction.
+        data_type: int16
+        unit: g/kg
+        nodata: -32768
+        note: Divide by 10 for mass percent. Clay, silt and sand are compositional and sum to 100%.
+      - &soc
+        name: soc
+        description: Soil organic carbon content in the fine earth fraction.
+        data_type: int16
+        unit: dg/kg
+        nodata: -32768
+        note: Divide by 10 for g/kg.
+
+  # ocs is published for the 0-30 cm topsoil only, so it gets its own depth axis.
+  - name: ocs-predictions
+    dimensions:
+      - *cell
+      - &depth30
+        name: depth
+        type: z
+        description: Topsoil interval, the {depth} token of the file names.
+        unit: cm
+        data_type: string
+        values: [0-30cm]
+      - *stat
+    variables:
+      - &ocs
+        name: ocs
+        description: Organic carbon stock in the 0-30 cm topsoil.
+        data_type: int16
+        unit: t/ha
+        nodata: -32768
+        note: >
+          Divide by 10 for kg/m2. Computed from point observations, not from the ocd maps, so the
+          two do not match exactly.
+
+  # The uncertainty maps are dimensionless, so they are a separate structure per variable set.
+  - name: uncertainty
+    dimensions: [*cell, *depth]
+    variables:
+      - {
+          <<: *bdod,
+          unit: "1",
+          description: Relative prediction uncertainty of bdod.,
+          note: &unc "Width of the 90% prediction interval relative to the median, (Q0.95 - Q0.05) / Q0.5, times 10. Divide by 10 for the ratio.",
+        }
+      - {
+          <<: *cec,
+          unit: "1",
+          description: Relative prediction uncertainty of cec.,
+          note: *unc,
+        }
+      - {
+          <<: *cfvo,
+          unit: "1",
+          description: Relative prediction uncertainty of cfvo.,
+          note: *unc,
+        }
+      - {
+          <<: *clay,
+          unit: "1",
+          description: Relative prediction uncertainty of clay.,
+          note: *unc,
+        }
+      - {
+          <<: *nitrogen,
+          unit: "1",
+          description: Relative prediction uncertainty of nitrogen.,
+          note: *unc,
+        }
+      - {
+          <<: *ocd,
+          unit: "1",
+          description: Relative prediction uncertainty of ocd.,
+          note: *unc,
+        }
+      - {
+          <<: *phh2o,
+          unit: "1",
+          description: Relative prediction uncertainty of phh2o.,
+          note: *unc,
+        }
+      - {
+          <<: *sand,
+          unit: "1",
+          description: Relative prediction uncertainty of sand.,
+          note: *unc,
+        }
+      - {
+          <<: *silt,
+          unit: "1",
+          description: Relative prediction uncertainty of silt.,
+          note: *unc,
+        }
+      - {
+          <<: *soc,
+          unit: "1",
+          description: Relative prediction uncertainty of soc.,
+          note: *unc,
+        }
+  - name: ocs-uncertainty
+    dimensions: [*cell, *depth30]
+    variables:
+      - {
+          <<: *ocs,
+          unit: "1",
+          description: Relative prediction uncertainty of ocs.,
+          note: *unc,
+        }
+
+  # Earth Engine holds the mean maps only, one image per property with one band per depth.
+  - name: gee
+    dimensions: [*cell, *depth]
+    variables:
+      [*bdod, *cec, *cfvo, *clay, *nitrogen, *ocd, *phh2o, *sand, *silt, *soc]
+  - name: gee-ocs
+    dimensions: [*cell, *depth30]
+    variables: [*ocs]
+
+  - name: landmask
+    dimensions: [*cell]
+    variables:
+      - name: landmask
+        description: >
+          Soil mask of the prediction domain, derived from the ESA CCI land cover map. Cells inside
+          the domain hold their ESA CCI land cover class code; cells outside it are nodata.
+        data_type: int16
+        nodata: -32768
+        note: ISRIC does not document this file; class codes follow the ESA CCI Land Cover legend.
+
+cdh:
+  domain: [agricultural-production]
+  usage:
+    intended_uses:
+      - soil inputs to crop, hydrological, and carbon models at national to global scale
+      - soil constraint and land suitability mapping
+      - baseline soil organic carbon stocks for sequestration and emissions accounting
+    not_recommended_for:
+      - use: field-scale soil management or fertilizer recommendations
+        reason: values are 250 m model predictions with wide prediction intervals, not measurements.
+        use_instead: local soil surveys or soil tests.
+      - use: change detection or time series of soil properties
+        reason: the maps are a single static prediction with no reference date.
+
+processing:
+  - id: source
+    description: >
+      Quantile regression forests (ranger, 200 trees) fitted per property on WoSIS soil profile
+      observations and global environmental covariates (climate, terrain, vegetation, land cover),
+      predicted at the six standard depths and tiled by ISRIC (Poggio et al. 2021; outputs version
+      RUN18, code v2.0.0). Aggregated 1 km and 5 km mean maps are also published but not listed here.
+    date: "2020-05-11" # date of the landmask file; the property tiles are dated April to June 2020
+    derived_from:
+      - title: WoSIS soil profile database, data stream 7 (March 2020 snapshot)
+        url: https://www.isric.org/explore/wosis
+      - title: ESA CCI Land Cover, used for the soil mask
+        url: https://www.esa-landcover-cci.org/
+
+data:
+  - name: predictions
+    structures: [predictions]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/
+        title: HTTPS (WebDAV)
+    href_template: "{variable}/{variable}_{depth}_{stat}.vrt"
+    processing_steps: [source]
+    description: >
+      One GDAL VRT per property, depth and statistic, mosaicking the GeoTIFF tiles in the folder of
+      the same name beside it (about 5 GB of tiles per map, 128x128 blocks, with a .vrt.ovr overview
+      file). Each property folder has a list_vrts.txt naming its maps and a checksum.sha256.txt.
+  - name: ocs-predictions
+    structures: [ocs-predictions]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/
+        title: HTTPS (WebDAV)
+    href_template: "{variable}/{variable}_{depth}_{stat}.vrt"
+    processing_steps: [source]
+    description: The four ocs maps for 0-30cm, laid out like the other prediction maps.
+  - name: uncertainty
+    structures: [uncertainty]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/
+        title: HTTPS (WebDAV)
+    href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
+    processing_steps: [source]
+    description: One GDAL VRT per property and depth, laid out like the prediction maps.
+  - name: ocs-uncertainty
+    structures: [ocs-uncertainty]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/
+        title: HTTPS (WebDAV)
+    href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
+    processing_steps: [source]
+    description: The single ocs uncertainty map for 0-30cm.
+  - name: gee-mean
+    structures: [gee, gee-ocs]
+    locations:
+      - url: https://earthengine.googleapis.com/v1/projects/soilgrids-isric/assets/
+        title: Earth Engine
+    href_template: "{variable}_mean"
+    processing_steps: [source]
+    description: >
+      Google Earth Engine images projects/soilgrids-isric/{property}_mean, curated by ISRIC. Mean
+      maps only; one image per property with one band per depth, named like the files
+      (soc_0-5cm_mean). Same scaled integer units as the VRTs, with nodata masked.
+  - name: landmask
+    structures: [landmask]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/landmask/landmask_SG_052020_COG512.tif
+        title: HTTPS (WebDAV)
+    processing_steps: [source]
+    description: Single cloud-optimized GeoTIFF on a slightly larger grid than the property maps.
+    media_type: "image/tiff; application=geotiff; profile=cloud-optimized"
+    file_size: 684 MB
+
+additional_links:
+  - title: SoilGrids FAQ
+    rel: describedby
+    url: https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs.html
+    description: Units, conversion factors, projection, access routes, and code examples.
+  - title: SoilGrids data README
+    rel: describedby
+    url: https://files.isric.org/soilgrids/latest/data/README.md
+  - title: ISRIC data catalogue
+    rel: describedby
+    url: https://data.isric.org/
+    description: ISO metadata for each SoilGrids layer.
+  - title: SoilGrids on Google Earth Engine
+    rel: describedby
+    url: https://docs.isric.org/globaldata/soilgrids/access_on_gee.html
+    description: Asset list and export and visualisation scripts from ISRIC.
+  - title: SoilGrids in the Earth Engine community catalog
+    rel: describedby
+    url: https://gee-community-catalog.org/projects/isric/
+    description: Earth Engine snippet and unit table.
+  - title: SoilGrids web map
+    rel: related
+    url: https://soilgrids.org/
+  - title: WRB soil class maps (SoilGrids 2.0, from 2017 predictions)
+    rel: related
+    url: https://files.isric.org/soilgrids/latest/data/wrb/
+    description: Most probable WRB reference soil group and per-class probabilities, catalogued as soilgrids-wrb.

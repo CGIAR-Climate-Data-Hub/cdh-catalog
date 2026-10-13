@@ -1,0 +1,331 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# SoilGrids 2.0 WRB soil class maps, federated from ISRIC's WebDAV server through the per-class VRT mosaics.
+# Separate from the soilgrids record: aggregated from the 2017 predictions, not newly modelled, and in EPSG:4326.
+cdh_schema_version: "v0.4.1"
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+
+id: soilgrids-wrb
+title: SoilGrids 2.0 WRB reference soil group probability maps at 250 m (ISRIC)
+version: "2.0" # as ISRIC labels it; published 2020-05-04, layers regenerated in March 2022
+series:
+  name: SoilGrids
+  url: https://www.isric.org/explore/soilgrids
+description: >
+  Probability of occurrence of each of 30 World Reference Base (WRB 2006) reference soil groups,
+  and the most probable group per cell, for the globe on a 250 m grid. These are the soil
+  classification maps of SoilGrids 2.0, but they are not new predictions: ISRIC summed the
+  qualifier-level class probabilities predicted in the SoilGrids250m 2017 release (multinomial
+  neural network and random forest ensemble on about 150,000 WoSIS profiles) into one map per
+  reference soil group, and took the highest as the most probable group. Anthrosols, Technosols and
+  Retisols are not included. Each map is a GDAL virtual raster (VRT) that mosaics a folder of
+  GeoTIFF tiles in place, so it opens remotely with GDAL-based tools.
+license: CC-BY-4.0 # as declared in the ISRIC data catalogue record
+resource_type: dataset
+
+keywords:
+  - SoilGrids
+  - ISRIC
+  - WRB
+  - World Reference Base
+  - reference soil group
+  - term: soil classification
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_7162
+  - term: soil types
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_7204
+  - term: digital soil mapping
+    scheme: https://agrovoc.fao.org/
+    uri: http://aims.fao.org/aos/agrovoc/c_e4975629
+note: >
+  The underlying model is the 2017 one, not the quantile regression forests of the SoilGrids 2.0
+  property maps, and ISRIC says a new unified soil classification method is under development.
+  The files are in EPSG:4326 although the ISRIC catalogue record states Homolosine. The VRTs
+  reference their tiles by relative path, so open them over HTTPS with GDAL's /vsicurl rather than
+  downloading the .vrt alone, and read windows. Probabilities of the 30 groups in a cell do not
+  always sum to exactly 100 because of rounding.
+
+contact:
+  - organization: ISRIC - World Soil Information
+    roles: [licensor, producer, point-of-contact]
+    email: soilgrids@isric.org
+    url: https://www.isric.org/
+  - name: Brayden Youngberg
+    roles: [maintainer]
+    email: b.youngberg@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
+
+doi: 10.17027/isric-soilgrids.c4dc161c-d62d-11ea-a1a3-292680b15169
+citation:
+  title: SoilGrids250m 2.0 - WRB classes and probabilities
+  authors:
+    - family: Poggio
+      given: L.
+    - family: de Sousa
+      given: L. M.
+  date: "2020-05-04"
+  publisher: ISRIC - World Soil Information
+  url: https://doi.org/10.17027/isric-soilgrids.c4dc161c-d62d-11ea-a1a3-292680b15169
+related_publications:
+  - doi: 10.5194/soil-7-217-2021
+    citation:
+      title: "SoilGrids 2.0: producing soil information for the globe with quantified spatial uncertainty"
+      authors:
+        - family: Poggio
+          given: L.
+        - family: de Sousa
+          given: L. M.
+        - family: Batjes
+          given: N. H.
+        - family: Heuvelink
+          given: G. B. M.
+        - family: Kempen
+          given: B.
+        - family: Ribeiro
+          given: E.
+        - family: Rossiter
+          given: D.
+      date: "2021"
+      publisher: SOIL
+  - doi: 10.1371/journal.pone.0169748
+    citation:
+      title: "SoilGrids250m: Global gridded soil information based on machine learning"
+      authors:
+        - family: Hengl
+          given: T.
+        - family: Mendes de Jesus
+          given: J.
+        - family: Heuvelink
+          given: G. B. M.
+        - family: Ruiperez Gonzalez
+          given: M.
+        - family: Kilibarda
+          given: M.
+        - family: Blagotić
+          given: A.
+        - family: Shangguan
+          given: W.
+        - family: Wright
+          given: M. N.
+        - family: Geng
+          given: X.
+        - family: Bauer-Marschallinger
+          given: B.
+        - family: Guevara
+          given: M. A.
+        - family: Vargas
+          given: R.
+        - family: MacMillan
+          given: R. A.
+        - family: Batjes
+          given: N. H.
+        - family: Leenaars
+          given: J. G. B.
+        - family: Ribeiro
+          given: E.
+        - family: Wheeler
+          given: I.
+        - family: Mantel
+          given: S.
+        - family: Kempen
+          given: B.
+      date: "2017"
+      publisher: PLOS ONE
+
+created: "2026-10-13"
+updated: "2026-10-13"
+
+spatial:
+  bbox: [-180, -56, 180, 84]
+  geography: [world]
+  crs: EPSG:4326
+
+temporal:
+  date: "2020" # static maps, published 2020-05-04 from the 2017 predictions
+
+structures:
+  - name: probability
+    dimensions:
+      - &cell
+        name: cell
+        type: xy
+        description: 7.5 arc-second cells (~250 m at the equator).
+        step: 0.0020833333
+        unit: degree
+      - name: rsg
+        type: soil_group
+        description: WRB reference soil group, the {rsg} token of the file names (WRB 2006 names, so Albeluvisols rather than Retisols).
+        reference_system: https://www.fao.org/soils-portal/data-hub/soil-classification/world-reference-base/en/
+        data_type: string
+        values:
+          - Acrisols
+          - Albeluvisols
+          - Alisols
+          - Andosols
+          - Arenosols
+          - Calcisols
+          - Cambisols
+          - Chernozems
+          - Cryosols
+          - Durisols
+          - Ferralsols
+          - Fluvisols
+          - Gleysols
+          - Gypsisols
+          - Histosols
+          - Kastanozems
+          - Leptosols
+          - Lixisols
+          - Luvisols
+          - Nitisols
+          - Phaeozems
+          - Planosols
+          - Plinthosols
+          - Podzols
+          - Regosols
+          - Solonchaks
+          - Solonetz
+          - Stagnosols
+          - Umbrisols
+          - Vertisols
+    variables:
+      - name: probability
+        description: Predicted probability that the cell's soil belongs to the reference soil group, in percent.
+        data_type: uint8
+        unit: "%"
+        nodata: 255
+  - name: most-probable
+    dimensions: [*cell]
+    variables:
+      - name: MostProbable
+        description: Reference soil group with the highest predicted probability in the cell.
+        data_type: uint8
+        nodata: 255
+        categories:
+          - { value: 0, label: Acrisols }
+          - { value: 1, label: Albeluvisols }
+          - { value: 2, label: Alisols }
+          - { value: 3, label: Andosols }
+          - { value: 4, label: Arenosols }
+          - { value: 5, label: Calcisols }
+          - { value: 6, label: Cambisols }
+          - { value: 7, label: Chernozems }
+          - { value: 8, label: Cryosols }
+          - { value: 9, label: Durisols }
+          - { value: 10, label: Ferralsols }
+          - { value: 11, label: Fluvisols }
+          - { value: 12, label: Gleysols }
+          - { value: 13, label: Gypsisols }
+          - { value: 14, label: Histosols }
+          - { value: 15, label: Kastanozems }
+          - { value: 16, label: Leptosols }
+          - { value: 17, label: Lixisols }
+          - { value: 18, label: Luvisols }
+          - { value: 19, label: Nitisols }
+          - { value: 20, label: Phaeozems }
+          - { value: 21, label: Planosols }
+          - { value: 22, label: Plinthosols }
+          - { value: 23, label: Podzols }
+          - { value: 24, label: Regosols }
+          - { value: 25, label: Solonchaks }
+          - { value: 26, label: Solonetz }
+          - { value: 27, label: Stagnosols }
+          - { value: 28, label: Umbrisols }
+          - { value: 29, label: Vertisols }
+
+cdh:
+  domain: [agricultural-production]
+  usage:
+    intended_uses:
+      - soil type inputs to crop, land evaluation, and ecosystem models at national to global scale
+      - stratifying or masking analyses by dominant soil group
+    not_recommended_for:
+      - use: field-scale soil identification
+        reason: values are 250 m predictions from the 2017 model with modest class accuracy, not survey observations.
+        use_instead: national soil survey maps or local profile descriptions.
+
+processing:
+  - id: source
+    description: >
+      SoilGrids250m 2017: ensemble of multinomial log-linear neural network (nnet) and random
+      forest (ranger) models fitted on WoSIS soil profiles with WRB classes and global covariates,
+      predicting per-class probabilities (Hengl et al. 2017).
+    date: "2017-03-10"
+    derived_from:
+      - title: WoSIS soil profile database
+        url: https://www.isric.org/explore/wosis
+      - title: SoilGrids250m 2017 TAXNWRB class probability layers
+        url: https://files.isric.org/soilgrids/former/2017-03-10/data/
+        version: "2017-03-10"
+  - id: aggregate
+    description: >
+      The 2017 qualifier-level probabilities summed into one map per reference soil group, and the
+      group with the highest probability written as MostProbable. Published as part of SoilGrids 2.0.
+    date: "2020-05-04"
+  - id: regenerate
+    description: >
+      Layers regenerated with ISRIC's WRB mapping scripts to fix a distortion at low latitudes, and
+      tiled as VRT mosaics.
+    code:
+      url: https://git.wur.nl/isric/soilgrids/SoilGrids250m/-/tree/master/mapping/wrb
+    date: "2022-03-01"
+
+data:
+  - name: probability
+    structures: [probability]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/wrb/
+        title: HTTPS (WebDAV)
+    href_template: "{rsg}.vrt"
+    processing_steps: [source, aggregate, regenerate]
+    description: >
+      One GDAL VRT per reference soil group, mosaicking the 4096x4096 GeoTIFF tiles in the folder of
+      the same name beside it, with a .vrt.ovr overview file.
+  - name: most-probable
+    structures: [most-probable]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/wrb/MostProbable.vrt
+        title: HTTPS (WebDAV)
+    processing_steps: [source, aggregate, regenerate]
+    description: GDAL VRT mosaicking the tiles in the MostProbable folder beside it.
+
+additional_assets:
+  - name: most-probable-legend
+    roles: [metadata, describedby]
+    media_type: application/json
+    description: Pixel value to reference soil group name for MostProbable.
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/wrb/MostProbable.rat.json
+  - name: most-probable-style
+    roles: [visual]
+    media_type: application/vnd.ogc.sld+xml
+    description: SLD colour style for the MostProbable map.
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/wrb/MostProbable.sld
+  - name: most-probable-preview
+    roles: [overview]
+    media_type: image/png
+    description: Global rendering of the MostProbable map.
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/wrb/MostProbable.png
+  - name: wms
+    roles: [visual]
+    description: ISRIC WMS serving the WRB maps as rendered images.
+    locations:
+      - url: https://maps.isric.org/mapserv?map=/map/wrb.map
+
+additional_links:
+  - title: ISRIC data catalogue record
+    rel: describedby
+    url: https://data.isric.org/geonetwork/srv/api/records/c4dc161c-d62d-11ea-a1a3-292680b15169
+  - title: SoilGrids FAQ, soil classes in SoilGrids 2.0
+    rel: describedby
+    url: https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_03.html
+    description: How the maps were aggregated from the 2017 predictions and what is planned next.
+  - title: Low-latitude distortion issue that prompted the 2022 regeneration
+    rel: about
+    url: https://git.wur.nl/isric/soilgrids/soilgrids-isric.org/-/issues/16
+  - title: SoilGrids web map
+    rel: related
+    url: https://soilgrids.org/
