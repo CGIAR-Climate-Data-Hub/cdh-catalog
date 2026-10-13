@@ -56,8 +56,9 @@ note: >
   units. The VRTs reference their tiles by relative path, so open them over HTTPS with GDAL's
   /vsicurl rather than downloading the .vrt alone, and read windows: a full
   global read touches thousands of tiles. Known gaps include New Zealand and parts of Siberia. The
-  "latest" folder is a rolling release and ISRIC may replace maps in place; the WRB soil class maps
-  in the same folder come from SoilGrids 2017 in EPSG:4326 and are not part of this record.
+  "latest" folder is a rolling release and ISRIC may replace maps in place. The WRB soil class maps in
+  the same folder are aggregated from the 2017 predictions and in EPSG:4326, so they have their own
+  record, soilgrids-wrb.
 
 contact:
   - organization: ISRIC - World Soil Information
@@ -408,7 +409,7 @@ additional_links:
   - title: SoilGrids web map
     rel: related
     url: https://soilgrids.org/
-  - title: WRB soil class maps (SoilGrids 2017)
+  - title: WRB soil class maps (SoilGrids 2.0, from 2017 predictions)
     rel: related
     url: https://files.isric.org/soilgrids/latest/data/wrb/
     description: Most probable WRB reference soil group and per-class probabilities, catalogued as soilgrids-wrb.
