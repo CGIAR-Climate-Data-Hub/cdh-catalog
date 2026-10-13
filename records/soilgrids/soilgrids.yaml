@@ -356,8 +356,6 @@ processing:
         url: https://www.esa-landcover-cci.org/
 
 data:
-  # ocs is its own entry: it has one depth value, so sharing a template with the six-depth
-  # properties would imply paths like ocs_0-5cm that do not exist.
   - name: predictions
     structures: [predictions]
     locations:
@@ -403,8 +401,7 @@ data:
     description: >
       Google Earth Engine images projects/soilgrids-isric/{property}_mean, curated by ISRIC. Mean
       maps only; one image per property with one band per depth, named like the files
-      (soc_0-5cm_mean). Same scaled integer units as the VRTs, with nodata masked. ISRIC says the
-      median and quantile images will follow.
+      (soc_0-5cm_mean). Same scaled integer units as the VRTs, with nodata masked.
   - name: landmask
     structures: [landmask]
     locations:

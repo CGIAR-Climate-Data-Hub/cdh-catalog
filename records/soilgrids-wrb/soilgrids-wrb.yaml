@@ -309,7 +309,6 @@ additional_assets:
     description: Global rendering of the MostProbable map.
     locations:
       - url: https://files.isric.org/soilgrids/latest/data/wrb/MostProbable.png
-
   - name: wms
     roles: [visual]
     description: ISRIC WMS serving the WRB maps as rendered images.
