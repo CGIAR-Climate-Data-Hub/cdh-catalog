@@ -24,7 +24,6 @@ resource_type: dataset
 
 keywords:
   - SoilGrids
-  - SoilGrids250m
   - ISRIC
   - WRB
   - World Reference Base
@@ -41,7 +40,7 @@ keywords:
 note: >
   These are 2017 predictions, superseded in method by SoilGrids 2.0, which does not yet publish
   soil classes. The VRTs reference their tiles by relative path, so open them over HTTPS with
-  GDAL's /vsicurl (rasterio, terra, QGIS) rather than downloading the .vrt alone, and read windows.
+  GDAL's /vsicurl rather than downloading the .vrt alone, and read windows.
   Probabilities of the 30 groups in a cell do not always sum to exactly 100 because of rounding.
 
 contact:
