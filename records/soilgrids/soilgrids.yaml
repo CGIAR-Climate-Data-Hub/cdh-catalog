@@ -346,9 +346,10 @@ processing:
         url: https://www.esa-landcover-cci.org/
 
 data:
-  # The template renders per structure: ocs has only the 0-30cm depth. (ponytail: one entry, not two)
+  # ocs is its own entry: it has one depth value, so sharing a template with the six-depth
+  # properties would imply paths like ocs_0-5cm that do not exist.
   - name: predictions
-    structures: [predictions, ocs-predictions]
+    structures: [predictions]
     locations:
       - url: https://files.isric.org/soilgrids/latest/data/
         title: HTTPS (WebDAV)
@@ -358,14 +359,30 @@ data:
       One GDAL VRT per property, depth and statistic, mosaicking the GeoTIFF tiles in the folder of
       the same name beside it (about 5 GB of tiles per map, 128x128 blocks, with a .vrt.ovr overview
       file). Each property folder has a list_vrts.txt naming its maps and a checksum.sha256.txt.
+  - name: ocs-predictions
+    structures: [ocs-predictions]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/
+        title: HTTPS (WebDAV)
+    href_template: "{variable}/{variable}_{depth}_{stat}.vrt"
+    processing_steps: [source]
+    description: The four ocs maps for 0-30cm, laid out like the other prediction maps.
   - name: uncertainty
-    structures: [uncertainty, ocs-uncertainty]
+    structures: [uncertainty]
     locations:
       - url: https://files.isric.org/soilgrids/latest/data/
         title: HTTPS (WebDAV)
     href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
     processing_steps: [source]
     description: One GDAL VRT per property and depth, laid out like the prediction maps.
+  - name: ocs-uncertainty
+    structures: [ocs-uncertainty]
+    locations:
+      - url: https://files.isric.org/soilgrids/latest/data/
+        title: HTTPS (WebDAV)
+    href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
+    processing_steps: [source]
+    description: The single ocs uncertainty map for 0-30cm.
   - name: landmask
     structures: [landmask]
     locations:
