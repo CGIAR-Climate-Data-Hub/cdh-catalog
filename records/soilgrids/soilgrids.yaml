@@ -307,6 +307,15 @@ structures:
           note: *unc,
         }
 
+  # Earth Engine holds the mean maps only, one image per property with one band per depth.
+  - name: gee
+    dimensions: [*cell, *depth]
+    variables:
+      [*bdod, *cec, *cfvo, *clay, *nitrogen, *ocd, *phh2o, *sand, *silt, *soc]
+  - name: gee-ocs
+    dimensions: [*cell, *depth30]
+    variables: [*ocs]
+
   - name: landmask
     dimensions: [*cell]
     variables:
@@ -384,6 +393,18 @@ data:
     href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
     processing_steps: [source]
     description: The single ocs uncertainty map for 0-30cm.
+  - name: gee-mean
+    structures: [gee, gee-ocs]
+    locations:
+      - url: https://earthengine.googleapis.com/v1/projects/soilgrids-isric/assets/
+        title: Earth Engine
+    href_template: "{variable}_mean"
+    processing_steps: [source]
+    description: >
+      Google Earth Engine images projects/soilgrids-isric/{property}_mean, curated by ISRIC. Mean
+      maps only; one image per property with one band per depth, named like the files
+      (soc_0-5cm_mean). Same scaled integer units as the VRTs, with nodata masked. ISRIC says the
+      median and quantile images will follow.
   - name: landmask
     structures: [landmask]
     locations:
@@ -406,6 +427,14 @@ additional_links:
     rel: describedby
     url: https://data.isric.org/
     description: ISO metadata for each SoilGrids layer.
+  - title: SoilGrids on Google Earth Engine
+    rel: describedby
+    url: https://docs.isric.org/globaldata/soilgrids/access_on_gee.html
+    description: Asset list and export and visualisation scripts from ISRIC.
+  - title: SoilGrids in the Earth Engine community catalog
+    rel: describedby
+    url: https://gee-community-catalog.org/projects/isric/
+    description: Earth Engine snippet and unit table.
   - title: SoilGrids web map
     rel: related
     url: https://soilgrids.org/
