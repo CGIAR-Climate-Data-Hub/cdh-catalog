@@ -54,7 +54,7 @@ note: >
   reproject points or windows before sampling. Values are stored as int16 in scaled units with no
   scale factor in the files; divide by the factor given in each variable's note to get conventional
   units. The VRTs reference their tiles by relative path, so open them over HTTPS with GDAL's
-  /vsicurl (rasterio, terra, QGIS) rather than downloading the .vrt alone, and read windows: a full
+  /vsicurl rather than downloading the .vrt alone, and read windows: a full
   global read touches thousands of tiles. Known gaps include New Zealand and parts of Siberia. The
   "latest" folder is a rolling release and ISRIC may replace maps in place; the WRB soil class maps
   in the same folder come from SoilGrids 2017 in EPSG:4326 and are not part of this record.
@@ -411,4 +411,4 @@ additional_links:
   - title: WRB soil class maps (SoilGrids 2017)
     rel: related
     url: https://files.isric.org/soilgrids/latest/data/wrb/
-    description: Most probable WRB reference soil group and per-class probabilities in EPSG:4326, not covered by this record.
+    description: Most probable WRB reference soil group and per-class probabilities, catalogued as soilgrids-wrb.
