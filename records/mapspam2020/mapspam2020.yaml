@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
-cdh_schema_version: "v0.4.1"
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/agriculture/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
 
 id: spam2020
 title: MAPSPAM 2020
@@ -73,7 +73,7 @@ related_publications:
     doi: 10.1016/j.agsy.2014.01.002
 
 created: "2026-07-06"
-updated: "2026-10-08"
+updated: "2026-10-14"
 
 spatial:
   bbox: [-180, -90, 180, 90]
@@ -201,53 +201,20 @@ cdh:
         reason: the grid is too coarse for field-scale operational decisions.
         use_instead: local survey or administrative production data.
 
+# The finest ICC level MapSPAM covers in full: each group has an "other" bucket (ocer, orts,
+# opul, ooil, ofib, vege). Nuts and anything else fall into the rest aggregate.
 commodities:
-  - wheat
-  - rice
-  - maize
-  - barley
-  - millets
-  - pearl-millet
-  - sorghum
   - cereals
-  - potato
-  - sweet-potatoes
-  - yams
-  - cassava
-  - root-vegetables
-  - common-bean
-  - chickpeas
-  - cowpeas
-  - pigeon-pea
-  - lentils
-  - pulses
-  - soybeans
-  - groundnuts
-  - coconuts
-  - oil-palms
-  - sunflower
-  - rapeseed
-  - sesame
-  - oil-crops
-  - sugarcane
-  - sugarbeet
-  - cotton
+  - root-tuber-crops-with-high-starch-or-inulin-content
+  - leguminous-crops
+  - oilseed-crops-and-oleaginous-fruits
+  - sugar-crops
   - fibre-crops
-  - coffee
-  - robusta-coffee
-  - cocoa
-  - tea
+  - stimulant-crops
+  - fruit-and-nuts
+  - vegetables-and-melons
   - tobacco
-  - banana
-  - plantains
-  - citrus
-  - tropical-fruits
-  - temperate-fruit
-  - tomatoes
-  - onions
-  - vegetables
   - rubber
-  - crops
 
 processing:
   - id: source
@@ -301,6 +268,10 @@ additional_assets:
     file_size: 5 KB
 
 additional_links:
+  - title: CROPGRIDS crop and harvested area
+    rel: related
+    id: cropgrids
+    description: FAO's 173-crop area maps on the same 2020 reference year, for crops MapSPAM folds into its aggregates.
   - title: MAPSPAM project website
     rel: about
     url: https://www.mapspam.info/about/

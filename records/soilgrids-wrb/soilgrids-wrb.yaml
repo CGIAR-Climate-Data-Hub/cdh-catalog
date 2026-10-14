@@ -1,12 +1,12 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # SoilGrids 2.0 WRB soil class maps, federated from ISRIC's WebDAV server through the per-class VRT mosaics.
 # Separate from the soilgrids record: aggregated from the 2017 predictions, not newly modelled, and in EPSG:4326.
-cdh_schema_version: "v0.4.1"
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 
 id: soilgrids-wrb
-title: SoilGrids 2.0 WRB reference soil group probability maps at 250 m (ISRIC)
+title: WRB reference soil group probability maps (SoilGrids 2.0)
 version: "2.0" # as ISRIC labels it; published 2020-05-04, layers regenerated in March 2022
 series:
   name: SoilGrids
@@ -134,7 +134,7 @@ related_publications:
       publisher: PLOS ONE
 
 created: "2026-10-13"
-updated: "2026-10-13"
+updated: "2026-10-14"
 
 spatial:
   bbox: [-180, -56, 180, 84]
@@ -235,7 +235,7 @@ structures:
           - { value: 29, label: Vertisols }
 
 cdh:
-  domain: [agricultural-production]
+  domain: [land, agricultural-production]
   usage:
     intended_uses:
       - soil type inputs to crop, land evaluation, and ecosystem models at national to global scale
@@ -271,24 +271,38 @@ processing:
       url: https://git.wur.nl/isric/soilgrids/SoilGrids250m/-/tree/master/mapping/wrb
     date: "2022-03-01"
 
+# The tiles of a map sit in a folder named after it, with the VRT that mosaics them beside the
+# folder, so each tile set is the data entry and its VRT is the file index.
 data:
   - name: probability
     structures: [probability]
     locations:
       - url: https://files.isric.org/soilgrids/latest/data/wrb/
         title: HTTPS (WebDAV)
-    href_template: "{rsg}.vrt"
+    media_type: image/tiff; application=geotiff
     processing_steps: [source, aggregate, regenerate]
-    description: >
-      One GDAL VRT per reference soil group, mosaicking the 4096x4096 GeoTIFF tiles in the folder of
-      the same name beside it, with a .vrt.ovr overview file.
+    description: 4096x4096 GeoTIFF tiles, one folder per reference soil group at {rsg}/.
+    file_index:
+      - format: vrt
+        title: One VRT per reference soil group beside its tile folder, with a .vrt.ovr overview file
+        href_template: "{rsg}.vrt"
+        locations:
+          - url: https://files.isric.org/soilgrids/latest/data/wrb/
+            title: HTTPS (WebDAV)
   - name: most-probable
     structures: [most-probable]
     locations:
-      - url: https://files.isric.org/soilgrids/latest/data/wrb/MostProbable.vrt
+      - url: https://files.isric.org/soilgrids/latest/data/wrb/MostProbable/
         title: HTTPS (WebDAV)
+    media_type: image/tiff; application=geotiff
     processing_steps: [source, aggregate, regenerate]
-    description: GDAL VRT mosaicking the tiles in the MostProbable folder beside it.
+    description: 4096x4096 GeoTIFF tiles of the most probable group.
+    file_index:
+      - format: vrt
+        title: VRT mosaicking the MostProbable tiles, with a .vrt.ovr overview file
+        locations:
+          - url: https://files.isric.org/soilgrids/latest/data/wrb/MostProbable.vrt
+            title: HTTPS (WebDAV)
 
 additional_assets:
   - name: most-probable-legend
@@ -316,6 +330,10 @@ additional_assets:
       - url: https://maps.isric.org/mapserv?map=/map/wrb.map
 
 additional_links:
+  - title: SoilGrids 2.0 soil property maps
+    rel: related
+    id: soilgrids
+    description: The quantile regression forest property predictions these class maps sit beside.
   - title: ISRIC data catalogue record
     rel: describedby
     url: https://data.isric.org/geonetwork/srv/api/records/c4dc161c-d62d-11ea-a1a3-292680b15169

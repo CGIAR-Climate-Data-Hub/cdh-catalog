@@ -1,12 +1,12 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # FAO-published NPKGRIDS fertilizer application rate maps, federated from FAO's public bucket.
-cdh_schema_version: "v0.4.1"
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/agriculture/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
 
 id: npkgrids
-title: NPKGRIDS crop-specific fertilizer application rates circa 2020 (FAO)
+title: NPKGRIDS crop-specific fertilizer application rates circa 2020
 version: "2.0" # as labelled on the FAO data catalog
 series:
   name: CROPGRIDS
@@ -98,7 +98,7 @@ related_publications:
       publisher: FAO Statistics Working Paper Series No. 26-54, FAO, Rome
 
 created: "2026-10-12"
-updated: "2026-10-12"
+updated: "2026-10-14"
 
 spatial:
   bbox: [-180, -90, 180, 90]
@@ -343,53 +343,8 @@ cdh:
         reason: the grid is too coarse and the rates are statistical allocations, not agronomic advice.
         use_instead: local soil tests and extension guidance.
 
-commodities:
-  - crops
-  - cereals
-  - wheat
-  - rice
-  - maize
-  - barley
-  - millets
-  - sorghum
-  - potato
-  - sweet-potatoes
-  - yams
-  - cassava
-  - root-vegetables
-  - pulses
-  - legumes
-  - common-bean
-  - chickpeas
-  - cowpeas
-  - pigeon-pea
-  - lentils
-  - soybeans
-  - groundnuts
-  - coconuts
-  - oil-palms
-  - sunflower
-  - rapeseed
-  - sesame
-  - oil-crops
-  - sugarcane
-  - sugarbeet
-  - cotton
-  - fibre-crops
-  - coffee
-  - cocoa
-  - tea
-  - tobacco
-  - banana
-  - plantains
-  - citrus
-  - fruits
-  - tropical-fruits
-  - temperate-fruit
-  - tomatoes
-  - onions
-  - vegetables
-  - rubber
+# 173 crops across every group, so the root; the crop dimension lists them.
+commodities: [crops]
 
 processing:
   - id: source

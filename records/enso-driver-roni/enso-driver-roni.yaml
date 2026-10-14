@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # FEDERATED record - the Atlas cites this index but does not host it.
-cdh_schema_version: v0.4.1
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 
 id: enso-driver-roni
 title: NOAA CPC Relative Oceanic Nino Index (RONI)
@@ -46,7 +46,7 @@ citation:
   url: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/
 
 created: "2026-09-18"
-updated: "2026-10-09"
+updated: "2026-10-14"
 
 temporal:
   start_date: "1950-01"
@@ -85,9 +85,9 @@ data:
     media_type: text/plain
 
 additional_links:
-  - title: Indian Ocean Dipole Mode Index (DMI), catalog record enso-driver-dmi
+  - title: Indian Ocean Dipole Mode Index (DMI)
     rel: related
-    url: https://www.cpc.ncep.noaa.gov/products/international/ocean_monitoring/indian/IODMI/DMI_month.html
+    id: enso-driver-dmi
     description: Sister IOD driver from the same ERSSTv6 reconstruction and 1991-2020 climatology.
 
 cdh:
