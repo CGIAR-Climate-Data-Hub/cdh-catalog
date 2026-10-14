@@ -6,7 +6,7 @@ extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 
 id: soilgrids-wrb
-title: WRB reference soil group probability maps (SoilGrids 2.0, ISRIC)
+title: WRB reference soil group probability maps (SoilGrids 2.0)
 version: "2.0" # as ISRIC labels it; published 2020-05-04, layers regenerated in March 2022
 series:
   name: SoilGrids

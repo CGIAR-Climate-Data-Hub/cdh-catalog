@@ -6,7 +6,7 @@ extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
 
 id: ecocrop
-title: EcoCrop crop ecological requirements database (FAO)
+title: EcoCrop crop ecological requirements database
 version: "1"
 description: >
   Expert-compiled ecological requirements for 2,568 plant species from the FAO EcoCrop database:

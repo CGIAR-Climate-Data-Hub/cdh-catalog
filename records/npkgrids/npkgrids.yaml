@@ -6,7 +6,7 @@ extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
 
 id: npkgrids
-title: NPKGRIDS crop-specific fertilizer application rates circa 2020 (FAO)
+title: NPKGRIDS crop-specific fertilizer application rates circa 2020
 version: "2.0" # as labelled on the FAO data catalog
 series:
   name: CROPGRIDS
