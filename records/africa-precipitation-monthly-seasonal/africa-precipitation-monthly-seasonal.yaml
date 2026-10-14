@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # CHIRPS v3 monthly Africa rewritten as COGs, plus seasonal sums derived from them (Adaptation Atlas).
-cdh_schema_version: v0.4.1
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 
 id: africa-precipitation-monthly-seasonal
 title: Monthly and Seasonal Precipitation from CHIRPS v3 (Africa)
@@ -92,7 +92,7 @@ related_publications:
       url: https://doi.org/10.1038/sdata.2015.66
 
 created: "2026-08-28"
-updated: "2026-10-08"
+updated: "2026-10-14"
 
 spatial:
   bbox: [-20.0, -40.0, 55.0, 40.0]
@@ -193,6 +193,12 @@ data:
         media_type: text/csv
     media_type: image/tiff; application=geotiff; profile=cloud-optimized
     processing_steps: [source, monthly-cog, seasonal-sum]
+
+additional_links:
+  - title: CHIRPS v3 daily precipitation
+    rel: related
+    id: chirps-v3-daily
+    description: The daily archive behind the monthly totals.
 
 cdh:
   domain: [climate]
