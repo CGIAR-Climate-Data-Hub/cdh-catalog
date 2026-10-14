@@ -268,6 +268,10 @@ additional_assets:
     file_size: 5 KB
 
 additional_links:
+  - title: CROPGRIDS crop and harvested area
+    rel: related
+    id: cropgrids
+    description: FAO's 173-crop area maps on the same 2020 reference year, for crops MapSPAM folds into its aggregates.
   - title: MAPSPAM project website
     rel: about
     url: https://www.mapspam.info/about/
