@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # FEDERATED record - ECMWF serves the data; the Hub does not host a copy.
-cdh_schema_version: v0.4.1
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/climate/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/climate/schema.json
 
 id: agera5
 title: AgERA5 daily agrometeorological indicators
@@ -81,7 +81,7 @@ citation:
 doi: 10.24381/cds.6c68c9bb
 
 created: "2026-10-08"
-updated: "2026-10-08"
+updated: "2026-10-14"
 
 spatial:
   bbox: [-180.0, -90.0, 180.0, 90.0]
@@ -357,8 +357,10 @@ data:
       curated by Climate Engine. One image per day, same band names and units as the Zarr stores,
       but 21 of the 27 variables.
     locations:
-      - url: https://earthengine.googleapis.com/v1/projects/climate-engine-pro/assets/ce-ag-era5-v2/daily
+      - url: ee://projects/climate-engine-pro/assets/ce-ag-era5-v2/daily
         title: Earth Engine
+      - url: https://earthengine.googleapis.com/v1/projects/climate-engine-pro/assets/ce-ag-era5-v2/daily
+        title: Earth Engine REST API
     processing_steps: [source]
   - name: cds-api
     structures: [daily]
