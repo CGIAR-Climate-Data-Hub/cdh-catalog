@@ -201,8 +201,20 @@ cdh:
         reason: the grid is too coarse for field-scale operational decisions.
         use_instead: local survey or administrative production data.
 
-# 46 crop groups across every ICC group, so the root; the crop dimension lists them.
-commodities: [crops]
+# The finest ICC level MapSPAM covers in full: each group has an "other" bucket (ocer, orts,
+# opul, ooil, ofib, vege). Nuts and anything else fall into the rest aggregate.
+commodities:
+  - cereals
+  - root-tuber-crops-with-high-starch-or-inulin-content
+  - leguminous-crops
+  - oilseed-crops-and-oleaginous-fruits
+  - sugar-crops
+  - fibre-crops
+  - stimulant-crops
+  - fruit-and-nuts
+  - vegetables-and-melons
+  - tobacco
+  - rubber
 
 processing:
   - id: source
