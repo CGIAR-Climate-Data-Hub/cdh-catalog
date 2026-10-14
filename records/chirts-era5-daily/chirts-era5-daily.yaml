@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
-cdh_schema_version: v0.4.1
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 created: "2026-08-25"
-updated: "2026-10-08"
+updated: "2026-10-14"
 id: chirts-era5-daily
 title: CHIRTS-ERA5 Daily
 version: "1"
@@ -161,7 +161,7 @@ structures:
         name: time
         type: temporal
         description: Day of the temperature estimate; the {time} token of the daily files.
-        extent: ["1983-01-01", "2026-10-03"] # files present as of `updated`; may lag the data, never lead it
+        extent: ["1983-01-01", "2026-10-08"] # files present as of `updated`; may lag the data, never lead it
         step: P1D
     variables:
       - name: Tmax
