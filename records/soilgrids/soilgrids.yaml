@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # ISRIC SoilGrids 2.0, federated from ISRIC's WebDAV server through the per-map VRT mosaics.
-cdh_schema_version: "v0.4.1"
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 
 id: soilgrids
 title: SoilGrids 2.0 global soil property maps at 250 m (ISRIC)
@@ -93,12 +93,12 @@ citation:
   url: https://doi.org/10.5194/soil-7-217-2021
 
 created: "2026-10-13"
-updated: "2026-10-13"
+updated: "2026-10-14"
 
 spatial:
   bbox: [-180, -56, 180, 83]
   geography: [world]
-  crs: "+proj=igh +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs" # Interrupted Goode Homolosine, ESRI:54052
+  crs: ESRI:54052 # Interrupted Goode Homolosine
 
 temporal:
   date: "2020" # static maps; fitted on the March 2020 WoSIS snapshot and published May 2020
@@ -143,42 +143,42 @@ structures:
         name: bdod
         description: Bulk density of the fine earth fraction.
         data_type: int16
-        unit: cg/cm3
+        unit: cg cm-3
         nodata: -32768
         note: Divide by 100 for kg/dm3.
       - &cec
         name: cec
         description: Cation exchange capacity of the soil at pH 7.
         data_type: int16
-        unit: mmol/kg
+        unit: mmol kg-1
         nodata: -32768
         note: Charge-equivalent mmol(c)/kg; divide by 10 for cmol(c)/kg.
       - &cfvo
         name: cfvo
         description: Volumetric fraction of coarse fragments larger than 2 mm.
         data_type: int16
-        unit: cm3/dm3
+        unit: cm3 dm-3
         nodata: -32768
         note: Divide by 10 for volume percent.
       - &clay
         name: clay
         description: Proportion of clay particles smaller than 0.002 mm in the fine earth fraction.
         data_type: int16
-        unit: g/kg
+        unit: g kg-1
         nodata: -32768
         note: Divide by 10 for mass percent. Clay, silt and sand are compositional and sum to 100%.
       - &nitrogen
         name: nitrogen
         description: Total nitrogen.
         data_type: int16
-        unit: cg/kg
+        unit: cg kg-1
         nodata: -32768
         note: Divide by 100 for g/kg.
       - &ocd
         name: ocd
         description: Organic carbon density.
         data_type: int16
-        unit: hg/m3
+        unit: hg m-3
         nodata: -32768
         note: Divide by 10 for kg/m3.
       - &phh2o
@@ -192,21 +192,21 @@ structures:
         name: sand
         description: Proportion of sand particles larger than 0.05 mm in the fine earth fraction.
         data_type: int16
-        unit: g/kg
+        unit: g kg-1
         nodata: -32768
         note: Divide by 10 for mass percent. Clay, silt and sand are compositional and sum to 100%.
       - &silt
         name: silt
         description: Proportion of silt particles between 0.002 and 0.05 mm in the fine earth fraction.
         data_type: int16
-        unit: g/kg
+        unit: g kg-1
         nodata: -32768
         note: Divide by 10 for mass percent. Clay, silt and sand are compositional and sum to 100%.
       - &soc
         name: soc
         description: Soil organic carbon content in the fine earth fraction.
         data_type: int16
-        unit: dg/kg
+        unit: dg kg-1
         nodata: -32768
         note: Divide by 10 for g/kg.
 
@@ -227,7 +227,7 @@ structures:
         name: ocs
         description: Organic carbon stock in the 0-30 cm topsoil.
         data_type: int16
-        unit: t/ha
+        unit: t ha-1
         nodata: -32768
         note: >
           Divide by 10 for kg/m2. Computed from point observations, not from the ocd maps, so the
@@ -328,7 +328,7 @@ structures:
         note: ISRIC does not document this file; class codes follow the ESA CCI Land Cover legend.
 
 cdh:
-  domain: [agricultural-production]
+  domain: [land, agricultural-production]
   usage:
     intended_uses:
       - soil inputs to crop, hydrological, and carbon models at national to global scale
@@ -355,47 +355,76 @@ processing:
       - title: ESA CCI Land Cover, used for the soil mask
         url: https://www.esa-landcover-cci.org/
 
+# The tiles of a map sit in a folder named after it, with the VRT that mosaics them beside the
+# folder, so each tile set is the data entry and its VRTs are a templated file index.
 data:
   - name: predictions
     structures: [predictions]
     locations:
       - url: https://files.isric.org/soilgrids/latest/data/
         title: HTTPS (WebDAV)
-    href_template: "{variable}/{variable}_{depth}_{stat}.vrt"
+    media_type: image/tiff; application=geotiff
     processing_steps: [source]
     description: >
-      One GDAL VRT per property, depth and statistic, mosaicking the GeoTIFF tiles in the folder of
-      the same name beside it (about 5 GB of tiles per map, 128x128 blocks, with a .vrt.ovr overview
-      file). Each property folder has a list_vrts.txt naming its maps and a checksum.sha256.txt.
+      GeoTIFF tiles, one folder per property, depth and statistic at
+      {variable}/{variable}_{depth}_{stat}/ (about 5 GB per map, 128x128 blocks). Each property
+      folder has a list_vrts.txt naming its maps and a checksum.sha256.txt.
+    file_index:
+      - format: vrt
+        title: One VRT per map beside its tile folder, with a .vrt.ovr overview file
+        href_template: "{variable}/{variable}_{depth}_{stat}.vrt"
+        locations:
+          - url: https://files.isric.org/soilgrids/latest/data/
+            title: HTTPS (WebDAV)
   - name: ocs-predictions
     structures: [ocs-predictions]
     locations:
       - url: https://files.isric.org/soilgrids/latest/data/
         title: HTTPS (WebDAV)
-    href_template: "{variable}/{variable}_{depth}_{stat}.vrt"
+    media_type: image/tiff; application=geotiff
     processing_steps: [source]
-    description: The four ocs maps for 0-30cm, laid out like the other prediction maps.
+    description: The tiles of the four ocs maps for 0-30cm, laid out like the other prediction maps.
+    file_index:
+      - format: vrt
+        href_template: "{variable}/{variable}_{depth}_{stat}.vrt"
+        locations:
+          - url: https://files.isric.org/soilgrids/latest/data/
+            title: HTTPS (WebDAV)
   - name: uncertainty
     structures: [uncertainty]
     locations:
       - url: https://files.isric.org/soilgrids/latest/data/
         title: HTTPS (WebDAV)
-    href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
+    media_type: image/tiff; application=geotiff
     processing_steps: [source]
-    description: One GDAL VRT per property and depth, laid out like the prediction maps.
+    description: The tiles of one uncertainty map per property and depth, laid out like the prediction maps.
+    file_index:
+      - format: vrt
+        href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
+        locations:
+          - url: https://files.isric.org/soilgrids/latest/data/
+            title: HTTPS (WebDAV)
   - name: ocs-uncertainty
     structures: [ocs-uncertainty]
     locations:
       - url: https://files.isric.org/soilgrids/latest/data/
         title: HTTPS (WebDAV)
-    href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
+    media_type: image/tiff; application=geotiff
     processing_steps: [source]
-    description: The single ocs uncertainty map for 0-30cm.
+    description: The tiles of the single ocs uncertainty map for 0-30cm.
+    file_index:
+      - format: vrt
+        href_template: "{variable}/{variable}_{depth}_uncertainty.vrt"
+        locations:
+          - url: https://files.isric.org/soilgrids/latest/data/
+            title: HTTPS (WebDAV)
   - name: gee-mean
     structures: [gee, gee-ocs]
     locations:
-      - url: https://earthengine.googleapis.com/v1/projects/soilgrids-isric/assets/
+      - url: ee://projects/soilgrids-isric/
         title: Earth Engine
+      - url: https://earthengine.googleapis.com/v1/projects/soilgrids-isric/assets/
+        title: Earth Engine REST API
     href_template: "{variable}_mean"
     processing_steps: [source]
     description: >
@@ -437,5 +466,5 @@ additional_links:
     url: https://soilgrids.org/
   - title: WRB soil class maps (SoilGrids 2.0, from 2017 predictions)
     rel: related
-    url: https://files.isric.org/soilgrids/latest/data/wrb/
-    description: Most probable WRB reference soil group and per-class probabilities, catalogued as soilgrids-wrb.
+    id: soilgrids-wrb
+    description: Most probable WRB reference soil group and per-class probabilities.
