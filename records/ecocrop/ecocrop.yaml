@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # FAO EcoCrop crop requirement thresholds, cleaned from the OpenCLIM CSV snapshot into one Parquet table.
-cdh_schema_version: v0.4.1
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/agriculture/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
 
 id: ecocrop
 title: EcoCrop crop ecological requirements database (FAO)
@@ -103,7 +103,7 @@ related_publications:
       publisher: Climate Resilience and Sustainability
 
 created: "2026-10-09"
-updated: "2026-10-09"
+updated: "2026-10-14"
 
 structures:
   - name: species-requirements
@@ -127,33 +127,33 @@ structures:
         description: Classification path class:subclass:order:family, colon-separated.
         data_type: string
       - name: syno
-        description: Synonyms, split on commas outside parentheses; items are free text as published.
-        data_type: other
+        description: Synonyms, split on commas outside parentheses; items are free text as published. List of strings.
+        data_type: array
       - name: comname
-        description: Common names in many languages, split on commas outside parentheses.
-        data_type: other
-      # plant attributes (multi-valued columns are list<string>)
+        description: Common names in many languages, split on commas outside parentheses. List of strings.
+        data_type: array
+      # plant attributes
       - name: lifo
-        description: "Life form: tree, shrub, herb, grass, vine, or combinations."
-        data_type: other
+        description: "Life form: tree, shrub, herb, grass, vine, or combinations. List of strings."
+        data_type: array
       - name: habi
-        description: "Growth habit: erect, prostrate/procumbent/semi-erect, climber/scrambler/scadent."
-        data_type: other
+        description: "Growth habit: erect, prostrate/procumbent/semi-erect, climber/scrambler/scadent. List of strings."
+        data_type: array
       - name: lispa
-        description: "Life span: annual, biennial, perennial."
-        data_type: other
+        description: "Life span: annual, biennial, perennial. List of strings."
+        data_type: array
       - name: phys
-        description: "Physiology: single stem, multi stem, evergreen, deciduous, C3/C4 and similar."
-        data_type: other
+        description: "Physiology: single stem, multi stem, evergreen, deciduous, C3/C4 and similar. List of strings."
+        data_type: array
       - name: cat
-        description: "Use category: cereals & pseudocereals, vegetables, forage/pasture, forest/wood, medicinals & aromatic, and others."
-        data_type: other
+        description: "Use category: cereals & pseudocereals, vegetables, forage/pasture, forest/wood, medicinals & aromatic, and others. List of strings."
+        data_type: array
       - name: plat
-        description: "Plant attributes: grown on large scale, grown on small scale, harvested from wild."
-        data_type: other
+        description: "Plant attributes: grown on large scale, grown on small scale, harvested from wild. List of strings."
+        data_type: array
       - name: prosy
-        description: "Production system: large scale/commercial, small scale (manual), home garden, and others."
-        data_type: other
+        description: "Production system: large scale/commercial, small scale (manual), home garden, and others. List of strings."
+        data_type: array
       # temperature
       - name: topmn
         description: Optimal minimum temperature.
@@ -257,11 +257,11 @@ structures:
         description: Absolute maximum light intensity, same classes as liopmn.
         data_type: string
       - name: photo
-        description: "Photoperiod sensitivity: short day (<12 hours), neutral day (12-14 hours), long day (>14 hours)."
-        data_type: other
+        description: "Photoperiod sensitivity: short day (<12 hours), neutral day (12-14 hours), long day (>14 hours). List of strings."
+        data_type: array
       - name: cliz
-        description: "Climate zones where the species is grown, Köppen-style labels as published, e.g. tropical wet & dry (Aw), subtropical humid (Cf)."
-        data_type: other
+        description: "Climate zones where the species is grown, Köppen-style labels as published, e.g. tropical wet & dry (Aw), subtropical humid (Cf). List of strings."
+        data_type: array
       # soil
       - name: dep
         description: "Optimal soil depth: very shallow (<20 cm), shallow (20-50 cm), medium (50-150 cm), deep (>>150 cm)."
@@ -270,11 +270,11 @@ structures:
         description: Absolute soil depth, same classes as dep.
         data_type: string
       - name: text
-        description: "Optimal soil texture: heavy, medium, light, organic, wide."
-        data_type: other
+        description: "Optimal soil texture: heavy, medium, light, organic, wide. List of strings."
+        data_type: array
       - name: textr
-        description: Absolute soil texture, same classes as text.
-        data_type: other
+        description: Absolute soil texture, same classes as text. List of strings.
+        data_type: array
       - name: fer
         description: "Optimal soil fertility: high, moderate, low."
         data_type: string
@@ -294,21 +294,21 @@ structures:
         description: Absolute soil salinity, same classes as sal.
         data_type: string
       - name: dra
-        description: "Optimal soil drainage: well (dry spells), poorly (saturated >50% of year), excessive (dry/moderately dry)."
-        data_type: other
+        description: "Optimal soil drainage: well (dry spells), poorly (saturated >50% of year), excessive (dry/moderately dry). List of strings."
+        data_type: array
       - name: drar
-        description: Absolute soil drainage, same classes as dra.
-        data_type: other
+        description: Absolute soil drainage, same classes as dra. List of strings.
+        data_type: array
       # tolerances and risks
       - name: abitol
-        description: "Abiotic tolerances: drought, flooding, fire, wind, salinity, frost, and others."
-        data_type: other
+        description: "Abiotic tolerances: drought, flooding, fire, wind, salinity, frost, and others. List of strings."
+        data_type: array
       - name: abisus
-        description: Abiotic susceptibilities, same classes as abitol.
-        data_type: other
+        description: Abiotic susceptibilities, same classes as abitol. List of strings.
+        data_type: array
       - name: intri
-        description: "Introduction risk: can become a weed, poisonous to man or animals, susceptible to nematodes, and others."
-        data_type: other
+        description: "Introduction risk: can become a weed, poisonous to man or animals, susceptible to nematodes, and others. List of strings."
+        data_type: array
 
 processing:
   - id: source
