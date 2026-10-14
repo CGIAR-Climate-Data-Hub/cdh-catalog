@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/schemas/profiles/cdh.schema.bundled.json
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # FAO-published CROPGRIDS crop and harvested area maps, federated from FAO's public bucket.
-cdh_schema_version: "v0.4.1"
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/agriculture/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
 
 id: cropgrids
 title: CROPGRIDS crop and harvested area for 2020 (FAO)
@@ -102,7 +102,7 @@ related_publications:
       publisher: FAO Statistics Working Paper Series No. 25-48, FAO, Rome
 
 created: "2026-10-12"
-updated: "2026-10-12"
+updated: "2026-10-14"
 
 spatial:
   bbox: [-180, -90, 180, 90]
@@ -332,53 +332,8 @@ cdh:
         reason: the dataset holds area only.
         use_instead: MapSPAM 2020 for gridded production and yield.
 
-commodities:
-  - crops
-  - cereals
-  - wheat
-  - rice
-  - maize
-  - barley
-  - millets
-  - sorghum
-  - potato
-  - sweet-potatoes
-  - yams
-  - cassava
-  - root-vegetables
-  - pulses
-  - legumes
-  - common-bean
-  - chickpeas
-  - cowpeas
-  - pigeon-pea
-  - lentils
-  - soybeans
-  - groundnuts
-  - coconuts
-  - oil-palms
-  - sunflower
-  - rapeseed
-  - sesame
-  - oil-crops
-  - sugarcane
-  - sugarbeet
-  - cotton
-  - fibre-crops
-  - coffee
-  - cocoa
-  - tea
-  - tobacco
-  - banana
-  - plantains
-  - citrus
-  - fruits
-  - tropical-fruits
-  - temperate-fruit
-  - tomatoes
-  - onions
-  - vegetables
-  - rubber
+# 173 crops across every group, so the root; the crop dimension lists them.
+commodities: [crops]
 
 processing:
   - id: source
@@ -420,6 +375,10 @@ data:
     media_type: "image/tiff; application=geotiff; profile=cloud-optimized"
 
 additional_links:
+  - title: MapSPAM 2020 crop production
+    rel: related
+    id: spam2020
+    description: Gridded production and yield by crop, for what CROPGRIDS does not hold.
   - title: Crop Area (Global - 2020 - ~5.6 km) - CROPGRIDS
     rel: describedby
     url: https://data.apps.fao.org/catalog/dataset/de37968a-aa0a-4686-aa59-741b0291a741
