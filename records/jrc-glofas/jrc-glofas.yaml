@@ -1,8 +1,9 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # somewhat double-federated record - the COG copies from JRC live on Source Cooperative; the Hub publishes only index files
 # (VRT mosaics and STAC GeoParquet) that open them in place.
-cdh_schema_version: v0.4.1
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 
 id: jrc-glofas
 title: JRC global river flood hazard maps (CEMS-GloFAS)
@@ -80,7 +81,7 @@ related_publications:
   - doi: 10.1016/j.advwatres.2016.05.002
 
 created: "2026-08-28"
-updated: "2026-10-09"
+updated: "2026-10-14"
 
 spatial:
   bbox: [-170.0013, -59.9871, 179.9696, 80.0013]
@@ -221,67 +222,28 @@ data:
     processing_steps: [source, cloud-optimize]
     file_index:
       - format: vrt
-        title: Seven bands, rp10 to rp500; tile paths are HTTPS (/vsicurl), band sources are sibling depth-rp{n}.vrt files
+        title: Seven bands, rp10 to rp500; tile paths are HTTPS (/vsicurl)
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth.vrt
             title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth.vrt
             title: S3
-      - format: stac-geoparquet
-        title: rp10
-        media_type: application/vnd.apache.parquet
+      - format: vrt
+        title: One single-band VRT per return period, the band sources of depth.vrt
+        href_template: "depth-rp{return_period}.vrt"
         locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp10.parquet
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/
             title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp10.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/
             title: S3
       - format: stac-geoparquet
-        title: rp20
+        title: One STAC GeoParquet per return period, listing that period's tiles
+        href_template: "depth-rp{return_period}.parquet"
         media_type: application/vnd.apache.parquet
         locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp20.parquet
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/
             title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp20.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp50
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp50.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp50.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp75
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp75.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp75.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp100
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp100.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp100.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp200
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp200.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp200.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp500
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/depth-rp500.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/depth-rp500.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/
             title: S3
   - name: depth-east-africa
     structures: [depth-nan]
@@ -312,67 +274,28 @@ data:
     processing_steps: [source, cloud-optimize]
     file_index:
       - format: vrt
-        title: Seven bands, rp10 to rp500; tile paths are HTTPS (/vsicurl), band sources are sibling hazard-rp{n}.vrt files
+        title: Seven bands, rp10 to rp500; tile paths are HTTPS (/vsicurl)
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard.vrt
             title: HTTPS
           - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard.vrt
             title: S3
-      - format: stac-geoparquet
-        title: rp10
-        media_type: application/vnd.apache.parquet
+      - format: vrt
+        title: One single-band VRT per return period, the band sources of hazard.vrt
+        href_template: "hazard-rp{return_period}.vrt"
         locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp10.parquet
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/
             title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp10.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/
             title: S3
       - format: stac-geoparquet
-        title: rp20
+        title: One STAC GeoParquet per return period, listing that period's tiles
+        href_template: "hazard-rp{return_period}.parquet"
         media_type: application/vnd.apache.parquet
         locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp20.parquet
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/
             title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp20.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp50
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp50.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp50.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp75
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp75.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp75.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp100
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp100.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp100.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp200
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp200.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp200.parquet
-            title: S3
-      - format: stac-geoparquet
-        title: rp500
-        media_type: application/vnd.apache.parquet
-        locations:
-          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/jrc-glofas-v2.1.2/hazard-rp500.parquet
-            title: HTTPS
-          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/hazard-rp500.parquet
+          - url: s3://digital-atlas/cdh/data/jrc-glofas-v2.1.2/
             title: S3
   - name: permanent-water
     structures: [permanent-water]
