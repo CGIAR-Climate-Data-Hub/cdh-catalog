@@ -37,11 +37,9 @@ keywords:
 note: >
   GLO-30 is missing 25 tiles over Armenia and Azerbaijan: Copernicus released them only in 2023_1,
   after the 2021_1 copy on AWS. Use GLO-90 there. Above 50 degrees latitude the GTI resamples the
-  wider-pixel tiles to the equatorial grid on read with nearest neighbour, so columns repeat. The GTI needs GDAL 3.8 or newer and references
-  the tiles over HTTPS with /vsicurl, so open it with GDAL-based tools (rasterio, terra, QGIS) and
-  read a window at a time; every read goes to AWS eu-central-1 directly and GLO-30 is over a
-  terabyte.
-
+  wider-pixel tiles to the equatorial grid on read with nearest neighbour, so columns repeat. The
+  GTI needs GDAL 3.8 or newer and references the tiles over HTTPS with /vsicurl, so open it with
+  GDAL-based tools and read a window at a time rather than the full dataset.
 contact:
   - organization: European Space Agency (ESA), Copernicus programme
     url: https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM
@@ -164,7 +162,7 @@ data:
     processing_steps: [source, cloud-optimize]
     file_index:
       - format: gti
-        title: Open as GTI:<url>; tile paths are HTTPS (/vsicurl)
+        title: VSICURl/HTTPS based Gdal Tile index
         media_type: application/geopackage+sqlite3
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/copernicus-dem-2021/glo-30.gti.gpkg
@@ -172,7 +170,7 @@ data:
           - url: s3://digital-atlas/cdh/data/copernicus-dem-2021/glo-30.gti.gpkg
             title: S3
       - format: stac-geoparquet
-        title: Snapshot of the Earth Search items, one row per elevation tile; hrefs are HTTPS
+        title: STAC GeoParquet of the Earth Search items. hrefs are HTTPS
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/copernicus-dem-2021/glo-30.parquet
@@ -193,7 +191,7 @@ data:
     processing_steps: [source, cloud-optimize]
     file_index:
       - format: gti
-        title: Open as GTI:<url>; tile paths are HTTPS (/vsicurl)
+        title: VSICURl/HTTPS based Gdal Tile index
         media_type: application/geopackage+sqlite3
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/copernicus-dem-2021/glo-90.gti.gpkg
@@ -201,7 +199,7 @@ data:
           - url: s3://digital-atlas/cdh/data/copernicus-dem-2021/glo-90.gti.gpkg
             title: S3
       - format: stac-geoparquet
-        title: Snapshot of the Earth Search items, one row per elevation tile; hrefs are HTTPS
+        title: STAC GeoParquet of the Earth Search items. hrefs are HTTPS
         media_type: application/vnd.apache.parquet
         locations:
           - url: https://digital-atlas.s3.amazonaws.com/cdh/data/copernicus-dem-2021/glo-90.parquet
