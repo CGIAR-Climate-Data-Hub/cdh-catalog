@@ -1,0 +1,245 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
+# Federated record: the COG tiles live on AWS Open Data; the Hub publishes only index files
+# (GTI tile indexes and STAC GeoParquet) that open them in place.
+cdh_schema_version: v0.5.0
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+
+id: copernicus-dem
+title: Copernicus DEM global digital surface model, 30 m and 90 m
+version: "2021_1"
+description: >
+  Global digital surface model (DSM) of the Earth's surface including buildings, infrastructure and
+  vegetation, derived from the TanDEM-X radar mission and edited and infilled by Airbus Defence and
+  Space for the European Space Agency (ESA) under the Copernicus programme. Two public instances:
+  GLO-30 at 1 arc-second (~30 m) and GLO-90 at 3 arc-seconds (~90 m), both as orthometric heights
+  in metres over the EGM2008 geoid. The standard global elevation base for terrain derivatives,
+  hydrological conditioning and elevation covariates. Sinergise (Sentinel Hub) republishes each
+  instance on AWS Open Data as one cloud-optimized GeoTIFF per 1x1 degree tile with a static
+  SpatioTemporal Asset Catalog (STAC). The Hub publishes a GDAL tile index (GTI) per instance that
+  opens all tiles as one global raster, and a STAC GeoParquet snapshot of the Earth Search items for
+  each instance that lists the tiles with their footprints and grid metadata. No data is copied.
+resource_type: dataset
+license: LicenseRef-Copernicus-DEM # free for the general public; attribution notice required, see additional_links
+attribution: >
+  © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by
+  the European Union and ESA; all rights reserved.
+
+keywords:
+  - elevation
+  - DEM
+  - digital surface model
+  - terrain
+  - topography
+  - Copernicus
+  - TanDEM-X
+
+note: >
+  GLO-30 is missing 25 tiles over Armenia and Azerbaijan: Copernicus released them only in 2023_1,
+  after the 2021_1 copy on AWS. Use GLO-90 there. Above 50 degrees latitude the GTI resamples the
+  wider-pixel tiles to the equatorial grid on read with nearest neighbour, so columns repeat. The
+  GTI needs GDAL 3.8 or newer and references the tiles over HTTPS with /vsicurl, so open it with
+  GDAL-based tools and read a window at a time rather than the full dataset.
+contact:
+  - organization: European Space Agency (ESA), Copernicus programme
+    url: https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM
+    roles: [licensor, producer]
+  - organization: Sinergise (Sentinel Hub)
+    url: https://copernicus-dem-30m.s3.amazonaws.com/readme.html
+    roles: [processor]
+  - name: Brayden Youngberg
+    organization: Alliance of Bioversity International and CIAT
+    email: b.youngberg@cgiar.org
+    roles: [processor, maintainer, point-of-contact]
+
+citation:
+  title: Copernicus DEM - Global and European Digital Elevation Model (COP-DEM)
+  authors:
+    - organization: European Space Agency (ESA)
+  date: "2021"
+  publisher: European Space Agency
+  url: https://doi.org/10.5270/ESA-c5d3d65
+doi: 10.5270/ESA-c5d3d65
+
+created: "2026-10-15"
+updated: "2026-10-15"
+
+spatial:
+  bbox: [-180, -90, 180, 90]
+  crs: EPSG:4326 # heights are orthometric over EGM2008 (EPSG:3855)
+  geography: [world]
+
+temporal:
+  start_date: "2011" # TanDEM-X acquisition period
+  end_date: "2015"
+
+structures:
+  - name: glo-30
+    dimensions:
+      - name: cell
+        type: xy
+        description: >
+          1 arc-second (~30 m at the equator). Latitude spacing is constant; longitude spacing is
+          1.5x, 2x, 3x, 5x and 10x wider above 50, 60, 70, 80 and 85 degrees.
+        step: 0.000277778
+        unit: degree
+    variables:
+      - &elevation
+        name: elevation
+        description: >
+          Surface height above the EGM2008 geoid, including canopy and buildings. No nodata value;
+          the ocean has no tiles and reads as 0, so sea cannot be told from 0 m land.
+        data_type: float32
+        unit: m
+  - name: glo-90
+    dimensions:
+      - name: cell
+        type: xy
+        description: 3 arc-seconds (~90 m at the equator), same latitude-dependent longitude spacing as GLO-30.
+        step: 0.000833333
+        unit: degree
+    variables:
+      - *elevation
+
+cdh:
+  domain: [land]
+  usage:
+    intended_uses:
+      - terrain inputs such as slope, aspect and flow direction for crop suitability and hydrological modelling
+      - elevation covariate for downscaling climate and interpolating station data
+      - exposure baselines for flood and landslide hazard, and visibility and routing analysis
+    not_recommended_for:
+      - use: bare-earth terrain analysis under forest or in cities
+        reason: it is a surface model, so heights include canopy and buildings.
+        use_instead: a bare-earth product derived from it, such as FABDEM, or local LiDAR terrain models.
+      - use: elevation change or time series
+        reason: a single static model from 2011 to 2015 radar acquisitions, released with edits rather than new data.
+      - use: sub-metre vertical precision, such as drainage design
+        reason: absolute vertical accuracy is specified as under 4 m at 90% confidence.
+
+processing:
+  - id: source
+    description: >
+      WorldDEM radar surface model from the TanDEM-X mission (2011 to 2015), edited, infilled and
+      resampled by Airbus Defence and Space to the Copernicus DEM GLO-30 and GLO-90 DGED products,
+      2021_1 release.
+    derived_from:
+      - title: Copernicus DEM - Global and European Digital Elevation Model (COP-DEM)
+        url: https://doi.org/10.5270/ESA-c5d3d65
+        version: "2021_1"
+  - id: cloud-optimize
+    description: >
+      Each 1x1 degree tile converted to a cloud-optimized GeoTIFF by Sinergise: the row and column
+      shared with neighbouring tiles dropped, giving 3600 (GLO-30) or 1200 (GLO-90) rows per tile,
+      DEFLATE compression with floating-point predictor and average-resampled overviews. Published
+      on AWS Open Data with a static STAC catalog per instance.
+  - id: index
+    description: >
+      Items for each instance read from the Element 84 Earth Search STAC API, which carries
+      projection, grid and raster metadata the static AWS catalog lacks, with asset hrefs rewritten
+      from s3:// to HTTPS so readers need no credentials. Snapshotted to STAC GeoParquet, one file
+      per instance, and a GTI tile index written over the elevation tiles at the equatorial
+      resolution. No data is copied.
+    code:
+      url: https://github.com/CGIAR-Climate-Data-Hub/cdh-data-pipeline/blob/main/recipes/copernicus_dem.py
+      version: ffe089e
+    date: "2026-10-15"
+
+data:
+  - name: glo-30
+    structures: [glo-30]
+    description: >
+      26,450 GLO-30 tiles named Copernicus_DSM_COG_10_<N|S>yy_00_<E|W>xxx_00_DEM, one folder per
+      tile holding the elevation COG and an AUXFILES folder with editing, filling, water-body and
+      height-error masks. Open the GTI as one global raster, or the GeoParquet to list and select
+      elevation tiles; the masks are not indexed.
+    locations:
+      - url: https://copernicus-dem-30m.s3.eu-central-1.amazonaws.com/
+        title: HTTPS
+      - url: s3://copernicus-dem-30m/
+        title: S3 (eu-central-1, no credentials)
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source, cloud-optimize]
+    file_index:
+      - format: gti
+        title: VSICURl/HTTPS based Gdal Tile index
+        media_type: application/geopackage+sqlite3
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/copernicus-dem-2021/glo-30.gti.gpkg
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/copernicus-dem-2021/glo-30.gti.gpkg
+            title: S3
+      - format: stac-geoparquet
+        title: STAC GeoParquet of the Earth Search items. hrefs are HTTPS
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/copernicus-dem-2021/glo-30.parquet
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/copernicus-dem-2021/glo-30.parquet
+            title: S3
+  - name: glo-90
+    structures: [glo-90]
+    description: >
+      26,475 GLO-90 tiles named Copernicus_DSM_COG_30_<N|S>yy_00_<E|W>xxx_00_DEM, same layout as
+      GLO-30. Complete land coverage, including the tiles withheld from GLO-30.
+    locations:
+      - url: https://copernicus-dem-90m.s3.eu-central-1.amazonaws.com/
+        title: HTTPS
+      - url: s3://copernicus-dem-90m/
+        title: S3 (eu-central-1, no credentials)
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source, cloud-optimize]
+    file_index:
+      - format: gti
+        title: VSICURl/HTTPS based Gdal Tile index
+        media_type: application/geopackage+sqlite3
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/copernicus-dem-2021/glo-90.gti.gpkg
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/copernicus-dem-2021/glo-90.gti.gpkg
+            title: S3
+      - format: stac-geoparquet
+        title: STAC GeoParquet of the Earth Search items. hrefs are HTTPS
+        media_type: application/vnd.apache.parquet
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/copernicus-dem-2021/glo-90.parquet
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/copernicus-dem-2021/glo-90.parquet
+            title: S3
+
+additional_links:
+  - title: Copernicus DEM licence
+    rel: license
+    url: https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf
+    description: >
+      Free use for the general public; the attribution notice above is required when
+      redistributing. The licence the AWS README points to for both GLO-30 Public and GLO-90.
+  - title: Copernicus DEM product page and release history
+    rel: about
+    url: https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM
+    description: Datums, accuracy specification, DOI and what changed in each yearly release.
+  - title: Copernicus DEM product handbook
+    rel: describedby
+    url: https://dataspace.copernicus.eu/sites/default/files/media/files/2024-06/geo1988-copernicusdem-spe-002_producthandbook_i5.0.pdf
+    description: Editing rules, quality mask codes and tile specifications.
+  - title: Copernicus DEM on the Registry of Open Data on AWS
+    rel: about
+    url: https://registry.opendata.aws/copernicus-dem/
+  - title: Sentinel Hub README for the AWS buckets
+    rel: describedby
+    url: https://copernicus-dem-30m.s3.amazonaws.com/readme.html
+    description: COG conversion details, tile naming and the latitude-dependent pixel spacing table.
+  - title: Earth Search STAC API collection, GLO-30
+    rel: describedby
+    url: https://earth-search.aws.element84.com/v1/collections/cop-dem-glo-30
+    description: Element 84's searchable STAC items for the AWS tiles, the source of the GeoParquet snapshot.
+  - title: Earth Search STAC API collection, GLO-90
+    rel: describedby
+    url: https://earth-search.aws.element84.com/v1/collections/cop-dem-glo-90
+  - title: Sentinel Hub static STAC collection, GLO-30
+    rel: describedby
+    url: https://copernicus-dem-30m-stac.s3.eu-central-1.amazonaws.com/dem_cop_30.json
+    description: The producer's own catalog of the same tiles, including the quality-mask assets.
+  - title: Sentinel Hub static STAC collection, GLO-90
+    rel: describedby
+    url: https://copernicus-dem-90m-stac.s3.eu-central-1.amazonaws.com/dem_cop_90.json
