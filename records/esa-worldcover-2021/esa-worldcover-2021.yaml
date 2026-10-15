@@ -1,0 +1,268 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
+# Federated record: the COG tiles live on AWS Open Data; the Hub publishes only a VRT mosaic and a
+# class-code list that open them in place. Earth Engine and Planetary Computer copies are listed as
+# further access paths.
+cdh_schema_version: v0.5.0
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+
+id: esa-worldcover-2021
+title: ESA WorldCover 2021 global land cover at 10 m
+version: v200
+series:
+  name: ESA WorldCover
+  url: https://esa-worldcover.org/en
+description: >
+  Global land cover map for the year 2021 at 10 m, classifying every land pixel between 60 degrees
+  south and 84 degrees north into 11 classes from Sentinel-1 radar and Sentinel-2 optical time
+  series. Produced by the ESA WorldCover consortium for the European Space Agency (ESA), with a
+  validated global overall accuracy of 76.7%. Used for land cover stratification and masking,
+  cropland and built-up extent baselines, and habitat and exposure mapping. AWS Open Data serves the
+  map as 2,651 cloud-optimized GeoTIFF tiles of 3x3 degrees, and the Hub publishes a GDAL virtual
+  raster (VRT) that opens them as one global mosaic.
+resource_type: dataset
+license: CC-BY-4.0
+attribution: >
+  © ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by
+  ESA WorldCover consortium
+
+keywords:
+  - land cover
+  - land cover classification
+  - LULC
+  - Sentinel-1
+  - Sentinel-2
+  - WorldCover
+  - ESA
+
+note: >
+  Pixels are 1/12000 degree, so their ground area shrinks with latitude; weight by pixel area or
+  reproject to an equal-area grid before computing area statistics. The VRT references the tiles
+  over HTTPS with /vsicurl, so open it with GDAL-based tools (rasterio, terra, stars) and read a
+  window at a time. Avoid reading the full map at once, as the whole map is about 117 GB.
+
+contact:
+  - organization: European Space Agency (ESA)
+    url: https://esa-worldcover.org/en
+    roles: [licensor, producer]
+  - organization: VITO
+    url: https://vito.be/en
+    email: remotesensing@vito.be
+    roles: [producer, processor, point-of-contact]
+  - name: Brayden Youngberg
+    organization: Alliance of Bioversity International and CIAT
+    email: b.youngberg@cgiar.org
+    roles: [processor, maintainer, point-of-contact]
+
+citation:
+  title: ESA WorldCover 10 m 2021 v200
+  authors:
+    - family: Zanaga
+      given: Daniele
+    - family: Van De Kerchove
+      given: Ruben
+    - family: Daems
+      given: Dirk
+    - family: De Keersmaecker
+      given: Wanda
+    - family: Brockmann
+      given: Carsten
+    - family: Kirches
+      given: Grit
+    - family: Wevers
+      given: Jan
+    - family: Cartus
+      given: Oliver
+    - family: Santoro
+      given: Maurizio
+    - family: Fritz
+      given: Steffen
+    - family: Lesiv
+      given: Myroslava
+    - family: Herold
+      given: Martin
+    - family: Tsendbazar
+      given: Nandin-Erdene
+    - family: Xu
+      given: Panpan
+    - family: Ramoino
+      given: Fabrizio
+    - family: Arino
+      given: Olivier
+  date: "2022-10-28"
+  publisher: Zenodo
+doi: 10.5281/zenodo.7254221
+
+created: "2026-10-15"
+updated: "2026-10-15"
+
+spatial:
+  bbox: [-180, -60, 180, 84]
+  crs: EPSG:4326
+  geography: [world]
+
+temporal:
+  date: "2021"
+
+structures:
+  - name: map
+    dimensions:
+      - name: cell
+        type: xy
+        description: 1/12000 degree (~10 m at the equator), on a 3x3 degree tile grid.
+        step: 0.0000833333
+        unit: degree
+    variables:
+      - name: map
+        description: >
+          Land cover class of the pixel. Cropland (40) is annual herbaceous crops only; tree crops
+          and plantations are tree cover (10) and pasture is grassland (30).
+        data_type: uint8
+        nodata: 0
+        categories:
+          - value: 10
+            label: Tree cover
+          - value: 20
+            label: Shrubland
+          - value: 30
+            label: Grassland
+          - value: 40
+            label: Cropland
+          - value: 50
+            label: Built-up
+          - value: 60
+            label: Bare/sparse vegetation
+          - value: 70
+            label: Snow and ice
+          - value: 80
+            label: Permanent water bodies
+          - value: 90
+            label: Herbaceous wetland
+          - value: 95
+            label: Mangroves
+          - value: 100
+            label: Moss and lichen
+
+cdh:
+  domain: [land]
+  usage:
+    intended_uses:
+      - land cover masks and strata for sampling, zonal statistics and model inputs
+      - cropland, built-up and tree cover extent baselines and their share of administrative units
+      - habitat, wetland and mangrove extent for exposure and conservation assessment
+    not_recommended_for:
+      - use: land cover change against the 2020 map
+        reason: the 2020 (v100) and 2021 (v200) maps use different algorithms, so differences mix real and methodological change.
+      - use: crop type, tree crop or pasture mapping
+        reason: cropland is annual herbaceous crops only; plantations fall under tree cover and pasture under grassland.
+        use_instead: ESA WorldCereal for temporary crop extent and type, or a land use product.
+
+processing:
+  - id: source
+    description: >
+      Sentinel-1 GRD and Sentinel-2 L2A observations from 2021 classified with the WorldCover v2
+      algorithm (CatBoost gradient-boosted decision trees) by the ESA WorldCover consortium, and
+      distributed by VITO as 3x3 degree cloud-optimized GeoTIFF tiles on Terrascope, Zenodo and AWS
+      Open Data.
+    derived_from:
+      - title: ESA WorldCover 10 m 2021 v200
+        url: https://doi.org/10.5281/zenodo.7254221
+        version: v200
+  - id: index
+    description: >
+      VRT mosaic over the tiles, laid out from the producer's tile grid, with the class legend and
+      colour table exported to class-codes.json. No data is copied.
+    code:
+      url: https://github.com/CGIAR-Climate-Data-Hub/cdh-data-pipeline/blob/main/recipes/esa_worldcover.py
+      version: 71c767d
+    date: "2026-10-15"
+
+data:
+  - name: WorldCover COGs
+    description: >
+      2,651 tiles named ESA_WorldCover_10m_2021_v200_<N|S>yy<E|W>xxx_Map.tif by their lower-left
+      corner.
+    locations:
+      - url: https://esa-worldcover.s3.amazonaws.com/v200/2021/map/
+        title: HTTPS
+      - url: s3://esa-worldcover/v200/2021/map/
+        title: S3 (no credentials)
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source]
+    file_index:
+      - format: vrt
+        title: Global mosaic; tile paths are HTTPS
+        media_type: application/xml
+        locations:
+          - url: https://digital-atlas.s3.amazonaws.com/cdh/data/esa-worldcover-2021-v200/map.vrt
+            title: HTTPS
+          - url: s3://digital-atlas/cdh/data/esa-worldcover-2021-v200/map.vrt
+            title: S3
+  - name: earth-engine
+    description: Image collection with one image for 2021, band Map. Needs an Earth Engine account.
+    locations:
+      - url: ee://ESA/WorldCover/v200
+        title: Earth Engine
+      - url: https://earthengine.googleapis.com/v1/projects/earthengine-public/assets/ESA/WorldCover/v200
+        title: Earth Engine REST API
+    processing_steps: [source]
+  - name: planetary-computer
+    description: >
+      The same tiles on Azure, in the esa-worldcover STAC collection alongside the 2020 map (filter
+      esa_worldcover:product_version to 2.0.0). Reads need a short-lived SAS token from the
+      Planetary Computer signing API. The sibling input_quality prefix holds the full quality layer;
+      AWS has only one of its 2,651 tiles.
+    locations:
+      - url: https://ai4edataeuwest.blob.core.windows.net/esa-worldcover/v200/2021/map/
+        title: Azure Blob (SAS token)
+    media_type: image/tiff; application=geotiff; profile=cloud-optimized
+    processing_steps: [source]
+
+additional_assets:
+  - name: class-codes
+    description: Class code to name and hex colour, read from the tiles' legend and colour table.
+    locations:
+      - url: https://digital-atlas.s3.amazonaws.com/cdh/data/esa-worldcover-2021-v200/class-codes.json
+        title: HTTPS
+      - url: s3://digital-atlas/cdh/data/esa-worldcover-2021-v200/class-codes.json
+        title: S3
+    media_type: application/json
+    roles: [metadata, describedby]
+    file_size: 1 KB
+  - name: tile-grid
+    description: Footprints of the 2,651 tiles with their ll_tile name, from the producer.
+    locations:
+      - url: https://esa-worldcover.s3.amazonaws.com/v200/2021/esa_worldcover_grid.fgb
+    media_type: application/flatgeobuf
+    roles: [metadata]
+  - name: product-user-manual
+    description: Product User Manual v2.0, with class definitions and the algorithm description.
+    locations:
+      - url: https://esa-worldcover.s3.amazonaws.com/v200/2021/docs/WorldCover_PUM_V2.0.pdf
+    media_type: application/pdf
+    roles: [describedby]
+  - name: validation-report
+    description: Product Validation Report v2.0, with the global and regional accuracy figures.
+    locations:
+      - url: https://esa-worldcover.s3.amazonaws.com/v200/2021/docs/WorldCover_PVR_V2.0.pdf
+    media_type: application/pdf
+    roles: [validation]
+
+additional_links:
+  - title: ESA WorldCover on the Registry of Open Data on AWS
+    rel: about
+    url: https://registry.opendata.aws/esa-worldcover/
+  - title: AWS bucket README
+    rel: describedby
+    url: https://esa-worldcover.s3.amazonaws.com/readme.html
+    description: Tile layout, attribution and citation; written for the 2020 release.
+  - title: Planetary Computer dataset page
+    rel: describedby
+    url: https://planetarycomputer.microsoft.com/dataset/esa-worldcover
+  - title: Planetary Computer STAC API collection
+    rel: service
+    url: https://planetarycomputer.microsoft.com/api/stac/v1/collections/esa-worldcover
+    description: Searchable items for both WorldCover releases; the Azure tiles are its assets.
+  - title: Earth Engine catalog entry
+    rel: describedby
+    url: https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v200
