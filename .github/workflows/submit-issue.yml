@@ -68,7 +68,7 @@ jobs:
           RECORD_ID: ${{ steps.parse.outputs.record_id }}
         run: |
           if [[ ! "$RECORD_ID" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
-            gh issue comment "$ISSUE_NUMBER" --body "⚠ Record ID \`${RECORD_ID}\` isn't a valid slug (lowercase letters, digits, hyphens only). Please re-generate this submission with a valid \`id\` and open a new issue."
+            gh issue comment "$ISSUE_NUMBER" --body "Record ID \`${RECORD_ID}\` isn't a valid slug (lowercase letters, digits, hyphens only). Please re-generate this submission with a valid \`id\` and open a new issue."
             gh issue edit "$ISSUE_NUMBER" --add-label needs-changes
             echo "ok=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -90,30 +90,51 @@ jobs:
           RECORD_ID: ${{ steps.guard.outputs.record_id }}
         run: npx --yes prettier@3 --write "records/${RECORD_ID}/${RECORD_ID}.yaml"
 
-      - name: Check out CDH tooling (v0.3.0)
+      # Same rule as the reusable validate-records workflow the PR check uses: the
+      # record's own cdh_schema_version picks the tooling release, so the two can't drift.
+      - name: Read cdh_schema_version from record
         if: steps.guard.outputs.ok == 'true'
+        id: version
+        env:
+          RECORD_ID: ${{ steps.guard.outputs.record_id }}
+        run: |
+          v=$(yq '.cdh_schema_version // ""' "records/${RECORD_ID}/${RECORD_ID}.yaml")
+          if [[ ! "$v" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            gh issue comment "$ISSUE_NUMBER" --body "\`cdh_schema_version\` is \`${v:-missing}\` — it must be a release tag like \`v0.5.0\`. Please re-generate this submission and open a new issue."
+            gh issue edit "$ISSUE_NUMBER" --add-label needs-changes
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+          echo "ref=$v" >> "$GITHUB_OUTPUT"
+          # Warn (don't fail) when the record targets an older release than the latest.
+          latest=$(gh release view --repo CGIAR-Climate-Data-Hub/cdh-metadata-standard --json tagName -q .tagName)
+          [ "$v" = "$latest" ] || gh issue comment "$ISSUE_NUMBER" --body "Note: this record uses \`cdh_schema_version: $v\`; the latest release is \`$latest\`. Consider re-generating it with the current Generator."
+
+      - name: Check out CDH tooling
+        if: steps.version.outputs.ok == 'true'
         uses: actions/checkout@v4
         with:
           repository: CGIAR-Climate-Data-Hub/cdh-metadata-standard
-          ref: v0.3.0
+          ref: ${{ steps.version.outputs.ref }}
           path: _cdh-tooling
 
       - uses: actions/setup-node@v4
-        if: steps.guard.outputs.ok == 'true'
+        if: steps.version.outputs.ok == 'true'
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: _cdh-tooling/package-lock.json
 
       - name: Install CDH tooling
-        if: steps.guard.outputs.ok == 'true'
+        if: steps.version.outputs.ok == 'true'
         working-directory: _cdh-tooling
         run: npm ci
 
       # Feedback lives on the issue, not a silently-failing PR — a broken record never
       # gets a PR opened for it at all.
-      - name: Validate record against CDH v0.3.0 profile
-        if: steps.guard.outputs.ok == 'true'
+      - name: Validate record against CDH profile
+        if: steps.version.outputs.ok == 'true'
         id: validate
         env:
           RECORD_ID: ${{ steps.guard.outputs.record_id }}
@@ -122,7 +143,7 @@ jobs:
               --profile _cdh-tooling/spec/schemas/profiles/cdh.schema.json \
               "records/${RECORD_ID}/${RECORD_ID}.yaml" > /tmp/validate.log 2>&1; then
             {
-              echo "⚠ This record didn't pass CDH v0.3.0 schema validation — no pull request was opened."
+              echo "This record didn't pass CDH ${{ steps.version.outputs.ref }} schema validation — no pull request was opened."
               echo
               echo '```'
               cat /tmp/validate.log
@@ -138,7 +159,7 @@ jobs:
           echo "ok=true" >> "$GITHUB_OUTPUT"
 
       - name: Generate GitHub App token
-        if: steps.guard.outputs.ok == 'true' && steps.validate.outputs.ok == 'true'
+        if: steps.validate.outputs.ok == 'true'
         id: app-token
         uses: actions/create-github-app-token@v1
         with:
@@ -148,7 +169,7 @@ jobs:
           repositories: cdh-catalog
 
       - name: Create pull request
-        if: steps.guard.outputs.ok == 'true' && steps.validate.outputs.ok == 'true'
+        if: steps.validate.outputs.ok == 'true'
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
@@ -170,18 +191,18 @@ jobs:
             Closes #${{ github.event.issue.number }}
 
             ---
-            Passed CDH v0.3.0 profile validation before this PR was opened. The
+            Passed CDH ${{ steps.version.outputs.ref }} profile validation before this PR was opened. The
             **Validate records** check below re-runs the same validation as a required gate.
           labels: submission
           delete-branch: false
 
       - name: Comment PR link on the issue
-        if: steps.guard.outputs.ok == 'true' && steps.validate.outputs.ok == 'true'
+        if: steps.validate.outputs.ok == 'true'
         env:
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
         run: |
           if [ -n "$PR_URL" ]; then
-            gh issue comment "$ISSUE_NUMBER" --body "✅ Validated. Pull request opened: ${PR_URL}"
+            gh issue comment "$ISSUE_NUMBER" --body "Validated. Pull request opened: ${PR_URL}"
           else
             gh issue comment "$ISSUE_NUMBER" --body "A pull request already exists for this record ID — check the existing PR."
           fi
