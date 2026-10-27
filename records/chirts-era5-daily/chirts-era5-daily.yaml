@@ -191,14 +191,14 @@ structures:
         description: Day. lat runs north to south.
         extent: ["1981-01-01", "2026-10-21"] # as of `updated`
     variables:
-      - &packed
-        <<: *Tmax
+      - <<: *Tmax
         data_type: int16
         nodata: -32768
         note: Stored as int16 with scale_factor 0.1; xarray rescales, GDAL returns raw counts.
-      - <<: *packed
-        name: Tmin
-        description: Daily minimum 2-meter air temperature
+      - <<: *Tmin
+        data_type: int16
+        nodata: -32768
+        note: Stored as int16 with scale_factor 0.1; xarray rescales, GDAL returns raw counts.
 
 processing:
   - id: source
