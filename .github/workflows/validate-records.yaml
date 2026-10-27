@@ -16,3 +16,20 @@ jobs:
     with:
       path: records
       changed-only: true
+
+  # Warn (don't fail) when a changed record names an older release than the
+  # latest. Same note submit-issue.yml posts on the submission issue.
+  latest-version:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare cdh_schema_version to latest release
+        run: |
+          latest=$(gh release view --repo CGIAR-Climate-Data-Hub/cdh-metadata-standard --json tagName -q .tagName)
+          for f in $(gh pr diff ${{ github.event.number }} --name-only | grep -E '^records/.*\.ya?ml$'); do
+            [ -f "$f" ] || continue  # skip files deleted by the PR
+            v=$(yq '.cdh_schema_version' "$f")
+            [ "$v" = "$latest" ] || echo "::warning file=$f::cdh_schema_version is $v; latest release is $latest"
+          done
