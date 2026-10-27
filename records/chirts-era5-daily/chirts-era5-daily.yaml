@@ -211,6 +211,17 @@ processing:
     date: "2026-10-08"
 
 data:
+  - name: zarr-geo-chunked
+    structures: [zarr]
+    locations:
+      - url: https://huggingface.co/datasets/aaguilar90/chirts-era5-daily/resolve/main/chirts-era5-daily.zarr
+        title: HTTPS
+    description: >
+      Zarr v3 store chunked 128 days x 300 lat x 300 lon (about 4 months x 15° x 15° per chunk),
+      for bounding-box and time-range reads without downloading the whole dataset.
+    media_type: application/vnd.zarr; version=3
+    file_size: 118 GB
+    processing_steps: [source, cloud-optimize]
   - name: tmax-geotiffs
     structures: [tmax]
     locations:
@@ -229,17 +240,6 @@ data:
     description: Daily minimum temperature GeoTIFF files, one per day in yearly folders
     media_type: image/tiff; application=geotiff
     processing_steps: [source]
-  - name: zarr-geo-chunked
-    structures: [zarr]
-    locations:
-      - url: https://huggingface.co/datasets/aaguilar90/chirts-era5-daily/resolve/main/chirts-era5-daily.zarr
-        title: HTTPS
-    description: >
-      Zarr v3 store chunked 128 days x 300 lat x 300 lon (about 4 months x 15° x 15° per chunk),
-      for bounding-box and time-range reads without downloading the whole dataset.
-    media_type: application/vnd.zarr; version=3
-    file_size: 118 GB
-    processing_steps: [source, cloud-optimize]
 
 cdh:
   domain:
