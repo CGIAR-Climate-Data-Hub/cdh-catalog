@@ -1,17 +1,19 @@
-# yaml-language-server: $schema=../../spec/schemas/profiles/cdh.schema.json
-cdh_schema_version: v0.4.1
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
+cdh_schema_version: v0.5.0
 extensions:
-  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 created: "2026-08-25"
-updated: "2026-10-26"
+updated: "2026-10-27"
 id: chirts-era5-daily
 title: CHIRTS-ERA5 Daily
 version: "1"
 description: >-
   CHIRTS-ERA5 daily provides global, high-resolution (0.05°) daily maximum and minimum 2-meter air
-  temperature estimates from 1983 to present. It blends ERA5 reanalysis with station observations
+  temperature estimates from 1980 to present. It blends ERA5 reanalysis with station observations
   using the CHIRTS algorithm, producing a consistent long-term record suitable for climate trend
-  analysis, heat-stress monitoring, and agricultural modeling.
+  analysis, heat-stress monitoring, and agricultural modeling. The primary access is an
+  analysis-ready Zarr store for bounding-box and time-range reads; the source daily GeoTIFFs from
+  the Climate Hazards Center are the alternative.
 resource_type: dataset
 keywords:
   - temperature
@@ -29,13 +31,11 @@ contact:
     url: https://www.chc.ucsb.edu/
     email: chc-help@geog.ucsb.edu
   - name: Andres Aguilar Ariza
-    roles:
-      - maintainer
+    roles: [maintainer]
     email: Andres.Aguilar@cgiar.org
     organization: Alliance of Bioversity International and CIAT
   - name: Brayden Youngberg
-    roles:
-      - maintainer
+    roles: [maintainer]
     email: b.youngberg@cgiar.org
     organization: Alliance of Bioversity International and CIAT
 doi: 10.15780/G2F08J
@@ -146,86 +146,101 @@ spatial:
   geography:
     - world
 temporal:
-  start_date: "1983-01-01"
+  start_date: "1980-01-01"
   end_date: null
   update_frequency: daily
+
 structures:
+  # One GeoTIFF per day and variable; float32 with -9999 nodata.
   - name: tmax
     dimensions:
-      - name: cell
+      - &cell
+        name: cell
         type: xy
-        description: 0.05° (~5 km at equator).
+        description: 0.05° (~5 km at equator), 60 S to 70 N.
         step: 0.05
         unit: degree
-      - name: time
+      - &time
+        name: time
         type: temporal
-        description: Day of the temperature estimate; the {time} token of the daily files.
-        extent:
-          - "1983-01-01"
-          - "2026-10-08"
+        description: Day; the {time} token of the daily files.
+        extent: ["1980-01-01", "2026-10-21"] # files present as of `updated`; may lag the data, never lead it
         step: P1D
     variables:
-      - name: Tmax
+      - &Tmax
+        name: Tmax
         description: Daily maximum 2-meter air temperature
         data_type: float32
         unit: degC
         nodata: -9999
   - name: tmin
-    dimensions:
-      - name: cell
-        type: xy
-        description: 0.05° (~5 km at equator).
-        step: 0.05
-        unit: degree
-      - name: time
-        type: temporal
-        description: Day of the temperature estimate; the {time} token of the daily files.
-        extent:
-          - "1983-01-01"
-          - "2026-10-08"
-        step: P1D
+    dimensions: [*cell, *time]
     variables:
-      - name: Tmin
+      - &Tmin
+        name: Tmin
         description: Daily minimum 2-meter air temperature
         data_type: float32
         unit: degC
         nodata: -9999
+
+  # Both variables in one store, packed as int16 with a 0.1 scale factor.
+  - name: zarr
+    dimensions:
+      - *cell
+      - <<: *time
+        description: Day. lat runs north to south.
+        extent: ["1981-01-01", "2026-10-21"] # as of `updated`
+    variables:
+      - &packed
+        <<: *Tmax
+        data_type: int16
+        nodata: -32768
+        note: Stored as int16 with scale_factor 0.1; xarray rescales, GDAL returns raw counts.
+      - <<: *packed
+        name: Tmin
+        description: Daily minimum 2-meter air temperature
+
+processing:
+  - id: source
+    description: CHIRTS-ERA5 daily GeoTIFFs published by the Climate Hazards Center.
+    derived_from:
+      - url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/
+        title: CHIRTS-ERA5 daily
+  - id: cloud-optimize
+    description: Stack the daily GeoTIFFs into one Tmax/Tmin(time, lat, lon) Zarr v3 store, packed as int16.
+    date: "2026-10-08"
+
 data:
   - name: tmax-geotiffs
-    structures:
-      - tmax
+    structures: [tmax]
     locations:
       - url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/tmax/tifs/daily/
         title: HTTPS
     href_template: "{time:%Y}/CHIRTS-ERA5.daily_Tmax.{time:%Y.%m.%d}.tif"
     description: Daily maximum temperature GeoTIFF files, one per day in yearly folders
     media_type: image/tiff; application=geotiff
+    processing_steps: [source]
   - name: tmin-geotiffs
-    structures:
-      - tmin
+    structures: [tmin]
     locations:
       - url: https://data.chc.ucsb.edu/experimental/CHIRTS-ERA5/tmin/tifs/daily/
         title: HTTPS
     href_template: "{time:%Y}/CHIRTS-ERA5.daily_Tmin.{time:%Y.%m.%d}.tif"
     description: Daily minimum temperature GeoTIFF files, one per day in yearly folders
     media_type: image/tiff; application=geotiff
+    processing_steps: [source]
   - name: zarr-geo-chunked
-    structures:
-      - tmax
-      - tmin
+    structures: [zarr]
     locations:
-      - url: >-
-          https://huggingface.co/datasets/aaguilar90/chirts-era5-daily/resolve/main/chirts-era5-daily.zarr
+      - url: https://huggingface.co/datasets/aaguilar90/chirts-era5-daily/resolve/main/chirts-era5-daily.zarr
         title: HTTPS
-    description: >-
-      CHIRTS-ERA5 daily maximum and minimum 2 m air temperature on a global 0.05-degree grid
-      spanning 60 S to 70 N, redistributed as a chunked, compressed Zarr v3 datacube for
-      bounding-box and time-range queries.
+    description: >
+      Zarr v3 store chunked 128 days x 300 lat x 300 lon (about 4 months x 15° x 15° per chunk),
+      for bounding-box and time-range reads without downloading the whole dataset.
     media_type: application/vnd.zarr; version=3
     file_size: 118 GB
-    spatial:
-      geography:
-        - world
+    processing_steps: [source, cloud-optimize]
+
 cdh:
   domain:
     - climate
@@ -237,3 +252,13 @@ cdh:
       - use: hourly or sub-daily analysis
         reason: only daily maximum and minimum are published.
         use_instead: ERA5 hourly 2 m temperature.
+
+additional_links:
+  - title: CHIRTS-daily at the Climate Hazards Center
+    rel: about
+    url: https://www.chc.ucsb.edu/data/chirtsdaily
+    description: Dataset page with method, versions and documentation.
+  - title: Zarr store README on Hugging Face
+    rel: describedby
+    url: https://huggingface.co/datasets/aaguilar90/chirts-era5-daily
+    description: Layout, Python and R examples, and the GDAL 3.11 requirement for Zarr v3.
