@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
+id: chinyanja-soy-validation
+version: '1'
+title: Soy advisory tool validation trials in the Chinyanja Triangle (Malawi, Zambia, Mozambique)
+description: On-station and on-farm validation datasets from the Chinyanja Triangle covering nutrient-omission trials, planting
+  windows, varieties, crop arrangement and management of maize and soybean in Malawi, Zambia and Mozambique. The data record
+  crop physiology, growth, yield and soil characteristics used to validate soybean advisory-tool recommendations.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+note: The asset template listed no repository for this entry; the linked IITA dataset is the on-farm validation trial data
+  matching the described scope (planting window, variety, nutrient management). The individual CKAN resource download URLs
+  currently return 404 at the source, so the dataset landing page and registered DOI are provided in place of the per-file
+  links.
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- planting window
+- nutrient omission
+- Chinyanja Triangle
+- on-farm trials
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: John Okoth Omondi
+  email: jo.omondi@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: John Okoth Omondi
+  email: jo.omondi@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: Validating Soy Use Case Advisory tool recommendations with farmers in the Chinyanja Triangle
+  authors:
+  - organization: International Institute of Tropical Agriculture (IITA)
+  date: '2025'
+  publisher: IITA
+spatial:
+  bbox:
+  - 26.0
+  - -16.0
+  - 34.0
+  - -12.0
+  crs: EPSG:4326
+  geography:
+  - malawi
+  - zambia
+  - mozambique
+temporal:
+  start_date: '2022'
+  end_date: '2025'
+  update_frequency: irregular
+structures:
+- name: trials
+  dimensions:
+  - name: location
+    type: location
+    data_type: string
+    description: Trial site across Malawi, Zambia and Mozambique.
+  - name: treatment
+    type: management
+    data_type: string
+    description: Nutrient-omission / planting-window / variety treatment arm.
+  - name: season
+    type: temporal
+    data_type: string
+    description: Crop season (2022/2023 and 2023/2024).
+  variables:
+  - name: yield
+    description: Measured crop yield per plot.
+    data_type: number
+    unit: t ha-1
+  - name: growth
+    description: Crop growth / physiology measurement.
+    data_type: number
+cdh:
+  domain:
+  - agricultural-production
+commodities:
+- soya-beans
+- maize
+data:
+- name: chinyanja-dataset
+  description: IITA CKAN dataset holding the validation-trial table and its data dictionary (malawi_zambia_mozambique_validation_trial_1.csv,
+    data_dictionary.csv).
+  locations:
+  - url: https://data.iita.org/dataset/validating-soy-use-case-advisory-tool-recommendations-with-farmers-in-the-chinyanja-triangle
+    title: Validating Soy Use Case Advisory tool recommendations with farmers in the Chinyanja Triangle
+  media_type: text/html
+doi: 10.25502/s7ms-t185/d

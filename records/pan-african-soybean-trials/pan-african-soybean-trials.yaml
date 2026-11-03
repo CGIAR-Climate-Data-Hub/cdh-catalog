@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
+id: pan-african-soybean-trials
+version: '1'
+title: Pan-African Soybean Variety Trials (PAT), 2015-2025
+description: 'A large-scale multi-environment trial dataset of soybean variety performance across Africa over ten years: 292
+  trials at 138 locations in 21 countries, covering 26,280 plots of 366 varieties. It records morphological, agronomic and
+  quality traits together with environmental covariates (soil, weather, management) for genotype x environment x management
+  modelling.'
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- variety trials
+- multi-environment trials
+- breeding
+- Africa
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Francis Muthoni
+  email: f.muthoni@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Francis Muthoni
+  email: f.muthoni@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: Pan-African Soybean Variety Trials (PAT)
+  authors:
+  - organization: International Institute of Tropical Agriculture (IITA)
+  date: '2025'
+  publisher: figshare
+doi: 10.6084/m9.figshare.30257359
+spatial:
+  bbox:
+  - -17.5
+  - -34.99
+  - 51.3
+  - 17.0
+  crs: EPSG:4326
+  geography:
+  - sub-saharan-africa
+temporal:
+  start_date: '2015'
+  end_date: '2025'
+  update_frequency: annual
+structures:
+- name: trials
+  dimensions:
+  - name: location
+    type: location
+    data_type: string
+    description: Trial site (one of 138 locations across 21 countries).
+  - name: variety
+    type: taxon
+    data_type: string
+    description: Soybean variety evaluated (366 varieties).
+  - name: year
+    type: temporal
+    data_type: integer
+    description: Trial year.
+    step: P1Y
+    extent:
+    - '2015'
+    - '2025'
+  variables:
+  - name: yield
+    description: Plot-level soybean grain yield.
+    data_type: number
+    unit: t ha-1
+  - name: disease_severity
+    description: Observed disease severity score.
+    data_type: number
+cdh:
+  domain:
+  - agricultural-production
+commodities:
+- soya-beans
+data:
+- name: pat-dataset
+  description: Archived Pan-African Trials Network dataset (tabular trials with environmental covariates).
+  locations:
+  - url: https://ndownloader.figshare.com/files/58425739
+  media_type: application/zip
+  file_size: 22 MB

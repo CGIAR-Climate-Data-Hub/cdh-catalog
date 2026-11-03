@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+id: global-cropping-intensity
+version: '1'
+title: Annual Global Cropping Intensity 2001-2019 (250 m)
+description: Annual dynamic global cropping-intensity dataset for 2001-2019 at 250 m resolution in GeoTIFF, with a co-registered
+  quality-control band and an overall accuracy of about 89 percent. Used in the Lake Victoria Basin land-degradation / landscape-integrity
+  assessment to represent cropping frequency and agricultural intensity.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- cropping intensity
+- multi-cropping
+- MODIS
+- GeoTIFF
+contact:
+- organization: Le Yu, Tsinghua University (dataset corresponding author)
+  name: Le Yu
+  email: leyu@tsinghua.edu.cn
+  roles:
+  - licensor
+  - producer
+- organization: Le Yu, Tsinghua University (dataset corresponding author)
+  name: Le Yu
+  email: leyu@tsinghua.edu.cn
+  roles:
+  - maintainer
+citation:
+  title: Annual dynamic dataset of global cropping intensity from 2001 to 2019
+  authors:
+  - family: Liu
+    given: X.
+  - family: Zheng
+    given: J.
+  - family: Yu
+    given: L.
+  date: '2021'
+  publisher: figshare / Scientific Data
+doi: 10.6084/m9.figshare.14099402.v1
+related_publications:
+- doi: 10.1038/s41597-021-01065-9
+spatial:
+  bbox:
+  - -180.0
+  - -90.0
+  - 180.0
+  - 90.0
+  crs: EPSG:4326
+temporal:
+  start_date: '2001'
+  end_date: '2019'
+  update_frequency: annual
+structures:
+- name: grid
+  dimensions:
+  - name: cell
+    type: xy
+    step: 0.00225
+    unit: degree
+    description: cropping-intensity 250 m grid cell.
+  - name: year
+    type: temporal
+    data_type: integer
+    step: P1Y
+    extent:
+    - '2001'
+    - '2019'
+    description: Map year.
+  variables:
+  - name: cropping_intensity
+    description: Annual cropping intensity ratio per pixel.
+    data_type: number
+    unit: '1'
+  - name: quality_control
+    description: Quality-control band for the intensity estimate.
+    data_type: uint8
+cdh:
+  domain:
+  - land
+  - agricultural-production
+data:
+- name: figshare-cropping-intensity
+  description: figshare item holding the GeoTIFF cropping-intensity and QC archive (GCI&QC.rar).
+  locations:
+  - url: https://figshare.com/articles/figure/Annual_dynamic_dataset_of_global_cropping_intensity_from_2001_to_2019/14099402
+  media_type: application/vnd.rar
