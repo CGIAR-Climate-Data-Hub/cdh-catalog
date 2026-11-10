@@ -9,7 +9,7 @@ title: High-Frequency Crowdsourced Commodity Prices in Nigeria (HFCP)
 description: Crowdsourced, high-frequency retail, wholesale and farmgate food-commodity prices across all 36 states and the
   Federal Capital Territory of Nigeria, curated with the National Bureau of Statistics. Prices were collected daily from markets
   and carry location metadata, enabling analysis of price dynamics, food security and market integration.
-license: CC-BY-NC
+license: CC-BY-4.0
 resource_type: dataset
 access: public
 created: '2026-10-28'
