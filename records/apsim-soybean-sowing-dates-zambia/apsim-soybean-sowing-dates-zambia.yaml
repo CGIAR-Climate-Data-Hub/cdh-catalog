@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
+id: apsim-soybean-sowing-dates-zambia
+version: '1'
+title: APSIM simulated optimum soybean sowing dates for Zambia, 1983-2016
+description: Simulated optimum soybean sowing windows for zambia produced with the APSIM cropping-systems model over 1983-2016.
+  Each row is a simulated site with the recommended planting date and the sowing-window start and end, evaluated across the
+  general sowing period to support planting-date optimisation under historical climate.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- sowing date
+- planting window
+- APSIM
+- cropping calendar
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Siyabusa Mkuhlani
+  email: S.Mkuhlani@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Siyabusa Mkuhlani
+  email: S.Mkuhlani@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: APSIM simulated soybean sowing dates for zambia for the period 1983-2016
+  authors:
+  - organization: International Institute of Tropical Agriculture (IITA)
+  date: '2016'
+  publisher: IITA
+doi: 10.25502/z1yc-vz70/d
+spatial:
+  bbox:
+  - 21.54
+  - -18.08
+  - 33.7
+  - -8.22
+  crs: EPSG:4326
+  geography:
+  - zambia
+temporal:
+  start_date: '1983'
+  end_date: '2016'
+structures:
+- name: sowing
+  dimensions:
+  - name: location
+    type: location
+    data_type: string
+    description: 'Simulated site: country with its longitude and latitude.'
+  - name: year
+    type: temporal
+    data_type: integer
+    description: Simulation year of the sowing window.
+    step: P1Y
+    extent:
+    - '1983'
+    - '2016'
+  variables:
+  - name: longitude
+    description: Longitude of the simulated site.
+    data_type: number
+    unit: degree_east
+  - name: latitude
+    description: Latitude of the simulated site.
+    data_type: number
+    unit: degree_north
+  - name: planting_date
+    description: Optimum planting date for the season.
+    data_type: string
+  - name: start_date
+    description: Start of the acceptable sowing window.
+    data_type: string
+  - name: end_date
+    description: End of the acceptable sowing window.
+    data_type: string
+cdh:
+  domain:
+  - agricultural-production
+commodities:
+- soya-beans
+data:
+- name: optimumapsimsoybeansowingdatezambia.csv
+  description: Simulated sowing-date output as a tabular CSV file.
+  locations:
+  - url: https://data.iita.org/dataset/a1003d06-87ff-4176-bb47-5e27a5057fdd/resource/89189694-cbdf-4938-9642-7fc2aed81a37/download/optimumapsimsoybeansowingdatezambia.csv
+  media_type: text/csv
+- name: data_dictionary_soybean.csv
+  description: Simulated sowing-date output as a tabular CSV file.
+  locations:
+  - url: https://data.iita.org/dataset/a1003d06-87ff-4176-bb47-5e27a5057fdd/resource/885e87a1-82b2-441a-ac64-f71ff9bdfe65/download/data_dictionary_soybean.csv
+  media_type: text/csv

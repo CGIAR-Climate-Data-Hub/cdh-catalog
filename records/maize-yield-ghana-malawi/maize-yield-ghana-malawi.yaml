@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
+id: maize-yield-ghana-malawi
+version: '1'
+title: Predicted Maize Yield in Northern Ghana and Malawi
+description: Household-survey-based maize yield predictions for Northern Ghana and Malawi for contrasting rainfall years (2013
+  and 2019), at about 300 m resolution. The release provides the modelled yield output tables together with the R scripts
+  that derive spatial predictions from survey and environmental inputs, supporting targeting of good agronomic practices.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+created: '2026-10-28'
+updated: '2026-11-03'
+keywords:
+- yield prediction
+- household survey
+- Africa RISING
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Francis Muthoni
+  email: f.muthoni@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Francis Muthoni
+  email: f.muthoni@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: Predicting Maize Yield in Ghana and Malawi
+  authors:
+  - organization: International Institute of Tropical Agriculture (IITA)
+  date: '2020'
+  publisher: GitHub
+  url: https://github.com/IITA-UUwp2/Predicting-Maize-Yield-in-Ghana-and-Malawi
+spatial:
+  bbox:
+  - - -2.83
+    - 4.73
+    - 1.2
+    - 11.17
+  - - 32.68
+    - -16.81
+    - 39.85
+    - -9.37
+  crs: EPSG:4326
+  geography:
+  - ghana
+  - malawi
+temporal:
+  start_date: '2013'
+  end_date: '2019'
+  update_frequency: irregular
+structures:
+- name: yield
+  dimensions:
+  - name: location
+    type: location
+    data_type: string
+    description: Predictions aligned to survey locations / grid cells in northern Ghana and Malawi.
+  - name: year
+    type: temporal
+    data_type: integer
+    description: Prediction year (contrasting rainfall regimes).
+  variables:
+  - name: predicted_yield
+    description: Model-predicted household maize yield.
+    data_type: number
+    unit: t ha-1
+cdh:
+  domain:
+  - agricultural-production
+commodities:
+- maize
+data:
+- name: ghana-2019
+  description: Modelled maize-yield output table for Ghana (2019).
+  locations:
+  - url: https://raw.githubusercontent.com/IITA-UUwp2/Predicting-Maize-Yield-in-Ghana-and-Malawi/main/dBaseGhana2019_Out.csv
+  media_type: text/csv
+- name: malawi-2019
+  description: Modelled maize-yield output table for Malawi (2019).
+  locations:
+  - url: https://raw.githubusercontent.com/IITA-UUwp2/Predicting-Maize-Yield-in-Ghana-and-Malawi/main/dBaseMalawi2019_Out.csv
+  media_type: text/csv

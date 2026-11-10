@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+id: citizen-h2d3
+version: '1'
+title: High-Frequency Diet Quality Mapping (Citizen-H2D3), Rwanda
+description: Citizen-driven, high-frequency individual and household dietary diversity data for Rwanda, collected weekly from
+  volunteer citizens through a mobile-phone interface during 2020-2021. The indicators summarise food-group diversity and
+  diet-quality measures that can be linked to environmental and price data.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- diet quality
+- food security
+- nutrition
+- crowdsourcing
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Rhys Manners
+  email: R.Manners@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Rhys Manners
+  email: R.Manners@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: High-frequency diet quality mapping (Citizen-H2D3)
+  authors:
+  - organization: International Institute of Tropical Agriculture (IITA)
+  date: '2021'
+  publisher: IITA
+doi: 10.25502/s6d7-k988/d
+spatial:
+  bbox:
+  - 28.86
+  - -2.84
+  - 30.9
+  - -1.05
+  crs: EPSG:4326
+  geography:
+  - rwanda
+temporal:
+  start_date: '2020'
+  end_date: '2021'
+  update_frequency: weekly
+structures:
+- name: indicators
+  dimensions:
+  - name: uid
+    type: location
+    data_type: string
+    description: Unique respondent identifier.
+  - name: week
+    type: temporal
+    data_type: integer
+    description: Weekly observation period over the 52-week collection window.
+  variables:
+  - name: food_group_diversity_score
+    description: Number of food groups consumed.
+    data_type: integer
+  - name: minimum_dietary_diversity_women
+    description: Minimum dietary diversity indicator for women.
+    data_type: string
+  - name: dairy
+    description: Reported dairy consumption in the reference period.
+    data_type: string
+  - name: meat_poultry_and_fish
+    description: Reported meat, poultry and fish consumption.
+    data_type: string
+cdh:
+  domain:
+  - socioeconomic
+data:
+- name: rwanda_dqq_indicators
+  description: Derived dietary-diversity indicator table.
+  locations:
+  - url: https://data.iita.org/dataset/4b2e6e53-2954-422a-951c-460d28564a06/resource/08a34c7c-7cef-4c33-b14b-4b455492a00a/download/rwanda_dqq_indicators.csv
+  media_type: text/csv
+- name: data_descriptor
+  description: Descriptor of the diet-quality variables.
+  locations:
+  - url: https://data.iita.org/dataset/4b2e6e53-2954-422a-951c-460d28564a06/resource/5043bdda-3c64-4cd1-be82-4754323acd42/download/data_descriptor.csv
+  media_type: text/csv

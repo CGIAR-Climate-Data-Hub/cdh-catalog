@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
+id: soysa10
+version: '1'
+title: SoySA10 - National 10-m soybean maps of South Africa (2018-2025)
+description: National 10-m resolution soybean maps for South Africa for 2018-2025, produced by classifying Sentinel-2 time-series
+  data. The dataset comprises soybean distribution maps, soybean field-type maps, and soy-cultivation change maps for the
+  2018-2020 and 2023-2025 periods, supporting acreage monitoring and cultivation tracking.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- land cover
+- Sentinel-2
+- crop mapping
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Francis Muthoni
+  email: f.muthoni@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Francis Muthoni
+  email: f.muthoni@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: SoySA10 - National 10-m soybean maps for South Africa (2018-2025)
+  authors:
+  - organization: International Institute of Tropical Agriculture (IITA)
+  date: '2025'
+  publisher: Zenodo
+doi: 10.5281/zenodo.17569053
+spatial:
+  bbox:
+  - 16.45
+  - -34.84
+  - 32.89
+  - -22.13
+  crs: EPSG:4326
+  geography:
+  - south-africa
+temporal:
+  start_date: '2018'
+  end_date: '2025'
+  update_frequency: annual
+structures:
+- name: maps
+  dimensions:
+  - name: cell
+    type: xy
+    step: 9.0e-05
+    unit: degree
+    description: 10 m pixel, stored on a geographic (EPSG:4326) grid.
+  - name: year
+    type: temporal
+    data_type: integer
+    description: Map year.
+    step: P1Y
+    extent:
+    - '2018'
+    - '2025'
+  variables:
+  - name: soybean_distribution
+    description: Classified soybean presence per pixel.
+    data_type: uint8
+    nodata: 255
+    categories:
+    - value: 0
+      label: No soybean
+    - value: 1
+      label: Soybean
+  - name: soybean_field_type
+    description: Soybean field-type class per pixel.
+    data_type: uint8
+    nodata: 255
+  - name: cultivation_change
+    description: Soy-cultivation change class for the mapped periods.
+    data_type: uint8
+    nodata: 255
+cdh:
+  domain:
+  - agricultural-production
+  - land
+commodities:
+- soya-beans
+data:
+- name: soysa10-zenodo
+  description: Zenodo record holding the GeoTIFF map packages (distribution, field type, cultivation change).
+  locations:
+  - url: https://doi.org/10.5281/zenodo.17569053
+  media_type: text/html

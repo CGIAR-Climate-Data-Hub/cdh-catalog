@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+id: global-pasture-watch-livestock
+version: '1'
+title: Global Pasture Watch Livestock Headcount (1 km)
+description: Global livestock headcount at 1 km spatial resolution from 2000 to 2022, produced by the Land & Carbon Lab Global
+  Pasture Watch and distributed through Google Earth Engine. Used in the Lake Victoria Basin land-degradation / landscape-integrity
+  assessment as the grazing / livestock pressure layer.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+note: Global Pasture Watch is a WRI / Google Land & Carbon Lab product; the maintainer contact is the WRI data lab - confirm
+  the specific dataset steward during review.
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- livestock
+- grazing pressure
+- Google Earth Engine
+- herbivory
+contact:
+- organization: World Resources Institute - Global Pasture Watch (Land & Carbon Lab)
+  name: GPW Data Team
+  email: datalab@wri.org
+  roles:
+  - licensor
+  - producer
+- organization: World Resources Institute - Global Pasture Watch (Land & Carbon Lab)
+  name: GPW Data Team
+  email: datalab@wri.org
+  roles:
+  - maintainer
+citation:
+  title: Global Pasture Watch - Livestock density (1 km, 2000-2022)
+  authors:
+  - organization: Land & Carbon Lab
+  date: '2024'
+  publisher: Google Earth Engine Data Catalog
+spatial:
+  bbox:
+  - -180.0
+  - -90.0
+  - 180.0
+  - 90.0
+  crs: EPSG:4326
+temporal:
+  start_date: '2000'
+  end_date: '2022'
+  update_frequency: annual
+structures:
+- name: grid
+  dimensions:
+  - name: cell
+    type: xy
+    step: 0.009
+    unit: degree
+    description: GPW 1 km grid cell.
+  - name: year
+    type: temporal
+    data_type: integer
+    step: P1Y
+    extent:
+    - '2000'
+    - '2022'
+    description: Map year.
+  variables:
+  - name: livestock_headcount
+    description: Estimated livestock headcount per grid cell.
+    data_type: number
+    unit: head
+cdh:
+  domain:
+  - agricultural-production
+  - land
+data:
+- name: gpw-publisher
+  description: Google Earth Engine Data Catalog publisher page for Global Pasture Watch products (livestock density).
+  locations:
+  - url: https://developers.google.com/earth-engine/datasets/publisher/global-pasture-watch
+  media_type: text/html

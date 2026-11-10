@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+id: landmetric-capeo-landcover
+version: '1'
+title: LandMetric CAPEO Land Cover (30 m)
+description: 30 m annual global harmonized land-cover (GHLC-30m) for 2020-2024, distributed through the OpenGeoHub LandMetric
+  node (IFAD MCDT-GO). Tested as a higher-resolution alternative to the 300 m product within the Lake Victoria Basin land-degradation
+  / landscape-integrity assessment; the workbook asset name 'CAPEO' maps to this GHLC-30m collection.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+note: Licence CC-BY-4.0 verified against the OpenGeoHub STAC API collection record (id land.cover_ifad.mcdt_go, GHLC-30m).
+  The workbook's 'land.cover_ifad.mcdt_go_landmetric' id no longer resolves (404), so the record links the live collection;
+  bbox corrected to the collection extent (-180, -60, 180, 84).
+created: '2026-10-28'
+updated: '2026-11-02'
+keywords:
+- land cover
+- high resolution
+- STAC
+- Sentinel-2
+contact:
+- organization: OpenGeoHub - LandMetric (IFAD MCDT-GO)
+  name: OpenGeoHub Node
+  email: tom.hengl@opengeohub.org
+  roles:
+  - licensor
+  - producer
+- organization: OpenGeoHub - LandMetric (IFAD MCDT-GO)
+  name: OpenGeoHub Node
+  email: tom.hengl@opengeohub.org
+  roles:
+  - maintainer
+citation:
+  title: LandMetric CAPEO land cover (30 m)
+  authors:
+  - organization: LandMetric / OpenGeoHub
+  date: '2024'
+  publisher: OpenGeoHub STAC
+  url: https://browser.stac.opengeohub.org/collections/land.cover_ifad.mcdt_go
+spatial:
+  bbox:
+  - -180.0
+  - -60.0
+  - 180.0
+  - 84.0
+  crs: EPSG:4326
+temporal:
+  start_date: '2020'
+  end_date: '2024'
+  update_frequency: annual
+structures:
+- name: grid
+  dimensions:
+  - name: cell
+    type: xy
+    step: 0.00027
+    unit: degree
+    description: LandMetric 30 m grid cell.
+  - name: year
+    type: temporal
+    data_type: integer
+    step: P1Y
+    extent:
+    - '2020'
+    - '2024'
+    description: Map year.
+  variables:
+  - name: land_cover_class
+    description: Land-cover class label per 30 m pixel (see source class legend).
+    data_type: integer
+cdh:
+  domain:
+  - land
+data:
+- name: landmetric-stac
+  description: OpenGeoHub STAC collection record (GHLC-30m) for the 30 m land-cover product.
+  locations:
+  - url: https://stac.opengeohub.org/v1/collections/land.cover_ifad.mcdt_go
+  media_type: application/json
