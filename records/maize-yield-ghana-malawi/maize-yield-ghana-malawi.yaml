@@ -9,7 +9,7 @@ title: Predicted Maize Yield in Northern Ghana and Malawi
 description: Household-survey-based maize yield predictions for Northern Ghana and Malawi for contrasting rainfall years (2013
   and 2019), at about 300 m resolution. The release provides the modelled yield output tables together with the R scripts
   that derive spatial predictions from survey and environmental inputs, supporting targeting of good agronomic practices.
-license: CC-BY-NC
+license: CC-BY-4.0
 resource_type: dataset
 access: public
 created: '2026-10-28'
