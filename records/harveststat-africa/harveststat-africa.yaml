@@ -9,7 +9,7 @@ title: HarvestStat Africa - Harmonized Subnational Crop Statistics
 description: 'Harmonized subnational agricultural statistics for Sub-Saharan Africa: quantity produced, harvested area and
   yield for 94 crops across 33 countries, mostly 1980-2022, compiled from national and international sources. The release
   pairs a tidy statistics table with FEWS NET-aligned administrative boundaries joinable on a geographic-unit identifier.'
-license: CC-BY-NC
+license: CC-BY-4.0
 resource_type: dataset
 access: public
 created: '2026-10-28'
