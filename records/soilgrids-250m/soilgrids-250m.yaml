@@ -106,12 +106,21 @@ temporal:
 structures:
   - name: predictions
     dimensions:
-      - &cell
-        name: cell
-        type: xy
-        description: 250 m cells in the Interrupted Goode Homolosine projection.
+      # Native Homolosine extents from the VRT headers; some maps start 750 m further east.
+      - &x
+        name: x
+        type: x
+        description: Easting of 250 m cells in the Interrupted Goode Homolosine projection.
         step: 250
         unit: m
+        extent: [-19949750, 19861750]
+      - &y
+        name: y
+        type: y
+        description: Northing of 250 m cells in the Interrupted Goode Homolosine projection.
+        step: 250
+        unit: m
+        extent: [-6147500, 8361000]
       - &depth
         name: depth
         type: z
@@ -213,7 +222,8 @@ structures:
   # ocs is published for the 0-30 cm topsoil only, so it gets its own depth axis.
   - name: ocs-predictions
     dimensions:
-      - *cell
+      - *x
+      - *y
       - &depth30
         name: depth
         type: z
@@ -235,7 +245,7 @@ structures:
 
   # The uncertainty maps are dimensionless, so they are a separate structure per variable set.
   - name: uncertainty
-    dimensions: [*cell, *depth]
+    dimensions: [*x, *y, *depth]
     variables:
       - {
           <<: *bdod,
@@ -298,7 +308,7 @@ structures:
           note: *unc,
         }
   - name: ocs-uncertainty
-    dimensions: [*cell, *depth30]
+    dimensions: [*x, *y, *depth30]
     variables:
       - {
           <<: *ocs,
@@ -307,8 +317,11 @@ structures:
           note: *unc,
         }
 
+  # The landmask grid is larger than the property maps.
   - name: landmask
-    dimensions: [*cell]
+    dimensions:
+      - { <<: *x, extent: [-20037500, 20037500] }
+      - { <<: *y, extent: [-6729000, 8600750] }
     variables:
       - name: landmask
         description: >

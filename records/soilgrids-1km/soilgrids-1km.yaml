@@ -129,21 +129,21 @@ structures:
       - name: cec
         description: Cation exchange capacity of the soil at pH 7.
         data_type: int16
-        unit: cmol(c) kg-1
+        unit: cmol kg-1
         nodata: -32768
-        note: Stored in mmol(c) kg-1 with scale_factor 0.1.
+        note: Charge-equivalent cmol(c)/kg. Stored in mmol(c)/kg with scale_factor 0.1.
       - name: cfvo
         description: Volumetric fraction of coarse fragments larger than 2 mm.
         data_type: int16
-        unit: cm3 100cm-3
+        unit: "%"
         nodata: -32768
-        note: Stored in cm3 dm-3 with scale_factor 0.1.
+        note: Volume percent. Stored in cm3 dm-3 with scale_factor 0.1.
       - name: clay
         description: Proportion of clay particles smaller than 0.002 mm in the fine earth fraction.
         data_type: int16
-        unit: g 100g-1
+        unit: "%"
         nodata: -32768
-        note: Stored in g kg-1 with scale_factor 0.1.
+        note: Mass percent. Stored in g kg-1 with scale_factor 0.1.
       - name: nitrogen
         description: Total nitrogen.
         data_type: int16
@@ -153,21 +153,21 @@ structures:
       - name: phh2o
         description: Soil pH in water.
         data_type: int16
-        unit: "1"
+        unit: "[pH]"
         nodata: -32768
-        note: pH units. Stored as pH times 10 with scale_factor 0.1.
+        note: Stored as pH times 10 with scale_factor 0.1.
       - name: sand
         description: Proportion of sand particles larger than 0.05 mm in the fine earth fraction.
         data_type: int16
-        unit: g 100g-1
+        unit: "%"
         nodata: -32768
-        note: Stored in g kg-1 with scale_factor 0.1.
+        note: Mass percent. Stored in g kg-1 with scale_factor 0.1.
       - name: silt
         description: Proportion of silt particles between 0.002 and 0.05 mm in the fine earth fraction.
         data_type: int16
-        unit: g 100g-1
+        unit: "%"
         nodata: -32768
-        note: Stored in g kg-1 with scale_factor 0.1.
+        note: Mass percent. Stored in g kg-1 with scale_factor 0.1.
       - name: soc
         description: Soil organic carbon content in the fine earth fraction.
         data_type: int16
@@ -178,9 +178,9 @@ structures:
         name: wv0010
         description: Volumetric water content at -10 kPa.
         data_type: int16
-        unit: 10-2 cm3 cm-3
+        unit: "%"
         nodata: -32768
-        note: Stored in 10-3 cm3 cm-3 with scale_factor 0.1.
+        note: Volume percent. Stored in 10-3 cm3 cm-3 with scale_factor 0.1.
       - {
           <<: *wv,
           name: wv0033,
