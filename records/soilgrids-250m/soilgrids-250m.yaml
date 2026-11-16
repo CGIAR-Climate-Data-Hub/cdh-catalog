@@ -4,7 +4,7 @@ cdh_schema_version: v0.5.0
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 
-id: soilgrids
+id: soilgrids-250m
 title: SoilGrids 2.0 global soil property maps
 version: "2.0" # as ISRIC labels it; the "latest" folder is a rolling release of this version
 series:

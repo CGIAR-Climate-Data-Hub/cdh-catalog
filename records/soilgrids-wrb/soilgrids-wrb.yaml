@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # SoilGrids 2.0 WRB soil class maps, federated from ISRIC's WebDAV server through the per-class VRT mosaics.
-# Separate from the soilgrids record: aggregated from the 2017 predictions, not newly modelled, and in EPSG:4326.
+# Separate from the soilgrids-250m record: aggregated from the 2017 predictions, not newly modelled, and in EPSG:4326.
 cdh_schema_version: v0.5.0
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
@@ -332,7 +332,7 @@ additional_assets:
 additional_links:
   - title: SoilGrids 2.0 soil property maps
     rel: related
-    id: soilgrids
+    id: soilgrids-250m
     description: The quantile regression forest property predictions these class maps sit beside.
   - title: ISRIC data catalogue record
     rel: describedby
