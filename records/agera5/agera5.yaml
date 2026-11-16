@@ -28,8 +28,7 @@ access_note: >
   copy the token from your profile page, then open the dataset page, go to the Download tab and
   accept the dataset licence at the bottom. Until the licence is accepted the stores answer 401 or
   403 even with a valid token. Send the token as an HTTP header "Authorization: Bearer <token>";
-  example.py beside this record is a working call. The Earth Engine asset needs a Google Earth
-  Engine account.
+  example.py beside this record is a working call.
 
 keywords:
   - AgERA5
@@ -100,73 +99,61 @@ climate:
       at 0.1°, so values follow the finer topography, land use and land-sea mask.
     resolution: 0.1 degree
 
-# One data dictionary for the Zarr stores and the CDS API; the Earth Engine copy carries 21 of the
-# 27 variables, so it is a second structure built from the same definitions.
+# One data dictionary for the Zarr stores and the CDS API.
 structures:
   - name: daily
     dimensions:
-      - &cell
-        name: cell
+      - name: cell
         type: xy
         description: 0.1° (~11 km at equator). Latitude ascends from -90 to 90, longitude from -180 to 179.9.
         step: 0.1
         unit: degree
-      - &time
-        name: time
+      - name: time
         type: temporal
         description: Day, midnight to midnight local time (00-00LT). Grows daily, about a week behind present.
         step: P1D
     variables:
-      - &Temperature_Air_2m_Max_24h
-        name: Temperature_Air_2m_Max_24h
+      - name: Temperature_Air_2m_Max_24h
         description: Maximum air temperature at 2 m over the local day.
         data_type: float32
         unit: K
         nodata: -9999
-      - &Temperature_Air_2m_Min_24h
-        name: Temperature_Air_2m_Min_24h
+      - name: Temperature_Air_2m_Min_24h
         description: Minimum air temperature at 2 m over the local day.
         data_type: float32
         unit: K
         nodata: -9999
-      - &Temperature_Air_2m_Mean_24h
-        name: Temperature_Air_2m_Mean_24h
+      - name: Temperature_Air_2m_Mean_24h
         description: Mean air temperature at 2 m over the local day.
         data_type: float32
         unit: K
         nodata: -9999
-      - &Temperature_Air_2m_Max_Day_Time
-        name: Temperature_Air_2m_Max_Day_Time
+      - name: Temperature_Air_2m_Max_Day_Time
         description: Maximum air temperature at 2 m between 06 and 18 local time.
         data_type: float32
         unit: K
         nodata: -9999
-      - &Temperature_Air_2m_Mean_Day_Time
-        name: Temperature_Air_2m_Mean_Day_Time
+      - name: Temperature_Air_2m_Mean_Day_Time
         description: Mean air temperature at 2 m between 06 and 18 local time.
         data_type: float32
         unit: K
         nodata: -9999
-      - &Temperature_Air_2m_Min_Night_Time
-        name: Temperature_Air_2m_Min_Night_Time
+      - name: Temperature_Air_2m_Min_Night_Time
         description: Minimum air temperature at 2 m between 18 and 06 local time.
         data_type: float32
         unit: K
         nodata: -9999
-      - &Temperature_Air_2m_Mean_Night_Time
-        name: Temperature_Air_2m_Mean_Night_Time
+      - name: Temperature_Air_2m_Mean_Night_Time
         description: Mean air temperature at 2 m between 18 and 06 local time.
         data_type: float32
         unit: K
         nodata: -9999
-      - &Dew_Point_Temperature_2m_Mean_24h
-        name: Dew_Point_Temperature_2m_Mean_24h
+      - name: Dew_Point_Temperature_2m_Mean_24h
         description: Mean dew point temperature at 2 m over the local day.
         data_type: float32
         unit: K
         nodata: -9999
-      - &Precipitation_Flux
-        name: Precipitation_Flux
+      - name: Precipitation_Flux
         description: Total precipitation over the local day.
         data_type: float32
         unit: mm d-1
@@ -176,28 +163,24 @@ structures:
         data_type: float32
         unit: "1"
         nodata: -9999
-      - &Precipitation_Rain_Duration_Fraction
-        name: Precipitation_Rain_Duration_Fraction
+      - name: Precipitation_Rain_Duration_Fraction
         description: Fraction of the day's hours with rain.
         data_type: float32
         unit: "1"
         nodata: -9999
-      - &Precipitation_Solid_Duration_Fraction
-        name: Precipitation_Solid_Duration_Fraction
+      - name: Precipitation_Solid_Duration_Fraction
         description: >
           Fraction of the day's hours with solid precipitation (freezing rain, snow, wet snow,
           rain-snow mix, ice pellets; no hail).
         data_type: float32
         unit: "1"
         nodata: -9999
-      - &Solar_Radiation_Flux
-        name: Solar_Radiation_Flux
+      - name: Solar_Radiation_Flux
         description: Surface downward solar radiation summed over the local day.
         data_type: float32
         unit: J m-2 d-1
         nodata: -9999
-      - &ReferenceET_PenmanMonteith_FAO56
-        name: ReferenceET_PenmanMonteith_FAO56
+      - name: ReferenceET_PenmanMonteith_FAO56
         description: Penman-Monteith reference evapotranspiration, FAO-56 method, over the local day.
         data_type: float32
         unit: mm d-1
@@ -212,8 +195,7 @@ structures:
         data_type: float32
         unit: "%"
         nodata: -9999
-      - &Relative_Humidity_2m_06h
-        name: Relative_Humidity_2m_06h
+      - name: Relative_Humidity_2m_06h
         description: Relative humidity at 2 m at 06 local time.
         data_type: float32
         unit: "%"
@@ -228,8 +210,7 @@ structures:
         data_type: float32
         unit: "%"
         nodata: -9999
-      - &Relative_Humidity_2m_15h
-        name: Relative_Humidity_2m_15h
+      - name: Relative_Humidity_2m_15h
         description: Relative humidity at 2 m at 15 local time.
         data_type: float32
         unit: "%"
@@ -239,69 +220,38 @@ structures:
         data_type: float32
         unit: "%"
         nodata: -9999
-      - &Vapour_Pressure_Mean_24h
-        name: Vapour_Pressure_Mean_24h
+      - name: Vapour_Pressure_Mean_24h
         description: Mean vapour pressure over the local day.
         data_type: float32
         unit: hPa
         nodata: -9999
-      - &Vapour_Pressure_Deficit_at_Maximum_Temperature
-        name: Vapour_Pressure_Deficit_at_Maximum_Temperature
+      - name: Vapour_Pressure_Deficit_at_Maximum_Temperature
         description: >
           Vapour pressure deficit at the daily maximum temperature: saturated vapour pressure at the
           maximum temperature minus the daily mean vapour pressure.
         data_type: float32
         unit: hPa
         nodata: -9999
-      - &Wind_Speed_10m_Mean_24h
-        name: Wind_Speed_10m_Mean_24h
+      - name: Wind_Speed_10m_Mean_24h
         description: Mean wind speed at 10 m over the local day.
         data_type: float32
         unit: m s-1
         nodata: -9999
-      - &Cloud_Cover_Mean_24h
-        name: Cloud_Cover_Mean_24h
+      - name: Cloud_Cover_Mean_24h
         description: Mean total cloud cover over the local day, 0 to 1.
         data_type: float32
         unit: "1"
         nodata: -9999
-      - &Snow_Thickness_Mean_24h
-        name: Snow_Thickness_Mean_24h
+      - name: Snow_Thickness_Mean_24h
         description: Mean snow depth over the local day.
         data_type: float32
         unit: cm
         nodata: -9999
-      - &Snow_Thickness_LWE_Mean_24h
-        name: Snow_Thickness_LWE_Mean_24h
+      - name: Snow_Thickness_LWE_Mean_24h
         description: Mean snow liquid water equivalent over the local day.
         data_type: float32
         unit: cm
         nodata: -9999
-
-  - name: gee
-    dimensions: [*cell, *time]
-    variables:
-      - *Temperature_Air_2m_Max_24h
-      - *Temperature_Air_2m_Min_24h
-      - *Temperature_Air_2m_Mean_24h
-      - *Temperature_Air_2m_Max_Day_Time
-      - *Temperature_Air_2m_Mean_Day_Time
-      - *Temperature_Air_2m_Min_Night_Time
-      - *Temperature_Air_2m_Mean_Night_Time
-      - *Dew_Point_Temperature_2m_Mean_24h
-      - *Precipitation_Flux
-      - *Precipitation_Rain_Duration_Fraction
-      - *Precipitation_Solid_Duration_Fraction
-      - *Solar_Radiation_Flux
-      - *ReferenceET_PenmanMonteith_FAO56
-      - *Relative_Humidity_2m_06h
-      - *Relative_Humidity_2m_15h
-      - *Vapour_Pressure_Mean_24h
-      - *Vapour_Pressure_Deficit_at_Maximum_Temperature
-      - *Wind_Speed_10m_Mean_24h
-      - *Cloud_Cover_Mean_24h
-      - *Snow_Thickness_Mean_24h
-      - *Snow_Thickness_LWE_Mean_24h
 
 cdh:
   domain: [climate]
@@ -350,18 +300,6 @@ data:
         title: HTTPS (CDS token as Bearer header)
     media_type: application/vnd.zarr; version=2
     processing_steps: [source]
-  - name: gee
-    structures: [gee]
-    description: >
-      Google Earth Engine image collection projects/climate-engine-pro/assets/ce-ag-era5-v2/daily,
-      curated by Climate Engine. One image per day, same band names and units as the Zarr stores,
-      but 21 of the 27 variables.
-    locations:
-      - url: ee://projects/climate-engine-pro/assets/ce-ag-era5-v2/daily
-        title: Earth Engine
-      - url: https://earthengine.googleapis.com/v1/projects/climate-engine-pro/assets/ce-ag-era5-v2/daily
-        title: Earth Engine REST API
-    processing_steps: [source]
   - name: cds-api
     structures: [daily]
     description: >
@@ -406,4 +344,7 @@ additional_links:
   - title: AgERA5 in the Earth Engine community catalog
     rel: describedby
     url: https://gee-community-catalog.org/projects/agera5_datasets/
-    description: Band list and Earth Engine snippet for the Climate Engine copy.
+    description: >
+      Image collection projects/climate-engine-pro/assets/ce-ag-era5-v2/daily, curated by Climate
+      Engine: one image per day, 21 of the 27 variables, same band names and units as the Zarr
+      stores. Needs an Earth Engine account.
