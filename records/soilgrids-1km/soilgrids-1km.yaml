@@ -62,6 +62,10 @@ contact:
     roles: [licensor, producer]
     email: soilgrids@isric.org
     url: https://www.isric.org/
+  - name: Andres Aguilar Ariza
+    roles: [processor]
+    email: Andres.Aguilar@cgiar.org
+    organization: Alliance of Bioversity International and CIAT
   - name: Brayden Youngberg
     roles: [maintainer, point-of-contact]
     email: b.youngberg@cgiar.org
@@ -206,14 +210,13 @@ cdh:
 processing:
   - id: source
     description: >
-      SoilGrids 2.0 quantile regression forest predictions (Poggio et al. 2021), aggregated by ISRIC
-      to [1000 m mean maps](https://files.isric.org/soilgrids/latest/data_aggregated/1000m/) in the
+      ISRIC's SoilGrids 2.0 1000 m aggregated mean maps, one GeoTIFF per property and depth in the
       Interrupted Goode Homolosine projection.
     derived_from:
-      - id: soilgrids-250m
-        version: "2.0"
+      - url: https://files.isric.org/soilgrids/latest/data_aggregated/1000m/
         title: SoilGrids 2.0 aggregated 1000 m maps
-  - id: reproject
+        version: "2.0"
+  - id: cloud-optimize
     description: >
       Reproject each map onto a 1/120 degree EPSG:4326 grid with nearest-neighbour resampling and
       stack them into one Zarr v3 store, keeping ISRIC's int16 values and adding a scale_factor.
@@ -230,7 +233,7 @@ data:
       cells (4 degrees square) for point profiles and bounding-box reads.
     media_type: application/vnd.zarr; version=3
     file_size: 8.7 GB
-    processing_steps: [source, reproject]
+    processing_steps: [source, cloud-optimize]
 
 additional_links:
   - title: Hugging Face dataset page
