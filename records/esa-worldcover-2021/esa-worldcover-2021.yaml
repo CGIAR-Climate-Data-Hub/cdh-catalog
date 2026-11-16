@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # Federated record: the COG tiles live on AWS Open Data; the Hub publishes only a VRT mosaic and a
-# class-code list that open them in place. Earth Engine and Planetary Computer copies are listed as
-# further access paths.
+# class-code list that open them in place. The Planetary Computer copy is a further access path; the
+# Earth Engine copy is a link.
 cdh_schema_version: v0.5.0
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
@@ -198,14 +198,6 @@ data:
             title: HTTPS
           - url: s3://digital-atlas/cdh/data/esa-worldcover-2021-v200/map.vrt
             title: S3
-  - name: earth-engine
-    description: Image collection with one image for 2021, band Map. Needs an Earth Engine account.
-    locations:
-      - url: ee://ESA/WorldCover/v200
-        title: Earth Engine
-      - url: https://earthengine.googleapis.com/v1/projects/earthengine-public/assets/ESA/WorldCover/v200
-        title: Earth Engine REST API
-    processing_steps: [source]
   - name: planetary-computer
     description: >
       The same tiles on Azure, in the esa-worldcover STAC collection alongside the 2020 map (filter
@@ -266,3 +258,6 @@ additional_links:
   - title: Earth Engine catalog entry
     rel: describedby
     url: https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v200
+    description: >
+      Image collection ESA/WorldCover/v200, one image for 2021 with band Map. Needs an Earth Engine
+      account.
