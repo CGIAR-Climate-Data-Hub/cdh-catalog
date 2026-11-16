@@ -307,15 +307,6 @@ structures:
           note: *unc,
         }
 
-  # Earth Engine holds the mean maps only, one image per property with one band per depth.
-  - name: gee
-    dimensions: [*cell, *depth]
-    variables:
-      [*bdod, *cec, *cfvo, *clay, *nitrogen, *ocd, *phh2o, *sand, *silt, *soc]
-  - name: gee-ocs
-    dimensions: [*cell, *depth30]
-    variables: [*ocs]
-
   - name: landmask
     dimensions: [*cell]
     variables:
@@ -418,19 +409,6 @@ data:
         locations:
           - url: https://files.isric.org/soilgrids/latest/data/
             title: HTTPS (WebDAV)
-  - name: gee-mean
-    structures: [gee, gee-ocs]
-    locations:
-      - url: ee://projects/soilgrids-isric/
-        title: Earth Engine
-      - url: https://earthengine.googleapis.com/v1/projects/soilgrids-isric/assets/
-        title: Earth Engine REST API
-    href_template: "{variable}_mean"
-    processing_steps: [source]
-    description: >
-      Google Earth Engine images projects/soilgrids-isric/{property}_mean, curated by ISRIC. Mean
-      maps only; one image per property with one band per depth, named like the files
-      (soc_0-5cm_mean). Same scaled integer units as the VRTs, with nodata masked.
   - name: landmask
     structures: [landmask]
     locations:
@@ -456,7 +434,10 @@ additional_links:
   - title: SoilGrids on Google Earth Engine
     rel: describedby
     url: https://docs.isric.org/globaldata/soilgrids/access_on_gee.html
-    description: Asset list and export and visualisation scripts from ISRIC.
+    description: >
+      Mean maps as Earth Engine images projects/soilgrids-isric/{property}_mean, one band per depth,
+      in World Mollweide (ESRI:54009) rather than the files' Homolosine. Asset list and export
+      scripts from ISRIC.
   - title: SoilGrids in the Earth Engine community catalog
     rel: describedby
     url: https://gee-community-catalog.org/projects/isric/
