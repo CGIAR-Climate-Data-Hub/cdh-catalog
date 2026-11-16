@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.bundled.json
 # Federated record: the COG tiles live on AWS Open Data; the Hub publishes only a VRT mosaic and a
-# class-code list that open them in place. The Planetary Computer copy is a further access path; the
-# Earth Engine copy is a link.
+# class-code list that open them in place. The Planetary Computer and Earth Engine copies are links.
 cdh_schema_version: v0.5.0
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
@@ -198,17 +197,6 @@ data:
             title: HTTPS
           - url: s3://digital-atlas/cdh/data/esa-worldcover-2021-v200/map.vrt
             title: S3
-  - name: planetary-computer
-    description: >
-      The same tiles on Azure, in the esa-worldcover STAC collection alongside the 2020 map (filter
-      esa_worldcover:product_version to 2.0.0). Reads need a short-lived SAS token from the
-      Planetary Computer signing API. The sibling input_quality prefix holds the full quality layer;
-      AWS has only one of its 2,651 tiles.
-    locations:
-      - url: https://ai4edataeuwest.blob.core.windows.net/esa-worldcover/v200/2021/map/
-        title: Azure Blob (SAS token)
-    media_type: image/tiff; application=geotiff; profile=cloud-optimized
-    processing_steps: [source]
 
 additional_assets:
   - name: class-codes
@@ -254,7 +242,11 @@ additional_links:
   - title: Planetary Computer STAC API collection
     rel: service
     url: https://planetarycomputer.microsoft.com/api/stac/v1/collections/esa-worldcover
-    description: Searchable items for both WorldCover releases; the Azure tiles are its assets.
+    description: >
+      Searchable items for both WorldCover releases (filter esa_worldcover:product_version to 2.0.0
+      for 2021); the same tiles on Azure are its assets. Reads need a short-lived SAS token from the
+      Planetary Computer signing API. Azure also holds the full input_quality layer, of which AWS
+      has only one of its 2,651 tiles.
   - title: Earth Engine catalog entry
     rel: describedby
     url: https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v200
