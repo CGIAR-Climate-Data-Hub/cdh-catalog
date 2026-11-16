@@ -93,7 +93,7 @@ citation:
   url: https://doi.org/10.5194/soil-7-217-2021
 
 created: "2026-10-13"
-updated: "2026-10-14"
+updated: "2026-11-16"
 
 spatial:
   bbox: [-180, -56, 180, 83]
@@ -347,7 +347,7 @@ processing:
       Quantile regression forests (ranger, 200 trees) fitted per property on WoSIS soil profile
       observations and global environmental covariates (climate, terrain, vegetation, land cover),
       predicted at the six standard depths and tiled by ISRIC (Poggio et al. 2021; outputs version
-      RUN18, code v2.0.0). Aggregated 1 km and 5 km mean maps are also published but not listed here.
+      RUN18, code v2.0.0). The 1 km aggregates are in soilgrids-1km; the 5 km ones are not listed.
     date: "2020-05-11" # date of the landmask file; the property tiles are dated April to June 2020
     derived_from:
       - title: WoSIS soil profile database, data stream 7 (March 2020 snapshot)
@@ -464,6 +464,10 @@ additional_links:
   - title: SoilGrids web map
     rel: related
     url: https://soilgrids.org/
+  - title: SoilGrids 2.0 mean maps at 1 km as a lat/lon Zarr
+    rel: related
+    id: soilgrids-1km
+    description: Twelve properties including water retention, five depths, EPSG:4326.
   - title: WRB soil class maps (SoilGrids 2.0, from 2017 predictions)
     rel: related
     id: soilgrids-wrb
