@@ -197,8 +197,8 @@ cdh:
   usage:
     intended_uses:
       - soil inputs to crop, hydrological, and carbon models at national to global scale
-      - soil constraint and land suitability mapping
       - point soil profiles and regional extracts without reprojecting
+      - soil water retention inputs (field capacity, wilting point) to crop and water balance models
     not_recommended_for:
       - use: field-scale soil management or fertilizer recommendations
         reason: values are 1 km aggregates of model predictions, not measurements.
@@ -206,6 +206,9 @@ cdh:
       - use: analyses that need prediction uncertainty
         reason: only the mean maps are included.
         use_instead: soilgrids-250m, which has quantiles and uncertainty layers.
+      - use: sub-national or landscape analyses that need finer detail
+        reason: 1 km cells average away variation the 250 m maps resolve.
+        use_instead: soilgrids-250m.
 
 processing:
   - id: source

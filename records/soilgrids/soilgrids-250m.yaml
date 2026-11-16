@@ -335,8 +335,8 @@ cdh:
   domain: [land, agricultural-production]
   usage:
     intended_uses:
-      - soil inputs to crop, hydrological, and carbon models at national to global scale
-      - soil constraint and land suitability mapping
+      - soil inputs to crop, hydrological, and carbon models at sub-national to national scale
+      - soil constraint and land suitability mapping where 250 m detail matters
       - baseline soil organic carbon stocks for sequestration and emissions accounting
     not_recommended_for:
       - use: field-scale soil management or fertilizer recommendations
@@ -344,6 +344,9 @@ cdh:
         use_instead: local soil surveys or soil tests.
       - use: change detection or time series of soil properties
         reason: the maps are a single static prediction with no reference date.
+      - use: continental or global analyses, or point profiles in latitude and longitude
+        reason: maps are in the Interrupted Goode Homolosine projection and a large read touches thousands of tiles.
+        use_instead: soilgrids-1km, the same mean maps as one lat/lon Zarr store.
 
 processing:
   - id: source
