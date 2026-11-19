@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+id: worldpop-gp-100m-population
+version: '1'
+title: WorldPop Global Project Population Density (100 m)
+description: Estimated residential population per 100 x 100 m global grid cells from the WorldPop Global Project, delivered
+  via Google Earth Engine. Used in the Lake Victoria Basin land-degradation / landscape-integrity assessment as the human-population
+  pressure layer.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+note: Publisher is WorldPop (University of Manchester); the maintainer contact is Flowminder, a co-producer of WorldPop Global
+  Project data - confirm the preferred contact during review. Period shown is the assessment window (2000-2024).
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- population density
+- gridded population
+- Google Earth Engine
+contact:
+- organization: WorldPop / Flowminder
+  name: WorldPop Data Team
+  email: info@flowminder.org
+  roles:
+  - licensor
+  - producer
+- organization: WorldPop / Flowminder
+  name: WorldPop Data Team
+  email: info@flowminder.org
+  roles:
+  - maintainer
+citation:
+  title: 'WorldPop Global Project Population Data: Estimated Residential Population per 100x100m Grid Cells'
+  authors:
+  - organization: WorldPop
+  date: '2024'
+  publisher: Google Earth Engine Data Catalog
+related_publications:
+- doi: 10.1038/sdata.2015.45
+spatial:
+  bbox:
+  - -180.0
+  - -90.0
+  - 180.0
+  - 90.0
+  crs: EPSG:4326
+temporal:
+  start_date: '2000'
+  end_date: '2024'
+  update_frequency: annual
+structures:
+- name: grid
+  dimensions:
+  - name: cell
+    type: xy
+    step: 0.000833
+    unit: degree
+    description: WorldPop 100 m grid cell.
+  - name: year
+    type: temporal
+    data_type: integer
+    step: P1Y
+    extent:
+    - '2000'
+    - '2024'
+    description: Map year.
+  variables:
+  - name: population_count
+    description: Estimated number of people per grid cell.
+    data_type: number
+    unit: person
+cdh:
+  domain:
+  - socioeconomic
+data:
+- name: worldpop-gp-100m-pop
+  description: Google Earth Engine Data Catalog entry for WorldPop Global Project 100 m population.
+  locations:
+  - url: https://developers.google.com/earth-engine/datasets/catalog/WorldPop_GP_100m_pop
+  media_type: text/html

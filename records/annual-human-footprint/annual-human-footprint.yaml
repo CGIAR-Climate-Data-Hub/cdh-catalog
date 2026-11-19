@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+id: annual-human-footprint
+version: '1'
+title: Annual Global Terrestrial Human Footprint 2000-2018 (1 km)
+description: Annual global terrestrial Human Footprint index from 2000 to 2018, mapped on a Mollweide equal-area projection
+  at 1 km resolution from eight pressure variables; one zipped GeoTIFF per year. Used in the Lake Victoria Basin land-degradation
+  / landscape-integrity assessment as an integrated anthropogenic-pressure indicator.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+note: The source dataset covers 2000-2018; the input spreadsheet listed a 2000-2024 assessment window - the dataset itself
+  does not extend to 2024. Confirm the intended period.
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- human footprint
+- anthropogenic pressure
+- Mollweide
+- cumulative impact
+contact:
+- organization: Xuecao Li, China Agricultural University (dataset corresponding author)
+  name: Xuecao Li
+  email: xuecaoli@cau.edu.cn
+  roles:
+  - licensor
+  - producer
+- organization: Xuecao Li, China Agricultural University (dataset corresponding author)
+  name: Xuecao Li
+  email: xuecaoli@cau.edu.cn
+  roles:
+  - maintainer
+citation:
+  title: An annual global terrestrial Human Footprint dataset from 2000 to 2018
+  authors:
+  - family: Mu
+    given: H.
+  - family: Li
+    given: X.
+  - family: Wen
+    given: Y.
+  date: '2022'
+  publisher: figshare / Scientific Data
+doi: 10.6084/m9.figshare.16571064.v8
+related_publications:
+- doi: 10.1038/s41597-022-01284-8
+spatial:
+  bbox:
+  - -180.0
+  - -90.0
+  - 180.0
+  - 90.0
+  crs: EPSG:54009
+temporal:
+  start_date: '2000'
+  end_date: '2018'
+  update_frequency: annual
+structures:
+- name: grid
+  dimensions:
+  - name: cell
+    type: xy
+    step: 1000
+    unit: m
+    description: human-footprint 1 km grid cell.
+  - name: year
+    type: temporal
+    data_type: integer
+    step: P1Y
+    extent:
+    - '2000'
+    - '2018'
+    description: Map year.
+  variables:
+  - name: human_footprint_index
+    description: Cumulative Human Footprint index per pixel.
+    data_type: number
+    unit: '1'
+cdh:
+  domain:
+  - land
+  - socioeconomic
+data:
+- name: figshare-human-footprint
+  description: figshare item holding the annual zipped GeoTIFF Human Footprint maps (hfpXXXX.zip).
+  locations:
+  - url: https://figshare.com/articles/figure/An_annual_global_terrestrial_Human_Footprint_dataset_from_2000_to_2018/16571064
+  media_type: application/zip
