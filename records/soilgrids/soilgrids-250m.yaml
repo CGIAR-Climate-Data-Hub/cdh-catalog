@@ -4,7 +4,7 @@ cdh_schema_version: v0.5.0
 extensions:
   - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
 
-id: soilgrids
+id: soilgrids-250m
 title: SoilGrids 2.0 global soil property maps
 version: "2.0" # as ISRIC labels it; the "latest" folder is a rolling release of this version
 series:
@@ -93,7 +93,7 @@ citation:
   url: https://doi.org/10.5194/soil-7-217-2021
 
 created: "2026-10-13"
-updated: "2026-10-14"
+updated: "2026-11-16"
 
 spatial:
   bbox: [-180, -56, 180, 83]
@@ -106,12 +106,21 @@ temporal:
 structures:
   - name: predictions
     dimensions:
-      - &cell
-        name: cell
-        type: xy
-        description: 250 m cells in the Interrupted Goode Homolosine projection.
+      # Native Homolosine extents from the VRT headers; some maps start 750 m further east.
+      - &x
+        name: x
+        type: x
+        description: Easting of 250 m cells in the Interrupted Goode Homolosine projection.
         step: 250
         unit: m
+        extent: [-19949750, 19861750]
+      - &y
+        name: y
+        type: y
+        description: Northing of 250 m cells in the Interrupted Goode Homolosine projection.
+        step: 250
+        unit: m
+        extent: [-6147500, 8361000]
       - &depth
         name: depth
         type: z
@@ -213,7 +222,8 @@ structures:
   # ocs is published for the 0-30 cm topsoil only, so it gets its own depth axis.
   - name: ocs-predictions
     dimensions:
-      - *cell
+      - *x
+      - *y
       - &depth30
         name: depth
         type: z
@@ -235,7 +245,7 @@ structures:
 
   # The uncertainty maps are dimensionless, so they are a separate structure per variable set.
   - name: uncertainty
-    dimensions: [*cell, *depth]
+    dimensions: [*x, *y, *depth]
     variables:
       - {
           <<: *bdod,
@@ -298,7 +308,7 @@ structures:
           note: *unc,
         }
   - name: ocs-uncertainty
-    dimensions: [*cell, *depth30]
+    dimensions: [*x, *y, *depth30]
     variables:
       - {
           <<: *ocs,
@@ -307,17 +317,11 @@ structures:
           note: *unc,
         }
 
-  # Earth Engine holds the mean maps only, one image per property with one band per depth.
-  - name: gee
-    dimensions: [*cell, *depth]
-    variables:
-      [*bdod, *cec, *cfvo, *clay, *nitrogen, *ocd, *phh2o, *sand, *silt, *soc]
-  - name: gee-ocs
-    dimensions: [*cell, *depth30]
-    variables: [*ocs]
-
+  # The landmask grid is larger than the property maps.
   - name: landmask
-    dimensions: [*cell]
+    dimensions:
+      - { <<: *x, extent: [-20037500, 20037500] }
+      - { <<: *y, extent: [-6729000, 8600750] }
     variables:
       - name: landmask
         description: >
@@ -331,8 +335,8 @@ cdh:
   domain: [land, agricultural-production]
   usage:
     intended_uses:
-      - soil inputs to crop, hydrological, and carbon models at national to global scale
-      - soil constraint and land suitability mapping
+      - soil inputs to crop, hydrological, and carbon models at sub-national to national scale
+      - soil constraint and land suitability mapping where 250 m detail matters
       - baseline soil organic carbon stocks for sequestration and emissions accounting
     not_recommended_for:
       - use: field-scale soil management or fertilizer recommendations
@@ -340,6 +344,9 @@ cdh:
         use_instead: local soil surveys or soil tests.
       - use: change detection or time series of soil properties
         reason: the maps are a single static prediction with no reference date.
+      - use: continental or global analyses, or point profiles in latitude and longitude
+        reason: maps are in the Interrupted Goode Homolosine projection and a large read touches thousands of tiles.
+        use_instead: soilgrids-1km, the same mean maps as one lat/lon Zarr store.
 
 processing:
   - id: source
@@ -347,7 +354,7 @@ processing:
       Quantile regression forests (ranger, 200 trees) fitted per property on WoSIS soil profile
       observations and global environmental covariates (climate, terrain, vegetation, land cover),
       predicted at the six standard depths and tiled by ISRIC (Poggio et al. 2021; outputs version
-      RUN18, code v2.0.0). Aggregated 1 km and 5 km mean maps are also published but not listed here.
+      RUN18, code v2.0.0). The 1 km aggregates are in soilgrids-1km; the 5 km ones are not listed.
     date: "2020-05-11" # date of the landmask file; the property tiles are dated April to June 2020
     derived_from:
       - title: WoSIS soil profile database, data stream 7 (March 2020 snapshot)
@@ -418,19 +425,6 @@ data:
         locations:
           - url: https://files.isric.org/soilgrids/latest/data/
             title: HTTPS (WebDAV)
-  - name: gee-mean
-    structures: [gee, gee-ocs]
-    locations:
-      - url: ee://projects/soilgrids-isric/
-        title: Earth Engine
-      - url: https://earthengine.googleapis.com/v1/projects/soilgrids-isric/assets/
-        title: Earth Engine REST API
-    href_template: "{variable}_mean"
-    processing_steps: [source]
-    description: >
-      Google Earth Engine images projects/soilgrids-isric/{property}_mean, curated by ISRIC. Mean
-      maps only; one image per property with one band per depth, named like the files
-      (soc_0-5cm_mean). Same scaled integer units as the VRTs, with nodata masked.
   - name: landmask
     structures: [landmask]
     locations:
@@ -456,7 +450,10 @@ additional_links:
   - title: SoilGrids on Google Earth Engine
     rel: describedby
     url: https://docs.isric.org/globaldata/soilgrids/access_on_gee.html
-    description: Asset list and export and visualisation scripts from ISRIC.
+    description: >
+      Mean maps as Earth Engine images projects/soilgrids-isric/{property}_mean, one band per depth,
+      in World Mollweide (ESRI:54009) rather than the files' Homolosine. Asset list and export
+      scripts from ISRIC.
   - title: SoilGrids in the Earth Engine community catalog
     rel: describedby
     url: https://gee-community-catalog.org/projects/isric/
@@ -464,6 +461,10 @@ additional_links:
   - title: SoilGrids web map
     rel: related
     url: https://soilgrids.org/
+  - title: SoilGrids 2.0 mean maps at 1 km as a lat/lon Zarr
+    rel: related
+    id: soilgrids-1km
+    description: Twelve properties including water retention, five depths, EPSG:4326.
   - title: WRB soil class maps (SoilGrids 2.0, from 2017 predictions)
     rel: related
     id: soilgrids-wrb
