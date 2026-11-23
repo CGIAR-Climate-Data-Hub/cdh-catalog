@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=../../spec/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.4.1
+extensions:
+  - https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.4.1/extensions/cdh/schema.json
+created: "2026-11-23"
+updated: "2026-11-23"
+id: spei-3-latam-5km
+title: Monthly SPEI-3 for Latin America at 5 km (1981-2025)
+version: "1"
+series:
+  name: Monthly SPEI-3 for Latin America at 5 km (1981-2025)
+description: >
+  Standardized Precipitation-Evapotranspiration Index accumulated over 3 months (SPEI-3) for Latin
+  America, delivered as monthly rasters at ~5 km. It is computed from the climatic water balance
+  (precipitation minus reference evapotranspiration) and quantifies short-term, seasonal drought and
+  wetness conditions. It is intended for monitoring and historical analysis of agricultural drought
+  and its relationship with ENSO events (El Niño / La Niña).
+resource_type: dataset
+keywords:
+  - SPEI
+  - SPEI-3
+  - drought
+  - drought index
+  - climatic water balance
+  - standardized precipitation-evapotranspiration index
+  - ENSO
+  - El Niño
+  - CHIRPS
+  - AgERA5
+note: >
+  January and February 1981 contain no valid values because SPEI-3 requires three months of prior
+  accumulation. Negative values indicate drier-than-normal conditions and positive values
+  wetter-than-normal; values below -1.5 are considered severe drought.
+license: CC-BY-4.0
+access: public
+attribution: >
+  Contains modified Copernicus Climate Change Service information (AgERA5) and CHIRPS v3 data from
+  the UCSB Climate Hazards Center.
+contact:
+  - organization: Alliance of Bioversity International and CIAT
+    name: Camilo Barrios Pérez
+    email: c.barrios@cgiar.org
+    url: https://alliancebioversityciat.org
+    roles:
+      - licensor
+      - producer
+      - processor
+      - point-of-contact
+      - maintainer
+    orcid: https://orcid.org/0000-0001-8332-8746
+citation:
+  title: Monthly SPEI-3 for Latin America at 5 km (1981-2025)
+  authors:
+    - family: Barrios Pérez
+      given: Camilo
+      orcid: https://orcid.org/0000-0001-8332-8746
+  date: "2026"
+  publisher: Alliance of Bioversity International and CIAT
+related_publications:
+  - citation:
+      title: >-
+        A Multiscalar Drought Index Sensitive to Global Warming: The Standardized Precipitation
+        Evapotranspiration Index (SPEI)
+      authors:
+        - family: Vicente-Serrano
+          given: S. M.
+        - family: Beguería
+          given: S.
+        - family: López-Moreno
+          given: J. I.
+      date: "2010"
+      publisher: Journal of Climate
+  - doi: 10.1038/sdata.2015.66
+spatial:
+  bbox:
+    - -118.35
+    - -56
+    - -28.85
+    - 32.7
+  crs: EPSG:4326
+temporal:
+  start_date: 1981-01
+  end_date: 2025-12
+structures:
+  - name: spei3-monthly
+    dimensions:
+      - name: cell
+        type: xy
+        description: Regular 0.05-degree grid (~5 km at the equator), identical to the CHIRPS grid.
+        step: 0.05
+        unit: degree
+      - name: time
+        type: temporal
+        description: Calculation month; each value integrates the 3-month window ending in that month.
+        extent:
+          - 1981-01
+          - 2025-12
+        step: P1M
+    variables:
+      - name: spei_3
+        description: >-
+          3-month SPEI, dimensionless (standard deviations relative to the distribution of the P -
+          ET0 water balance over the reference period). Negative values indicate water deficit and
+          positive values water surplus. Cells without data (ocean, areas outside the domain, and
+          the first two months of the series) are encoded as NaN; no explicit nodata value is set in
+          the GeoTIFFs.
+        data_type: float32
+data:
+  - name: monthly-geotiff
+    description: One GeoTIFF per month with SPEI-3 for Latin America (540 files, 1981-01 to 2025-12).
+    locations:
+      - url: https://example.org/REPLACE/SPEI_3_Valores/Historico/
+    href_template: SPEI_3_LATAM_{time:%Y%m}.tif
+    media_type: image/tiff; application=geotiff
+    file_size: 3.8 MB
+    processing_steps:
+      - source
+      - spei
+processing:
+  - id: source
+    description: >
+      Daily CHIRPS v3 precipitation and daily AgERA5 v2 reference evapotranspiration clipped to
+      Latin America; AgERA5 ET0 was resampled to the 0.05-degree CHIRPS grid.
+    derived_from:
+      - title: CHIRPS v3 (Climate Hazards Center InfraRed Precipitation with Station data), daily
+        url: https://www.chc.ucsb.edu/data/chirps3
+        version: "3.0"
+      - title: AgERA5 - Agrometeorological indicators from 1979 to present derived from reanalysis
+        url: https://cds.climate.copernicus.eu/datasets/sis-agrometeorological-indicators
+        version: "2.0"
+  - id: spei
+    description: >
+      Monthly aggregation of precipitation and ET0, computation of the climatic water balance (P -
+      ET0), 3-month accumulation, and standardization by fitting a log-logistic distribution per
+      pixel and calendar month to obtain SPEI-3.
+cdh:
+  domain:
+    - climate
+    - hydrology
+    - agricultural-production
+  usage:
+    intended_uses:
+      - monitoring and historical characterization of agricultural drought
+      - analysis of El Niño / La Niña impacts on the water balance
+      - identification of areas and periods with seasonal water deficit
+    not_recommended_for:
+      - use: farm- or plot-scale drought assessment
+        reason: the ~5 km resolution does not capture local variability.
+        use_instead: station observations or higher-resolution local data.
+      - use: long-term hydrological drought
+        reason: the 3-month window reflects short-term conditions.
+        use_instead: SPEI at 12 or more months.
