@@ -11,8 +11,6 @@ description: Gridded CO2 emissions from human activities in the Emissions Databa
 license: CC-BY-NC-ND-4.0
 resource_type: dataset
 access: public
-note: EDGAR material is generally CC-BY-4.0, but the IEA-EDGAR CO2 component is licensed CC-BY-NC-ND-4.0 per the source page;
-  confirm the applicable terms for your reuse. Period shown is the assessment window (1997-2024).
 created: '2026-10-28'
 updated: '2026-10-28'
 keywords:
