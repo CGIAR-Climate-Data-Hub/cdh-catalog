@@ -11,8 +11,6 @@ description: Annual global terrestrial Human Footprint index from 2000 to 2018, 
 license: CC-BY-4.0
 resource_type: dataset
 access: public
-note: The source dataset covers 2000-2018; the input spreadsheet listed a 2000-2024 assessment window - the dataset itself
-  does not extend to 2024. Confirm the intended period.
 created: '2026-10-28'
 updated: '2026-10-28'
 keywords:
