@@ -11,8 +11,6 @@ description: Estimated residential population per 100 x 100 m global grid cells 
 license: CC-BY-4.0
 resource_type: dataset
 access: public
-note: Publisher is WorldPop (University of Manchester); the maintainer contact is Flowminder, a co-producer of WorldPop Global
-  Project data - confirm the preferred contact during review. Period shown is the assessment window (2000-2024).
 created: '2026-10-28'
 updated: '2026-10-28'
 keywords:
