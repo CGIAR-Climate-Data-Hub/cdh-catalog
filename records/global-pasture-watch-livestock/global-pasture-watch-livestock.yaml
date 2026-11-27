@@ -11,8 +11,6 @@ description: Global livestock headcount at 1 km spatial resolution from 2000 to 
 license: CC-BY-4.0
 resource_type: dataset
 access: public
-note: Global Pasture Watch is a WRI / Google Land & Carbon Lab product; the maintainer contact is the WRI data lab - confirm
-  the specific dataset steward during review.
 created: '2026-10-28'
 updated: '2026-10-28'
 keywords:
