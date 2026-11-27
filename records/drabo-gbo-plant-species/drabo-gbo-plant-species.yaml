@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+id: drabo-gbo-plant-species
+version: '1'
+title: Plant species of Drabo Gbo Forest, Benin
+description: A comprehensive inventory of the 655 plant species recorded in the Drabo Gbo Forest, a 14-hectare rehabilitated
+  secondary rainforest patch in southern Benin regenerated over about 28 years. The list documents species composition, taxonomic
+  identity, phytogeographic origin, introduction history and survival status following long-term ecological restoration.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- plant diversity
+- species inventory
+- forest restoration
+- biodiversity
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Peter Neuenschwander
+  email: P.Neuenschwander@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Peter Neuenschwander
+  email: P.Neuenschwander@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: Comprehensive list of all plant species of Drabo Gbo, Benin (status July 2016)
+  authors:
+  - family: Neuenschwander
+    given: P.
+  - family: Adomou
+    given: A. C.
+  date: '2017'
+  publisher: IITA / Nature Conservation
+doi: 10.25502/1rh1-gm93/d
+related_publications:
+- doi: 10.3897/natureconservation.21.13906
+  citation:
+    title: Reconstituting a rainforest patch in southern Benin for the protection of threatened plants
+    authors:
+    - family: Neuenschwander
+      given: P.
+    date: '2017'
+    publisher: Nature Conservation
+spatial:
+  bbox:
+  - 0.77
+  - 6.22
+  - 2.7
+  - 10.33
+  crs: EPSG:4326
+  geography:
+  - benin
+temporal:
+  date: '2016'
+structures:
+- name: species
+  dimensions:
+  - name: species
+    type: taxon
+    data_type: string
+    description: Scientific name of a recorded plant species (655 species).
+  variables:
+  - name: origin
+    description: Phytogeographic origin zone of the species (e.g. Guineo-Congolian, Sudanian).
+    data_type: string
+  - name: survival_status
+    description: Survival / introduction status after restoration.
+    data_type: string
+cdh:
+  domain:
+  - land
+  - adaptation
+data:
+- name: species_list
+  description: Supplementary species-list spreadsheet.
+  locations:
+  - url: https://data.iita.org/dataset/e0b1c5a7-e995-46f4-83b9-e0b923216bd5/resource/92797275-b306-47e5-adf6-66b34517566f/download/supplementary-file.-n-and-a.xls
+  media_type: application/vnd.ms-excel

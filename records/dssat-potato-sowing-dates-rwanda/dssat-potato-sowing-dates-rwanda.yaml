@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/agriculture/schema.json
+id: dssat-potato-sowing-dates-rwanda
+version: '1'
+title: DSSAT simulated optimum potato sowing dates for Rwanda, 1983-2016
+description: Simulated optimum potato sowing windows for rwanda produced with the DSSAT cropping-systems model over 1983-2016.
+  Each row is a simulated site with the recommended planting date and the sowing-window start and end, evaluated across the
+  general sowing period to support planting-date optimisation under historical climate.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- sowing date
+- planting window
+- DSSAT
+- cropping calendar
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Siyabusa Mkuhlani
+  email: S.Mkuhlani@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Siyabusa Mkuhlani
+  email: S.Mkuhlani@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: DSSAT simulated potato sowing dates for rwanda for the period 1983-2016
+  authors:
+  - organization: International Institute of Tropical Agriculture (IITA)
+  date: '2016'
+  publisher: IITA
+doi: 10.25502/gsbk-ax93/d
+spatial:
+  bbox:
+  - 28.86
+  - -2.84
+  - 30.9
+  - -1.05
+  crs: EPSG:4326
+  geography:
+  - rwanda
+temporal:
+  start_date: '1983'
+  end_date: '2016'
+structures:
+- name: sowing
+  dimensions:
+  - name: location
+    type: location
+    data_type: string
+    description: 'Simulated site: country with its longitude and latitude.'
+  - name: year
+    type: temporal
+    data_type: integer
+    description: Simulation year of the sowing window.
+    step: P1Y
+    extent:
+    - '1983'
+    - '2016'
+  variables:
+  - name: longitude
+    description: Longitude of the simulated site.
+    data_type: number
+    unit: degree_east
+  - name: latitude
+    description: Latitude of the simulated site.
+    data_type: number
+    unit: degree_north
+  - name: planting_date
+    description: Optimum planting date for the season.
+    data_type: string
+  - name: start_date
+    description: Start of the acceptable sowing window.
+    data_type: string
+  - name: end_date
+    description: End of the acceptable sowing window.
+    data_type: string
+cdh:
+  domain:
+  - agricultural-production
+commodities:
+- potatoes
+data:
+- name: dssatoptimumsowingdates_potato.csv
+  description: Simulated sowing-date output as a tabular CSV file.
+  locations:
+  - url: https://data.iita.org/dataset/5a5afafe-0e10-4e87-9d2f-6a8e26934b83/resource/a6de3d09-302f-4081-8bc2-f00473ffcd71/download/dssatoptimumsowingdates_potato.csv
+  media_type: text/csv
+- name: data_dictionary_potato.csv
+  description: Simulated sowing-date output as a tabular CSV file.
+  locations:
+  - url: https://data.iita.org/dataset/5a5afafe-0e10-4e87-9d2f-6a8e26934b83/resource/043ebff9-c230-46d0-9d04-a2519c4d9d98/download/data_dictionary_potato.csv
+  media_type: text/csv

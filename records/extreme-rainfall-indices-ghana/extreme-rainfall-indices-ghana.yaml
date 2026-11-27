@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/schemas/profiles/cdh.schema.json
+cdh_schema_version: v0.5.0
+extensions:
+- https://cgiar-climate-data-hub.github.io/cdh-metadata-standard/v0.5.0/extensions/cdh/schema.json
+id: extreme-rainfall-indices-ghana
+version: '1'
+title: Extreme rainfall indices in Ghana (1981-2015)
+description: Gridded extreme-precipitation (ETCCDI) indices for Ghana derived from CHIRPS v2 daily rainfall for 1981-2015
+  on a 0.25-degree geographic grid. Consecutive wet/dry days, total precipitation and heavy-rainfall percentile indices are
+  provided as annual maps plus trend surfaces, supporting climate-trend monitoring for climate-smart agriculture.
+license: CC-BY-4.0
+resource_type: dataset
+access: public
+note: The asset template listed 5000 m resolution and 1981-2019; direct inspection of the NetCDFs shows a 0.25-degree (~25
+  km) grid covering 1981-2015, reflected here.
+created: '2026-10-28'
+updated: '2026-10-28'
+keywords:
+- ETCCDI
+- extreme precipitation
+- CHIRPS
+- rainfall indices
+- climate trends
+contact:
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Francis Muthoni
+  email: f.muthoni@cgiar.org
+  roles:
+  - licensor
+  - producer
+- organization: International Institute of Tropical Agriculture (IITA)
+  name: Francis Muthoni
+  email: f.muthoni@cgiar.org
+  roles:
+  - maintainer
+citation:
+  title: Extreme rainfall indices in Ghana
+  authors:
+  - organization: International Institute of Tropical Agriculture (IITA)
+  date: '2020'
+  publisher: IITA
+doi: 10.25502/bsb2-7q19/d
+spatial:
+  bbox:
+  - -3.0
+  - 8.0
+  - 1.0
+  - 11.0
+  crs: EPSG:4326
+  geography:
+  - ghana
+temporal:
+  start_date: '1981'
+  end_date: '2015'
+  update_frequency: annual
+series:
+  name: CHIRPS v2
+  url: https://www.chc.ucsb.edu/data/chirps
+structures:
+- name: indices
+  dimensions:
+  - name: cell
+    type: xy
+    step: 0.25
+    unit: degree
+    description: 0.25-degree CHIRPS grid cell (roughly 25 km).
+  - name: year
+    type: temporal
+    data_type: integer
+    description: Annual index value.
+    step: P1Y
+    extent:
+    - '1981'
+    - '2015'
+  variables:
+  - name: cdd
+    description: Consecutive wet days (>=1 mm) per year.
+    data_type: float32
+    unit: day
+    nodata: NaN
+  - name: cwd
+    description: Consecutive dry days (<1 mm) per year.
+    data_type: float32
+    unit: day
+    nodata: NaN
+  - name: prcptot
+    description: Annual total precipitation from wet days.
+    data_type: float32
+    unit: mm
+    nodata: NaN
+  - name: rx1day
+    description: Maximum 1-day precipitation.
+    data_type: float32
+    unit: mm
+    nodata: NaN
+  - name: rx5day
+    description: Maximum 5-day consecutive precipitation.
+    data_type: float32
+    unit: mm
+    nodata: NaN
+  - name: sdii
+    description: Simple daily intensity index (precipitation / wet days).
+    data_type: float32
+    unit: mm d-1
+    nodata: NaN
+  - name: r95p
+    description: Total precipitation from very wet days (above the 95th percentile).
+    data_type: float32
+    unit: mm
+    nodata: NaN
+cdh:
+  domain:
+  - climate
+data:
+- name: etccdi-netcdf
+  description: One NetCDF per ETCCDI index (cdd, cwd, prcptot, R10mm, R20mm, r95p, r99p, RX1DAY, RX5DAY, SDII) plus trend
+    surfaces.
+  locations:
+  - url: https://data.iita.org/dataset/extreme-rainfall-indices-in-ghana
+  media_type: application/x-netcdf
